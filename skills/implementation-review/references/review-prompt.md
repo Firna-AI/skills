@@ -28,13 +28,28 @@ You are reviewing local changes in this repository.
 Review the local diff against `origin/main`. You may inspect the repository
 read-only for context. Focus on concrete bugs, security issues, missing
 tests, weak tests, docs that contradict the changed code, generated
-artifact drift, and implementation risks in the scope below. A weak test
-cannot fail, was weakened or special-cased to pass, is over-mocked, or
-uses a hand-written fake store. A missing-test finding names the
-requirement or the defect that no test covers. It also names a code change
-that no existing test catches. Pay particular attention to
+artifact drift, leftover layers, and implementation risks in the scope
+below. A weak test cannot fail, was weakened or special-cased to pass, is
+over-mocked, or uses a hand-written fake store. A missing-test finding
+names the requirement or the defect that no test covers. It also names a
+code change that no existing test catches. Pay particular attention to
 <review focus> in that scope. Do not treat speculative or purely theoretical
 concerns as findings. Do not modify files or automatically fix findings.
+
+A leftover layer is code that keeps an old way working beside the new way
+of the diff. These are leftover layers:
+
+- a converter that turns new data into an old type, or wraps a new API in
+  an old one,
+- a value that the new data holds and the code derives again,
+- two code paths that do the same job,
+- a mechanism whose reason the diff removes,
+- code that finds the elements of another component or package through
+  selectors, class names, or globals.
+
+The fix for a leftover layer moves the code that uses the old way to the
+new way, and deletes the old way. The `plans` skill gives the detail under
+"Replacing an old way".
 
 ## Scope
 

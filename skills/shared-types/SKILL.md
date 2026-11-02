@@ -18,6 +18,11 @@ the commands for each generator.
   bodies, query parameters, events, messages, and error payloads.
 - The frontend never hand-writes a type, interface, or data transfer
   object for backend data. It imports the generated type.
+- Code that reads backend data uses the generated type directly. Do not
+  convert the data into a hand-written model so that old code keeps
+  working.
+- Use each value that the backend data holds, such as a bound, an order,
+  or a status. Do not derive that value again in the frontend.
 - The generator reads the serde attributes, so the wire format and the
   TypeScript type come from one definition. Keep the attributes on the
   Rust type.

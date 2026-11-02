@@ -78,6 +78,8 @@ When you delete dead code:
 
 - Delete the dead code that your change touches or leaves unused. Report
   other dead code that you find, for a separate branch.
+- Code that your change replaces is left unused when the change moves all
+  code that used it to the replacement.
 - The tests that cover only the dead code are dead code. Delete them.
 - A test that reaches live behaviour only through the dead code moves to
   the live path. Keep every assertion.

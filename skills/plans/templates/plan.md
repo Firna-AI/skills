@@ -14,6 +14,12 @@ Contract owners:
 - [<Protocol doc>](../docs/protocol/<doc>.md).
 - The [<area> README](../<path>/README.md).
 
+Replaced ways: <Keep this list only when the change puts a new way in place
+of an old one, as the `plans` skill says under "Replacing an old way".>
+
+- <Old way> → <new way>. Consumers: <each consumer>. Moved in Milestone
+  <N>. Deleted in Milestone <N>.
+
 ## Milestone 1: Mockups
 
 Tags: mockup
