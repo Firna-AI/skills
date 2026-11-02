@@ -147,6 +147,38 @@ role: the role hook is not installed in $HOME/.claude/settings.json; run scripts
 role: the role hook is installed in $HOME/.claude/settings.json" "$out" "start with hooks"
 }
 
+test_start_with_only_a_foreign_role_hook_reports_not_installed() {
+  session "$1" s1
+  local out
+  mkdir -p "$HOME/.claude"
+  cat > "$HOME/.claude/settings.json" <<'JSON'
+{"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "\"/opt/team/project/scripts/role-hook.sh\""}]}]}}
+JSON
+  out="$(role start)" || fail "start with a foreign role hook exit status $?"
+  assert_eq "role: marked this session for the coordinator role in $(role_marker s1)
+role: the role hook is not installed in $HOME/.claude/settings.json; run scripts/install.sh --hooks in the skills clone, or type /coordinator again after a compaction" \
+    "$out" "start with a foreign role hook"
+}
+
+test_installed_owned_hook_prints_the_same_reminder() {
+  session "$1" s1
+  local command event out expected
+  role start > /dev/null || fail "start exit status $?"
+  "$repo_under_test/scripts/install.sh" --hooks --quiet > /dev/null || fail "install hooks exit status $?"
+  for event in SessionStart UserPromptSubmit; do
+    command="$(jq -r --arg event "$event" \
+      '.hooks[$event][].hooks[] | select(.command | contains("role-hook.sh")) | .command' "$HOME/.claude/settings.json")"
+    assert_eq "\"$repo_under_test/scripts/role-hook.sh\" --futex-ai-skills-role-hook" "$command" "$event owned command"
+    out="$(printf '{"session_id":"s1","hook_event_name":"%s"}' "$event" | bash -c "$command")" \
+      || fail "$event installed hook exit status $?"
+    case "$event" in
+      SessionStart) expected="Role reminder: this session holds the coordinator role. Read $HOME/.claude/skills/coordinator/SKILL.md now, before you act, and follow the \`coordinator\` skill." ;;
+      UserPromptSubmit) expected="Role reminder: this session holds the coordinator role. Follow the \`coordinator\` skill. When its full text is not in your context, read $HOME/.claude/skills/coordinator/SKILL.md first." ;;
+    esac
+    assert_eq "$expected" "$out" "$event reminder with ownership marker"
+  done
+}
+
 test_stop_removes_the_marker_and_stops_reminders() {
   session "$1" s1
   local out

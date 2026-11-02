@@ -68,7 +68,7 @@ loop_lock="$HOME/.futex/skills-loop.lock"
 # Every hook entry that this script writes contains one of these marks.
 # The jq programs below read the marks and paths as jq variables.
 hook_mark='/scripts/update.sh" --hook'
-role_mark='/scripts/role-hook.sh"'
+role_mark='--futex-ai-skills-role-hook'
 # shellcheck disable=SC2016
 drop_hooks='def ours: ((.command // "") | (contains($mark) or contains($role_mark)));
   def drop: map(.hooks = ((.hooks // []) | map(select(ours | not))))
@@ -83,9 +83,9 @@ add_hooks="$drop_hooks"'
   | .hooks.UserPromptSubmit += [{hooks: [{type: "command",
       command: ("\"" + $cmd + "\" --hook --min-interval 300"), async: true}]}]
   | .hooks.SessionStart += [{hooks: [{type: "command",
-      command: ("\"" + $role_cmd + "\""), timeout: 10}]}]
+      command: ("\"" + $role_cmd + "\" " + $role_mark), timeout: 10}]}]
   | .hooks.UserPromptSubmit += [{hooks: [{type: "command",
-      command: ("\"" + $role_cmd + "\""), timeout: 10}]}]'
+      command: ("\"" + $role_cmd + "\" " + $role_mark), timeout: 10}]}]'
 
 link() {
   local target="$1" path="$2" old

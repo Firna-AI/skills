@@ -32,7 +32,7 @@ case "$1" in
     printf '%s\n' "$role" > "$marker"
     echo "role: marked this session for the $role role in $marker"
     settings="$HOME/.claude/settings.json"
-    if grep -Fq 'role-hook.sh' "$settings" 2>/dev/null; then
+    if grep -Fq -- '--futex-ai-skills-role-hook' "$settings" 2>/dev/null; then
       echo "role: the role hook is installed in $settings"
     else
       echo "role: the role hook is not installed in $settings; run scripts/install.sh --hooks in the skills clone, or type /coordinator again after a compaction"

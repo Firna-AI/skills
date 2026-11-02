@@ -36,7 +36,6 @@ conductor --json message create --session <orchestrator> \
   the child on the board.
 - Send a message only when the table in `SKILL.md` allows a send. Put
   everything for the child into one message.
-- Run `gh` with `--repo <owner/repo>` for a child in another repository.
 
 ## Read a result
 
@@ -47,12 +46,14 @@ conductor --json message create --session <orchestrator> \
   the child. So a newer report can come for the same message id. Read
   each active child in each cycle, and act on its current result.
 - The board stops a second action with three records: the stage of the
-  child, the state of each relayed item, and the retry record. The retry
-  record is in the next action of the child. Do not relay or raise an
-  item again. Do not send an answer again. Do not send a second retry for
+  child, each relayed item, and the retry record. The record of an item
+  holds its state and its version. The retry record is in the next
+  action of the child. Do not relay or raise an item again when it did
+  not change. Do not send an answer again. Do not send a second retry for
   a request.
 - The merge check runs again on the same final report in each cycle,
-  until it passes. That is not a second action.
+  until it passes, or until the pull request merged or closed. That is
+  not a second action.
 - When the report of a child says that the user answered one of its
   items there, mark that item closed on the board. Do not send the
   answer again.
@@ -68,16 +69,48 @@ conductor --json message create --session <orchestrator> \
   agent sends no task list when it starts again. The same tasks on the
   board from the last cycle show it.
 
+## Relayed items
+
+"Items and answers" in `SKILL.md` says which items go to the user. The
+"Open items" rules of the `decisions-and-findings` skill say which of
+them your report gives in full, and which get one line under **Open**.
+
+The board maps each of your numbers to the child and the child's own
+number. It also records the version that the user saw: the date of the
+child's report, and the child's sentence on the change. The first
+version of an item has no such sentence. For your own item, your report
+and your sentence give the version.
+
+When you give an item in full, save its text in
+`.context/coordinator/items/<number>.md`. A newer version replaces the
+text. After a compaction, a re-print reads the item there.
+
+The child gives a newer version when its report gives the item with a
+sentence on the change that the board does not hold, or when a field that
+"Open items" names differs from the saved text. An answered item that the
+child asks again is a newer version too. Give the item in full
+again, with the sentence on the change, and record the new version. The
+item is open again, also when the user answered it. The same holds when
+you change one of your own items.
+
+Before you send an answer, compare the version on the board with the
+current report of the child. Make this comparison before you record a
+newer version. When the item changed after the version that the user
+answered, send nothing for it. Set its state to "open, answered <letter>
+before the change". Give the changed item in full, and ask the user to
+confirm the answer or to choose again.
+
 ## Stages
 
-At each stage, relay each item whose **Action** is `ask the user`, when
-the board does not hold it yet. Send the answers of the user as "Items
-and answers" in `SKILL.md` says. The other results of the reader get the
-same action at every stage, as the table in `SKILL.md` says.
+At each stage, relay the items of the child as "Relayed items" says.
+Send the answers of the user as "Items and answers" in `SKILL.md` says.
+When the board holds a pull request number, read its state first, as
+"The state of a pull request" says. The other results of the reader get
+the same action at every stage, as the table in `SKILL.md` says.
 
-A final report or a question is new when it has an item that the board
-does not hold. It is also new when it moves the child to a later stage.
-Otherwise the board handled it.
+A final report or a question is new when it has an item, or a version of
+an item, that the board does not hold. It is also new when it moves the
+child to a later stage. Otherwise the board handled it.
 
 | Stage | The child | On a new final report or question | On a result that the board handled |
 | --- | --- | --- | --- |
@@ -116,16 +149,37 @@ approve it with the changes that the user names. C, stop the change.
 - A child that stopped with work that is not committed gets the status
   request or the retry message. Never finish its work yourself.
 
+## The state of a pull request
+
+Read the state of the pull request first at each stage where the board
+holds its number. The stage `merged` needs no read. The merge check and
+"A queued merge" read the state in their queries. At another stage, such
+as `blocked`, read it with the `gh pr view` query of "Merge and after".
+
+Read the merge fields, `mergeable` and `mergeStateStatus`, only when the
+state is `OPEN`. A merged pull request reads `UNKNOWN` there, and a
+closed one can read `CLEAN`.
+
+| The state | Do this |
+| --- | --- |
+| `OPEN` | Act by the stage. |
+| `MERGED`, below the top of a stack | Act as "A stack of pull requests" says. |
+| `MERGED`, any other pull request | Act as "After the merge" says, and set `merged`. |
+| `CLOSED` | Someone closed the pull request without a merge. Raise one item, and set `blocked`. |
+
 ## The merge check
+
+`<owner/repo>` comes from the board, and `gh api` takes it in its path or
+its variables.
 
 | Condition | Read it with |
 | --- | --- |
+| The state, the draft, and the merge state | `gh pr view <n> --repo <owner/repo> --json state,mergeCommit,headRefName,isDraft,mergeable,mergeStateStatus,headRefOid`. Read the state first, as "The state of a pull request" says. |
 | The final report | The last report of the child. The report also gives the merge method from `AGENTS.md`. |
-| The required checks | `gh pr checks <n> --required`. "no required checks reported" means that the branch has none. |
-| The other checks | `gh pr checks <n> --json name,bucket,workflow`. |
-| A check on `main` | `gh run list --branch main --workflow <workflow> --status completed --limit 1`, then `gh run view <run> --json jobs`. |
-| Draft and merge state | `gh pr view <n> --json isDraft,mergeable,mergeStateStatus,headRefOid`. |
-| The diff | `gh pr diff <n>` and `gh pr view <n> --json files`. Read every changed line. |
+| The required checks | `gh pr checks <n> --repo <owner/repo> --required`. "no required checks reported" means that the branch has none. |
+| The other checks | `gh pr checks <n> --repo <owner/repo> --json name,bucket,workflow`. |
+| A check on `main` | `gh run list --repo <owner/repo> --branch main --workflow <workflow> --status completed --limit 1`, then `gh run view <run> --repo <owner/repo> --json jobs`. |
+| The diff | `gh pr diff <n> --repo <owner/repo>` and `gh pr view <n> --repo <owner/repo> --json files`. Read every changed line. |
 | The items | The relayed items on the board. |
 
 A check fails on `main` too when its job failed in the latest completed
@@ -142,13 +196,12 @@ workflow, the check did not fail on `main`.
 | A required check that fails on `main` too, or the merge state `BLOCKED` with no check that runs | Raise an item. |
 | The merge state `DIRTY` or `BEHIND` | Send the merge-main message. |
 | An open item of the change | Wait for the answer of the user. |
-| The pull request is `CLOSED` and not merged | Raise an item, and set `blocked`. |
 
 ## Merge and after
 
 ```sh
-gh pr merge <n> --squash --match-head-commit <headRefOid>
-gh pr view <n> --json state,mergeCommit,headRefName
+gh pr merge <n> --repo <owner/repo> --squash --match-head-commit <headRefOid>
+gh pr view <n> --repo <owner/repo> --json state,mergeCommit,headRefName
 ```
 
 - Use the merge method that the `AGENTS.md` of the repository names, or
@@ -160,10 +213,10 @@ gh pr view <n> --json state,mergeCommit,headRefName
   the next cycle.
 - Raise each other error of the merge command as an item that quotes
   the error. Examples are a ruleset error and a permission error.
-- After the merge command, read the state with `gh pr view`. On
-  `MERGED`, act as "After the merge" says, and set `merged`. On `OPEN`,
-  GitHub queued the pull request. Set `merge queued`, and read it again
-  in the next cycle.
+- After the merge command, read the state with the `gh pr view` query
+  above. On `OPEN`, GitHub queued the pull request. Set `merge queued`,
+  and read it again in the next cycle. Act on `MERGED` and `CLOSED` as
+  "The state of a pull request" says.
 
 ### A queued merge
 
@@ -171,22 +224,21 @@ gh pr view <n> --json state,mergeCommit,headRefName
 `merge queued`, read the pull request in each cycle with this query:
 
 ```sh
-gh api graphql -f query='query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){pullRequest(number:$n){state isInMergeQueue}}}' -F o=<owner> -F r=<repo> -F n=<n>
+gh api graphql -f query='query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){pullRequest(number:$n){state isInMergeQueue}}}' -f o=<owner> -f r=<repo> -F n=<n>
 ```
 
 | The query shows | Do this |
 | --- | --- |
-| `MERGED` | Read `gh pr view <n> --json state,mergeCommit,headRefName`. Act as "After the merge" says, and set `merged`. |
+| `MERGED` or `CLOSED` | Act as "The state of a pull request" says. On `MERGED`, first run the `gh pr view` query of "Merge and after". It gives `mergeCommit` and `headRefName`. |
 | `OPEN`, and `isInMergeQueue` is true | Nothing in this cycle. |
 | `OPEN`, `isInMergeQueue` false, and a removal event after your merge command | The queue removed the pull request. Set `merge check`, and run the merge check. When it passes, raise an item that quotes GitHub's reason, and do not merge. The open item stops the merge until the user answers. So the pull request does not go back into the queue in each cycle. |
 | `OPEN`, `isInMergeQueue` false, and no such removal event | GitHub waits to add the pull request to the queue. Nothing in this cycle. |
-| `CLOSED` | Someone closed the pull request without a merge. Raise an item, and set `blocked`. |
 
 The last removal event of the pull request gives GitHub's reason, such
 as `failed_checks`:
 
 ```sh
-gh api graphql -f query='query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){pullRequest(number:$n){timelineItems(last:1,itemTypes:[REMOVED_FROM_MERGE_QUEUE_EVENT]){nodes{...on RemovedFromMergeQueueEvent{createdAt reason}}}}}}' -F o=<owner> -F r=<repo> -F n=<n>
+gh api graphql -f query='query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){pullRequest(number:$n){timelineItems(last:1,itemTypes:[REMOVED_FROM_MERGE_QUEUE_EVENT]){nodes{...on RemovedFromMergeQueueEvent{createdAt reason}}}}}}' -f o=<owner> -f r=<repo> -F n=<n>
 ```
 
 ### After the merge
@@ -201,9 +253,9 @@ conductor workspace archive <workspaceId>
   each other error of the delete as an item that quotes the error.
 - Archive the child. The archive also closes the sessions of the child.
 - Send the merge-main message to each child whose pull request or plan
-  touches a file that the merge changed. `gh pr view <n> --json files`
-  lists the files of a pull request. The `mergeCommit` is the commit
-  that the message names.
+  touches a file that the merge changed.
+  `gh pr view <n> --repo <owner/repo> --json files` lists the files of a
+  pull request. The `mergeCommit` is the commit that the message names.
 - In the report, name the follow-up items that the pull request adds.
   Its description lists them. The `finish-work` skill asks for this
   after each merge.
@@ -231,14 +283,17 @@ each other. Only the bottom pull request targets `main`.
 
 - Run the merge check when the report of the child gives the whole stack.
 - Merge from the bottom, one pull request at a time.
-- After each merge below the top, delete its branch, as "After the
-  merge" says. Send the stack message. Set `merge check`, and check the
-  next pull request in a later cycle.
-- Set `merged` and archive the child after the top pull request merges.
+- After each merge below the top, delete its branch, send the merge-main
+  messages, and name the follow-up items, as "After the merge" says. Send
+  the stack message. Set `merge check`, and check the next pull request
+  in a later cycle.
+- After the top pull request merges, the child gets "After the merge"
+  and `merged`, as "The state of a pull request" says.
 
 ## The archive
 
 - Archive a child after its merge, or when the user asks for it.
-- Do not archive a child at the stage `blocked`.
+- Do not archive a child at the stage `blocked` before its pull request
+  merges, unless the user asks for it.
 - An archived workspace stays restorable. Record each archive in the log
   of the board.

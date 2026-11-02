@@ -78,7 +78,7 @@ test_hooks_are_added_once() {
     "$(jq -r '.hooks.UserPromptSubmit[0].hooks[0].command' "$s")" "UserPromptSubmit command"
   assert_eq "true" "$(jq '.hooks.UserPromptSubmit[0].hooks[0].async' "$s")" "UserPromptSubmit async"
   for event in SessionStart UserPromptSubmit; do
-    assert_eq "[{\"type\":\"command\",\"command\":\"\\\"$clone/scripts/role-hook.sh\\\"\",\"timeout\":10}]" \
+    assert_eq "[{\"type\":\"command\",\"command\":\"\\\"$clone/scripts/role-hook.sh\\\" --futex-ai-skills-role-hook\",\"timeout\":10}]" \
       "$(jq -c --arg event "$event" --arg s role-hook.sh \
         '[.hooks[$event][].hooks[] | select(.command | contains($s))]' "$s")" "$event role hook"
   done
@@ -101,6 +101,59 @@ JSON
   assert_eq "1" "$(jq '.hooks.SessionStart | length' "$s")" "only foreign hook remains"
   assert_eq "echo hi" "$(jq -r '.hooks.SessionStart[0].hooks[0].command' "$s")" "foreign hook after uninstall"
   assert_eq "1" "$(jq -r .env.X "$s")" "env after uninstall"
+}
+
+test_hooks_keep_foreign_role_hooks() {
+  make_fixture "$1"
+  local s event foreign='"/opt/team/project/scripts/role-hook.sh"'
+  s="$(settings_file)"
+  mkdir -p "$HOME/.claude"
+  jq -n --arg cmd "$foreign" '{hooks: {
+    SessionStart: [{hooks: [{type: "command", command: $cmd}]}],
+    UserPromptSubmit: [{hooks: [{type: "command", command: $cmd}]}]
+  }}' > "$s"
+  install --hooks --quiet > /dev/null
+  for event in SessionStart UserPromptSubmit; do
+    assert_eq "3" "$(jq --arg event "$event" '.hooks[$event] | length' "$s")" "$event entries"
+    assert_eq "$foreign" "$(jq -r --arg event "$event" '.hooks[$event][0].hooks[0].command' "$s")" \
+      "$event foreign role hook kept"
+  done
+}
+
+test_uninstall_keeps_foreign_role_hooks() {
+  make_fixture "$1"
+  local s event foreign='"/opt/team/project/scripts/role-hook.sh"'
+  s="$(settings_file)"
+  install --hooks --quiet > /dev/null
+  jq --arg cmd "$foreign" '
+    .hooks.SessionStart[0].hooks += [{type: "command", command: $cmd}]
+    | .hooks.UserPromptSubmit[0].hooks += [{type: "command", command: $cmd}]
+  ' "$s" > "$1/settings.json"
+  mv "$1/settings.json" "$s"
+  install --uninstall > /dev/null
+  for event in SessionStart UserPromptSubmit; do
+    assert_eq "1" "$(jq --arg event "$event" '.hooks[$event] | length' "$s")" "$event foreign entry kept"
+    assert_eq "1" "$(jq --arg event "$event" '.hooks[$event][0].hooks | length' "$s")" "$event owned hooks removed"
+    assert_eq "$foreign" "$(jq -r --arg event "$event" '.hooks[$event][0].hooks[0].command' "$s")" \
+      "$event foreign role hook kept"
+  done
+}
+
+test_owned_role_hooks_stay_unique_after_reinstall_and_clone_change() {
+  make_fixture "$1"
+  local s event install_clone second_clone="$1/second clone"
+  s="$(settings_file)"
+  git_t clone -q "$remote" "$second_clone"
+  for install_clone in "$clone" "$clone" "$second_clone"; do
+    "$install_clone/scripts/install.sh" --hooks --quiet > /dev/null
+    for event in SessionStart UserPromptSubmit; do
+      assert_eq "2" "$(jq --arg event "$event" '.hooks[$event] | length' "$s")" "$event entries from $install_clone"
+      assert_eq "\"$install_clone/scripts/role-hook.sh\" --futex-ai-skills-role-hook" \
+        "$(jq -r --arg event "$event" \
+          '.hooks[$event][].hooks[] | select(.command | contains("--futex-ai-skills-role-hook")) | .command' "$s")" \
+        "$event single owned role hook from $install_clone"
+    done
+  done
 }
 
 test_hooks_skip_invalid_json() {

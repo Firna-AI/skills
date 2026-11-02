@@ -9,7 +9,7 @@ printed it.
 
 | Workspace | Repository | Name | Orchestrator | Last message | Branch or PR | Stage | Next action | Updated |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <workspace id, or "none" before the create> | <owner/repo> | <name> | <session id of the orchestrator> | <id of the last message that you sent to it> | <branch, or #n> | <stage> | <the last result of the reader, the retry when you sent one, and what the next cycle does> | <date> |
+| <workspace id, or "none" before the create> | <owner/repo> | <name> | <session id of the orchestrator> | <id of the last message that you sent to it> | <branch, or #n. For a stack: each #n that has not merged, bottom first.> | <stage> | <the last result of the reader, the retry when you sent one, and what the next cycle does> | <date> |
 
 Stages: `new`, `brainstorm`, `plan`, `implementing`, `merge check`,
 `merge queued`, `merged`, and `blocked`. The cycle reference of the skill
@@ -17,12 +17,13 @@ says what each stage means.
 
 ## Relayed items
 
-| Number | Child | Child's number | Source report | State |
+| Number | Child | Child's number | Version | State |
 | --- | --- | --- | --- | --- |
-| <your number> | <name of the child> | <the number of the child, or "own" for your own item> | <the message id that you gave the reader for the report, and the date> | <"open", "answered <letter> on <date>", "sent in <message id>", or "closed on <date>"> |
+| <your number> | <name of the child> | <the number of the child, or "own" for your own item> | <the version that the user saw: the date of the report, and its sentence on the change or "first"> | <"open", "open, answered <letter> before the change", "answered <letter> on <date>", "sent in <message id>", or "closed on <date>"> |
 
 Give a new item the next free number. Keep its number in each later
-report.
+report. When you give an item in full, save its text in
+`.context/coordinator/items/<number>.md`.
 
 ## User instructions
 

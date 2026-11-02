@@ -101,13 +101,15 @@ These go to the user, because you answer no item:
 - your own items: a block, a failed retry, a failed create, a repository
   that you cannot reach, a scope wider than the request, a merge that a
   check blocks, a merge error, and a pull request that the merge queue
-  removed.
+  removed or that closed without a merge.
 
 Give them in one numbered list per message, in the layout of the
 `decisions-and-findings` skill. Give each item the next free number of
 the board. Its **Source** line names the child and the child's own
-number. Keep the child's letters. Record each item on the board.
+number. Keep the child's letters. Record each item and its version on
+the board, as `references/cycle.md` says.
 
+Before you send an answer, compare its version, as the reference says.
 Send each answer to its child in the child's numbers, with the answers
 message of `templates/messages.md`. An approved plan gets the plan
 approval message. An item without an answer stays open, as "Open items"
@@ -119,7 +121,8 @@ Merge the pull request of a child into `main` when all of these hold:
 
 1. The final report of the child says that the implementation is
    complete under the `finish-work` skill, and that its review is done.
-2. Each required check passes, as `gh pr checks <n> --required` shows.
+2. Each required check passes, as
+   `gh pr checks <n> --repo <owner/repo> --required` shows.
 3. Each check that is not required passes, or fails on the latest run of
    `main` too.
 4. The pull request is not a draft, and GitHub can merge it.
@@ -137,11 +140,12 @@ option of an item can name a bypass only as a step that the user runs.
 
 Merge as `references/cycle.md` says. When the merge stops because the
 child pushed after your check, or because `main` moved, check again in
-the next cycle. Raise each other merge error as an item that quotes it. A merge queue can
-hold the pull request for some cycles, at the stage `merge queued`. When
-GitHub shows the state `MERGED`, delete the branch, and archive the
-child. Send the merge-main message to each child that changes the same
-files. Name the follow-up items that the pull request adds.
+the next cycle. Raise each other merge error as an item that quotes it.
+A merge queue can hold the pull request for some cycles, at the stage
+`merge queued`. When GitHub shows the state `MERGED`, delete the branch.
+Archive the child after its last pull request merges. Send the
+merge-main message to each child that changes the same files. Name the
+follow-up items that the pull request adds.
 
 ## A long session
 
