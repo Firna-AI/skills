@@ -47,6 +47,11 @@ with examples and take precedence when the two differ in detail:
   type domain, service, and interface code.
 - Types that cross to a TypeScript or JavaScript frontend are generated
   from the Rust types. See the `shared-types` skill.
+- When you replace a type, a format, or an API, move all code that uses
+  it to the new one. Do not add a converter so that old code keeps
+  working. A converter turns new data into the old type, or wraps a new
+  API in the old one. The `plans` skill says how a plan replaces an old
+  way.
 
 ## Files and modules
 

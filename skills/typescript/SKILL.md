@@ -51,6 +51,14 @@ layout.
 - Do not add a barrel file that re-exports modules to avoid updating
   imports. The one exception is a package's public entry point.
 - Define a value in its owner module and import it from there.
+- When you replace a type, a format, or an API, move all code that uses
+  it to the new one. Do not add a converter so that old code keeps
+  working. A converter turns new data into the old type, or wraps a new
+  API in the old one. The `plans` skill says how a plan replaces an old
+  way.
+- Give a component or a package the props, refs, and callbacks that other
+  code needs from it. Product code outside it does not find or change its
+  elements through selectors, class names, or globals.
 
 ## Tests
 

@@ -139,6 +139,24 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
   item, not as a line in the plan. The section "Follow-up items" says how.
 - An open finding blocks only dependent work, as the `delegating` skill says.
 
+## Replacing an old way
+
+Some changes put a new way in place of an old one: a data format, a type,
+an API, a data source, a backend, or a mechanism. A consumer is code, a
+test, or a doc that uses the old way. A converter is code that turns the
+new way into the old way, so that a consumer can stay as it is.
+
+- When the plan completes, every consumer in the repository uses the new
+  way. The old way and its converters are gone. Only a user decision can
+  keep a converter, for a consumer outside the repository.
+- List each old way and its consumers under `Replaced ways` in the plan.
+  Give each consumer a TODO that moves it. Give the old way a TODO that
+  deletes it.
+- Read [references/replacing-an-old-way.md](references/replacing-an-old-way.md)
+  before you write that list. It says what else the change deletes, when
+  a converter can stay for one milestone, and which consumers wait for the
+  user.
+
 ## Implementing a plan
 
 When the plan is approved, the orchestrator session of the workspace
@@ -193,9 +211,10 @@ plan that is already on `main` without the user's approval.
   add one line that names the file. Review reports go in the review folder
   of the branch, beside its findings file. The `implementation-review`
   skill gives the folder.
-- A plan keeps only its summary, milestones, TODOs, contracts, decisions,
-  design calls, user approvals, and short review summaries. Agents read the
-  whole plan, so logs in a plan slow every session.
+- A plan keeps only its summary, replaced ways, milestones, TODOs,
+  contracts, decisions, design calls, user approvals, and short review
+  summaries. Agents read the whole plan, so logs in a plan slow every
+  session.
 
 ## Live and history
 
