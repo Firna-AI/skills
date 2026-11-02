@@ -283,9 +283,9 @@ Depends on: 1, 2, 3, 4, 5
 
 The complete checks, the review, and the pull request.
 
-- [ ] Run `scripts/check.sh`, `tests/run.sh`, `shellcheck -x` on each
+- [x] Run `scripts/check.sh`, `tests/run.sh`, `shellcheck -x` on each
       changed script, and `git diff --check`. Commit, and push.
-- [ ] Review the diff against `origin/main` with the
+- [x] Review the diff against `origin/main` with the
       `implementation-review` skill. Fix the `fix now` findings, record
       follow-up items for the rest, re-review once, and report.
 - [ ] Delete this plan when "Deleting the plan" of `plans` says.
