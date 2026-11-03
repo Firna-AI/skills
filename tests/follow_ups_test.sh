@@ -17,7 +17,7 @@ write_item() {  # write_item <dir> <name> <title> <grades line> <kind line> [lin
 }
 
 test_lists_items_by_score_with_the_count() {
-  local plans="$1/plans" out expected
+  local plans="$1/plans" out expected scenario body
   write_item "$plans" typo "Typo in help text" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Fix after merge."
   write_item "$plans" retry "Retry loop has no limit" "- **Severity:** High. **Effort:** Medium. **Confidence:** High. **Harder later:** No." "- **Kind:** Needs decision."
   write_item "$plans" port "Port reuse in the harness" "- **Severity:** Medium. **Effort:** Large. **Confidence:** Medium. **Harder later:** No." "- **Kind:** Outside the scope."
@@ -29,16 +29,27 @@ test_lists_items_by_score_with_the_count() {
  3/10  Medium  $plans/follow-ups/port.md  Port reuse in the harness  [Outside the scope]
 open follow-up items: 4"
   assert_eq "$expected" "$out" "listing"
+  while IFS='|' read -r scenario body; do
+    write_item "$plans" typo "Typo in help text" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Fix after merge."
+    printf '%b\n' "$body" >> "$plans/follow-ups/typo.md"
+    out="$(follow_ups "$plans")"
+    assert_eq "$expected" "$out" "listing ignores $scenario"
+  done <<'EOF'
+body prose|\nThe example says **Depends on:** retry.md.
+body fenced block|\n```markdown\n- **Depends on:** retry.md\n```
+body Terms entry|\n- **Terms:**\n  - **Depends on:** retry.md is the item to fix first.
+first-list Terms entry|- **Terms:**\n  - **Depends on:** retry.md is the item to fix first.
+EOF
 }
 
 test_lists_the_links_of_an_item_under_it() {
-  local plans="$1/plans" out expected
+  local plans="$1/plans" out expected scenario links
   write_item "$plans" upload "Enable uploads" "- **Severity:** High. **Effort:** Medium. **Confidence:** High. **Harder later:** No." "- **Kind:** Post-merge task." "- **Depends on:** plans/follow-ups/alpha.md, [beta.md](./beta.md),
   \`gamma.md\`, alpha.md
   - beta.md
 - **Related:** ignored.md
   ignored-too.md
-- **Depends on:** ignored-again.md"
+- **Depends on:** alpha.md"
   write_item "$plans" alpha "First prerequisite" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Fix after merge."
   write_item "$plans" beta "Second prerequisite" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Fix after merge."
   write_item "$plans" gamma "Third prerequisite" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Fix after merge." '- **Depends on:** alpha.md.
@@ -56,6 +67,25 @@ test_lists_the_links_of_an_item_under_it() {
                needed by: upload.md
 open follow-up items: 4"
   assert_eq "$expected" "$out" "listing with dependencies"
+  write_item "$plans" gamma "Third prerequisite" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Fix after merge."
+  expected=" 7/10  High    $plans/follow-ups/upload.md  Enable uploads  [Post-merge task]
+               depends on: alpha.md
+ 4/10  Low     $plans/follow-ups/alpha.md  First prerequisite  [Fix after merge]
+               needed by: upload.md
+ 4/10  Low     $plans/follow-ups/beta.md  Second prerequisite  [Fix after merge]
+ 4/10  Low     $plans/follow-ups/gamma.md  Third prerequisite  [Fix after merge]
+open follow-up items: 4"
+  while IFS='|' read -r scenario links; do
+    write_item "$plans" upload "Enable uploads" "- **Severity:** High. **Effort:** Medium. **Confidence:** High. **Harder later:** No." "- **Kind:** Post-merge task." "$(printf '%b' "$links")"
+    out="$(follow_ups "$plans")"
+    assert_eq "$expected" "$out" "listing with $scenario"
+  done <<'EOF'
+bare label and wrapped name|- **Depends on:**\n  plans/follow-ups/alpha.md
+bare label and sub-list|- **Depends on:**\n  - plans/follow-ups/alpha.md
+tab-indented continuation|- **Depends on:** upload.md,\n\tplans/follow-ups/alpha.md
+wrapped Markdown target only|- **Depends on:** [beta.md](\n  ./alpha.md "gamma.md")
+repeated Depends on fields|- **Depends on:** upload.md\n- **Depends on:** alpha.md
+EOF
 }
 
 test_lists_the_whole_do_with_group_on_each_member() {
@@ -72,6 +102,18 @@ test_lists_the_whole_do_with_group_on_each_member() {
                do with: a.md, b.md
 open follow-up items: 3"
   assert_eq "$expected" "$out" "listing with the whole do-with group"
+  write_item "$plans" a "First item" "- **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Fix after merge." '- **Depends on:** b.md. **Do with:** c.md. **Related:** ignored.md.'
+  out="$(follow_ups "$plans")"
+  expected=" 6/10  Medium  $plans/follow-ups/a.md  First item  [Fix after merge]
+               depends on: b.md
+               do with: b.md, c.md
+ 6/10  Medium  $plans/follow-ups/b.md  Second item  [Fix after merge]
+               needed by: a.md
+               do with: a.md, c.md
+ 6/10  Medium  $plans/follow-ups/c.md  Third item  [Fix after merge]
+               do with: a.md, b.md
+open follow-up items: 3"
+  assert_eq "$expected" "$out" "listing with two link labels on one line"
 }
 
 test_marks_a_link_to_no_such_item() {

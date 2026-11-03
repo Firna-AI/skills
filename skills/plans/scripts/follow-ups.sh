@@ -5,7 +5,8 @@
 # Items with the same score list High severity first, then by path. A "?"
 # after a score marks a missing grade. The last line gives the number of
 # open items. Under each item, list dependencies, reverse links, the whole
-# do-with group, and names with no open item. Links do not change the order.
+# do-with group, and names with no open item. Read links from the first list
+# after the title. Links do not change the order.
 # Usage: follow-ups.sh [plans-dir]   (default: ./plans)
 set -euo pipefail
 dir="${1:-plans}"
@@ -42,7 +43,15 @@ score_item() {
     }
     # names(t): read bare file names from paths, Markdown links, or prose.
     # A name can end a sentence, as in "a.md.", so drop the trailing dots.
-    function names(t,   part, j, result) {
+    function names(t,   part, j, result, before, target) {
+      while (match(t, /\[[^]]*\]\([[:space:]]*[^[:space:])]+([[:space:]]+"[^"]*")?[[:space:]]*\)/)) {
+        before = substr(t, 1, RSTART - 1)
+        target = substr(t, RSTART, RLENGTH)
+        t = substr(t, RSTART + RLENGTH)
+        sub(/^\[[^]]*\]\([[:space:]]*/, "", target)
+        sub(/[[:space:])].*$/, "", target)
+        t = before " " target " " t
+      }
       gsub(/[^A-Za-z0-9._-]+/, " ", t)
       split(t, part, " ")
       for (j = 1; j in part; j++) {
@@ -51,21 +60,32 @@ score_item() {
       }
       return result
     }
-    BEGIN { split("Severity|Likelihood|Effort|Confidence|Harder later|Kind|Depends on|Do with", labels, "|") }
-    {  # a link label continues only on nonblank lines that start with a space
-      for (label in continued) {
-        if ($0 ~ /^ / && $0 !~ /^[[:space:]]*$/) text[label] = text[label] " " $0
-        else delete continued[label]
+    # Bold labels divide the text. Only link fields keep their text.
+    function link_fields(t,   label) {
+      while (match(t, /\*\*[^*]+:\*\*/)) {
+        if (field != "") text[field] = text[field] " " substr(t, 1, RSTART - 1)
+        label = substr(t, RSTART + 2, RLENGTH - 5)
+        t = substr(t, RSTART + RLENGTH)
+        field = (label == "Depends on" || label == "Do with") ? label : ""
       }
+      if (field != "") text[field] = text[field] " " t
     }
+    BEGIN { split("Severity|Likelihood|Effort|Confidence|Harder later|Kind", labels, "|") }
     !has_title && sub(/^# /, "") { title = $0; has_title = 1; next }
-    {  # keep the text after the first "**<label>:** " of each label
+    {
+      if (has_title && !list_done) {
+        if ($0 ~ /^- /) {
+          in_list = 1
+          field = ""
+          link_fields($0)
+        } else if (in_list && $0 ~ /^[[:space:]]*$/) list_done = 1
+        else if (in_list && field != "" && $0 ~ /^[ \t]/) link_fields($0)
+        else field = ""
+      }
+      # Keep the first match in the file for each grade label and Kind.
       for (i in labels) {
         at = index($0, "**" labels[i] ":** ")
-        if (at && !(labels[i] in text)) {
-          text[labels[i]] = substr($0, at + length(labels[i]) + 6)
-          if (labels[i] == "Depends on" || labels[i] == "Do with") continued[labels[i]] = 1
-        }
+        if (at && !(labels[i] in text)) text[labels[i]] = substr($0, at + length(labels[i]) + 6)
       }
     }
     END {

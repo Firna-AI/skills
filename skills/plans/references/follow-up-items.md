@@ -67,8 +67,10 @@ not have the plan, the review report, or the findings file.
     each link means.
   - Name each item by its path, as `plans/follow-ups/<name>.md`.
     `scripts/follow-ups.sh` also reads a bare file name or a Markdown
-    link. Separate the names with commas. Wrap a long line onto indented
-    lines, not into a list.
+    link. A Markdown link counts by its target only. Separate the names
+    with commas. Wrap a long line onto indented lines, not into a list.
+  - Keep the link lines in the first list of the item. The script reads
+    no link line after that list, so a label in the body adds no link.
   - The item layout of the `decisions-and-findings` skill gives each link
     a kind. "Work that waits for the answer" and "options that conflict"
     become **Depends on**, on the item that must wait. "The same cause",

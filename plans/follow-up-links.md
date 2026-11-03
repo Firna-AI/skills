@@ -9,15 +9,13 @@ and an agent takes "the next item" in that order. An item can say in its
 it together with another item. That line is prose. The script does not read
 it, and the rule for the next item ignores it.
 
-The change adds two optional lines to the first lines of an item. **Depends
-on** names the items to fix first. **Do with** names the items that one branch
-fixes together. `follow-ups.sh` prints the links of each item under its line,
-and the rules for the next item use them. The score and the order of the
-listing do not change.
+The change adds two optional lines to the first lines of an item: **Depends
+on** and **Do with**. `follow-ups.sh` prints the links under each item, and
+the rules for the next item use them. The score and the order do not change.
 
-The user adds the lines to the items of other repositories by hand. Two open
-items there propose to print the outcome of the **Action** line beside the
-kind: `follow-up-list-approval-state.md` in `mokly-ai/mokly` and
+The user adds the lines to the items of other repositories by hand. Open items
+there propose to print the outcome of the **Action** line beside the kind:
+`follow-up-list-approval-state.md` in `mokly-ai/mokly` and
 `follow-up-list-hides-item-choices.md` in `mokly-ai/mokly-cloud`. This plan
 does not change the line of an item, so it does not conflict with them.
 
@@ -153,6 +151,9 @@ The lines of an item:
 - 2026-11-03, Milestone 1: Commas separate the names. A long line wraps onto
   indented lines, not into a list. The script still reads an indented list,
   so that the reader is lenient.
+- 2026-11-03, review round 1: The script reads link lines only in the first
+  list of an item, so a label in the body adds no link. A bold label ends a
+  field, a repeated link line joins, and a Markdown link counts by its target.
 - 2026-11-03: The plan has no list of replaced ways. **Related** keeps the
   meaning of each link, and an item without the lines stays valid.
 
@@ -205,8 +206,7 @@ The rules:
   decision stays in **Related**. The branch that applies the answer writes
   the line, because a false link misleads more than no link.
 - 2026-11-03: `README.md` does not describe the listing, so it needs no
-  change. The plans `SKILL.md` has 225 lines, so it gets no new line, only
-  the words "with the links of each item" in its sentence about the listing.
+  change. The plans `SKILL.md` has 225 lines, so it gets words, not lines.
 
 The script and the tests:
 
