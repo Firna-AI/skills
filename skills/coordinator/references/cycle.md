@@ -175,7 +175,7 @@ variables.
 
 | Condition | Read it with |
 | --- | --- |
-| The state, the draft, the merge state, and the reviews | `gh pr view <n> --repo <owner/repo> --json state,mergeCommit,headRefName,isDraft,mergeable,mergeStateStatus,headRefOid,reviewDecision`. Read the state first, as "The state of a pull request" says. |
+| The state, the draft, and the merge state | `gh pr view <n> --repo <owner/repo> --json state,mergeCommit,headRefName,isDraft,mergeable,mergeStateStatus,headRefOid`. Read the state first, as "The state of a pull request" says. |
 | The final report | The last report of the child. The report also gives the merge method from `AGENTS.md`. |
 | The required checks | `gh pr checks <n> --repo <owner/repo> --required`. "no required checks reported" means that the branch has none. |
 | The other checks | `gh pr checks <n> --repo <owner/repo> --json name,bucket,workflow`. |
