@@ -20,11 +20,14 @@ fixes together. `follow-ups.sh` prints the links of each item under its line,
 and the rules for the next item use them. The score and the order of the
 listing do not change.
 
-Decision 2 asks how the items of other repositories get the lines. Two open
-items in other repositories propose to print the outcome of the **Action**
-line beside the kind: `follow-up-list-approval-state.md` in `mokly-ai/mokly`
-and `follow-up-list-hides-item-choices.md` in `mokly-ai/mokly-cloud`. This
-plan does not change the line of an item, so it does not conflict with them.
+The user adds the lines to the items of other repositories by hand. Two open
+items there propose to print the outcome of the **Action** line beside the
+kind: `follow-up-list-approval-state.md` in `mokly-ai/mokly` and
+`follow-up-list-hides-item-choices.md` in `mokly-ai/mokly-cloud`. This plan
+does not change the line of an item, so it does not conflict with them.
+
+The user answered both decisions on 2026-11-03 and asked for no change, so I
+took the answers as the approval of the plan.
 
 Contract owners:
 
@@ -35,7 +38,7 @@ Contract owners:
 
 ## Decision 1: Follow-up list ignores order and same-branch links
 
-- **Answer:** B, chosen by the user on 2026-11-03.
+- **Answer:** B, chosen by the user on 2026-11-03, and chosen again on the same day after the options check added E and F.
 - **Severity:** Medium. **Effort:** Medium.
 - **Source:** Design.
 - **Category:** Process.
@@ -83,10 +86,11 @@ The options share these assumptions:
   links that the script finds alone drop it.
 - Each link is optional. Source: the request.
 - The change edits only this repository. Source: my design call of
-  2026-11-02. Decision 2 asks about it.
+  2026-11-02. Decision 2 keeps it.
 
 ## Decision 2: Existing links stay prose in other repositories
 
+- **Answer:** the user does the migration by hand, on 2026-11-03: "I will do the migration manually don't worry about it". The plan adds no task and no rule for it. This is closest to A.
 - **Severity:** Medium. **Effort:** Small.
 - **Source:** Design.
 - **Category:** Process.
@@ -130,8 +134,7 @@ The options share these assumptions:
 - Each change of a shared layout decides its migration again. Source: the
   earlier layout changes. F drops it.
 
-The options check of 2026-11-03 added D, E, and F, wrote the new root
-question, and kept B.
+The options check of 2026-11-03 added D, E, and F, and kept B.
 
 ## Design
 
@@ -231,9 +234,8 @@ The script and the tests:
 
 Depends on: none
 
-The `docs implementor` adds the two lines to the template and states their
-rules and the listing in the reference. An agent can already write and read
-the lines. The script follows in Milestone 2.
+The `docs implementor` adds the two lines to the template, and states their
+rules and the listing in the reference. The script follows in Milestone 2.
 
 - [ ] `skills/plans/templates/follow-up.md`: add the optional
       `**Depends on:**` and `**Do with:**` lines after **Reason**. Each
@@ -260,8 +262,7 @@ the lines. The script follows in Milestone 2.
 
 Depends on: 1
 
-The `non-ui implementor` makes `follow-ups.sh` print the links under each
-item.
+The `non-ui implementor` makes `follow-ups.sh` print the links.
 
 - [ ] Add the three tests of the design to `tests/follow_ups_test.sh`. Run
       them against the current script, and see each fail on an assertion.
