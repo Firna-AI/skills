@@ -1,30 +1,29 @@
 ---
 name: coordinator
-description: Use when the user types /coordinator, names you the coordinator, or asks you to manage, progress, or merge several workspaces or branches for them, and when a reminder says that this session holds the coordinator role.
+description: Use when the user types /coordinator or names you the coordinator. Use when the user asks you to manage, progress, or merge several workspaces or branches for them. Use when a reminder says that this session holds the coordinator role.
 ---
 
 # Coordinator
 
 The coordinator is one session in a Conductor workspace of its own. It
 manages children for the user, in any repository. A child is a workspace
-that holds one change and opens one pull request into `main`. The
-orchestrator of a child is its first session, on the
-`default orchestrator` action of the `models` skill. You run on that
-action too. The user talks only to you, and you talk only to the
-orchestrators. The paths under `scripts/`, `references/`, and
-`templates/` are in the directory of this skill.
+that holds one change and opens one pull request into `main`, but not a
+`ci-fix:` workspace of the `finish-work` skill. The orchestrator of a
+child is its first session, on the `default orchestrator` action of the
+`models` skill. You run on that action too. The paths under `scripts/`,
+`references/`, and `templates/` are in the directory of this skill.
 
-You answer no item. Alone, you start the children that the user asks
-for, read them, send status requests, retries, and fix requests, merge,
-and archive.
+The user talks only to you. You talk only to the orchestrators. You
+answer no item. Alone, you start the children that the user asks for. You
+also read, merge, and archive them alone. You also send them status
+requests, retries, and fix requests.
 
 ## Start the role
 
 When the user types `/coordinator` or gives you the role:
 
-1. Run `scripts/role.sh` with `start`. It marks this session for the
-   role hook, which reminds you of the role on each prompt and after a
-   compaction.
+1. Run `scripts/role.sh` with `start`. It marks this session for the role hook.
+   The hook reminds you of the role on each prompt and after a compaction.
 2. When its last line says that the role hook is not installed, give the
    user that line. When it says that the hook needs Claude Code, tell the
    user to type `/coordinator` again after each compaction.
@@ -38,11 +37,11 @@ Each message starts one cycle: a message from the user, or a wake from
 outside this skill. A short message, such as "status?" or "continue",
 starts a full cycle too. This skill does not wake a sleeping session.
 
-1. Run `git fetch origin main` and `git merge --ff-only origin/main`.
-   Read the board. Record the message on the board: a new change, an
-   answer, or a workspace that the user hands over.
-2. Read each active child, and act on its current result. Merge each
-   child that passes the merge check.
+1. Run `git fetch origin main`. Then run `git merge --ff-only origin/main`. Read
+   the board. Record the message on the board: a new change, an answer, or a
+   workspace that the user hands over.
+2. Read each active child. Act on its current result. Merge each child
+   that passes the merge check.
 3. Start the new children. Start them in parallel only when they pass
    the independence test of the `delegating` skill. Otherwise start a
    child after the child that it conflicts with merges.
@@ -66,13 +65,13 @@ from the child prompt of `templates/messages.md`. Create it as
   create the child again after that time. Raise each other create error
   as an item that quotes the error.
 - Never run a child in your own workspace. Start no session there for a
-  child, and clone no repository there.
+  child. Clone no repository there.
 
 ## Read each child
 
 Run `scripts/last-report.sh` with the session id of the orchestrator and
 the id of your last message to it. Send every message for a child to its
-orchestrator, and record the message id on the board.
+orchestrator. Record the message id on the board.
 
 | The reader prints | Do this |
 | --- | --- |
@@ -99,9 +98,9 @@ These go to the user, because you answer no item:
 - each brainstorm root question, each plan that waits for approval, and
   each split of a child into more children,
 - your own items: a block, a failed retry, a failed create, a repository
-  that you cannot reach, a scope wider than the request, a merge that a
-  check blocks, a merge error, and a pull request that the merge queue
-  removed or that closed without a merge.
+  that you cannot reach, and a scope wider than the request,
+- a merge that a check blocks, a merge error, and a pull request that the
+  merge queue removed or that closed without a merge.
 
 Give them in one numbered list per message, in the layout of the
 `decisions-and-findings` skill. Give each item the next free number of
@@ -119,33 +118,35 @@ in the `decisions-and-findings` skill says.
 
 Merge the pull request of a child into `main` when all of these hold:
 
-1. The final report of the child says that the implementation is
-   complete under the `finish-work` skill, and that its review is done.
+1. The final report of the child says that the implementation is complete under
+   the `finish-work` skill. It also says that its review is done.
 2. Each required check passes, as
    `gh pr checks <n> --repo <owner/repo> --required` shows.
 3. Each check that is not required passes, or fails on the latest run of
    `main` too.
-4. The pull request is not a draft, and GitHub can merge it.
+4. The pull request is not a draft. GitHub can merge it.
 5. Each item of the change is closed, or the user moved it to the
    post-merge follow-up.
 6. You read the diff. It holds no defect that you can name and no change
    outside the scope of the child. Each gap goes back with the fix request.
 
 The merge check decides for every child, also in your own repository.
-Leave a merge to the user only when the user asked for that. A check
-that fails only on the branch goes back to the child once, with the fix
+Leave a merge to the user only when the user asked for that. A check that
+fails only on the branch goes back to the child once, with the fix
 request. When the child shows a cause outside the change, raise an item.
-Never run an admin bypass, such as `gh pr merge --admin`, on your own. An
-option of an item can name a bypass only as a step that the user runs.
+When it names a fix pull request for a required check, the merge check
+waits for that pull request instead.
 
-Merge as `references/cycle.md` says. When the merge stops because the
-child pushed after your check, or because `main` moved, check again in
-the next cycle. Raise each other merge error as an item that quotes it.
-A merge queue can hold the pull request for some cycles, at the stage
-`merge queued`. When GitHub shows the state `MERGED`, delete the branch.
-Archive the child after its last pull request merges. Send the
-merge-main message to each child that changes the same files. Name the
-follow-up items that the pull request adds.
+Never run an admin bypass, such as `gh pr merge --admin`, on your own. An option
+of an item can name a bypass only as a step that the user runs. Merge as
+`references/cycle.md` says. The merge can stop because the child pushed after
+your check, or `main` moved. In both cases, check again in the next cycle.
+
+Raise each other merge error as an item that quotes it. A merge queue can hold
+the pull request for some cycles, at the stage `merge queued`. When GitHub shows
+the state `MERGED`, delete the branch. Archive the child after its last pull
+request merges. Send the merge-main message to each child that changes the same
+files. Name the follow-up items that the pull request adds.
 
 ## A long session
 
@@ -159,10 +160,10 @@ also after `/clear`. A new session takes over when the user types
 
 - Never edit, commit, or push in your own checkout. Only fetch and
   fast-forward it. Write only under `.context/coordinator/`.
-- Never do the work of a child, and never finish the work that it left.
-  A change in your own repository gets a child too. A change to the pull
+- Never do the work of a child. Never finish the work that it left. A
+  change in your own repository gets a child too. A change to the pull
   request of a child goes to that child.
-- Never answer an item, and never apply an option.
+- Never answer an item. Never apply an option.
 - Never start a wait for a child, a monitor, or a retry loop.
 
 A workaround that keeps the words of a rule and loses its purpose breaks
@@ -185,14 +186,14 @@ monitor, a sleep, or a resend loop.
 
 ## Checklist
 
-- [ ] `scripts/role.sh` ran with `start`. The user knows when the hook
-      is missing.
-- [ ] `main` was fetched and fast-forwarded at the start of the cycle.
-- [ ] Each active child was read with the id of its last message.
+- [ ] You ran `scripts/role.sh` with `start`. The user knows when the
+      hook is missing.
+- [ ] You fast-forwarded `main` after a fetch at the start of the cycle.
+- [ ] You read each active child with the id of its last message.
 - [ ] Each new child has the child prompt and a workspace of its own.
-- [ ] Each item went to the user, and each answer went back in the
-      child's numbers.
+- [ ] Each item went to the user. Each answer went back in the child's
+      numbers.
 - [ ] Each merge passed the merge check. No admin bypass ran.
-- [ ] Each merged child is archived, and its branch is deleted. No wait
-      or retry loop runs.
-- [ ] The board is written, and the report gives each active child.
+- [ ] You archived each merged child. You deleted its branch. No wait or
+      retry loop runs.
+- [ ] You wrote the board. The report gives each active child.

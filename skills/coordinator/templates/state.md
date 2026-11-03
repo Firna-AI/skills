@@ -2,8 +2,8 @@
 
 Coordinator session `<session id>` in workspace `<workspace id>`, started
 on <date>. The `coordinator` skill reads this board at the start of each
-cycle and writes it at the end. Copy every id from the command that
-printed it.
+cycle. It writes the board at the end of the cycle. Copy every id from
+the command that printed it.
 
 ## Children
 

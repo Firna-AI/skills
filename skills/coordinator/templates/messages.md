@@ -1,14 +1,14 @@
 # Messages to children
 
-Fill each `<slot>`, and delete the lines that do not apply. Write each
-message to a file under `.context/coordinator/messages/`, and send it to
-the orchestrator of the child, as the cycle reference of the skill says.
+Fill each `<slot>`. Delete the lines that do not apply. Write each
+message to a file under `.context/coordinator/messages/`. Send it to the
+orchestrator of the child, as the cycle reference of the skill says.
 Record the id of each message on the board.
 
 A message that starts a workspace or a session has the six fields of the
 `delegating` skill: Scope, Goal, Context, Steps, Constraints, and Output.
 The child prompt, the new orchestrator prompt, and the handover message
-start one. The other messages continue a request, so they need no fields.
+start one. The other messages continue a request. So they need no fields.
 
 ## Child prompt
 
@@ -18,8 +18,8 @@ The first message of a new child.
     areas, when the request of the user names them.>
 
     Goal: a pull request into `main` that <the result that the user asked
-    for>. Its checks pass and its post-push review is done. The pull
-    request stays open. The coordinator merges it.
+    for>. Its checks pass. Its post-push review is done. The pull request
+    stays open. The coordinator merges it.
 
     Context:
     - The user asked for this change: "<the words of the user>".
@@ -37,16 +37,15 @@ The first message of a new child.
 
     Steps:
     1. When no line above chooses the approach, brainstorm with the
-       `brainstorming` skill. Report the root questions, and wait for the
+       `brainstorming` skill. Report the root questions. Wait for the
        answers.
-    2. Write the plan with the `plans` skill. Commit it, push the branch,
-       and report. Wait for the approval of the plan.
+    2. Write the plan with the `plans` skill. Commit it. Push the branch.
+       Then report. Wait for the approval of the plan.
     3. Implement the plan by delegation, as the `plans` skill says.
-    4. Run the checks and the review that the `finish-work` skill
-       requires. Commit and push.
+    4. Run the checks that the `finish-work` skill requires. Also run the
+       review that it requires. Commit your changes. Push the branch.
     5. Open a pull request into `main` with `gh pr create --base main`.
-    6. Wait for the CI checks of the pull request, and report their
-       result.
+    6. Wait for the CI checks of the pull request. Report their result.
 
     Constraints:
     - Do not merge your pull request. The coordinator merges it.
@@ -54,7 +53,7 @@ The first message of a new child.
       `decisions-and-findings` skill. Keep the numbers and the letters of
       your items in later reports.
     - Change only <the scope>. When the work needs a change outside the
-      scope, stop and report it.
+      scope, stop the work. Report the change that it needs.
 
     Output, in your final message, in the final-report layout of the
     `decisions-and-findings` skill:
@@ -63,7 +62,8 @@ The first message of a new child.
     - The checks that ran, and the CI result of each check of the pull
       request.
     - Whether the implementation is complete under the `finish-work`
-      skill, and whether its review is done.
+      skill.
+    - Whether its review is done.
     - The items that need the user, each with its number and its lettered
       options.
     - The merge method that `AGENTS.md` names, or "none".
@@ -120,10 +120,11 @@ For a request that ended without a final report or a question, and for
 
     Status request from the coordinator. When the work of your last
     request is not complete, finish it first. Then report in the
-    final-report layout of the `decisions-and-findings` skill. Give the
-    branch, the plan file, and the pull request. Say what is done and what
-    is open. List each item that needs the user, in your own numbers. Name
-    every blocker.
+    final-report layout of the `decisions-and-findings` skill.
+
+    Give the branch, the plan file, and the pull request. Say what is
+    done and what is open. List each item that needs the user, in your
+    own numbers. Name every blocker.
 
 ## Retry message
 
@@ -144,7 +145,7 @@ child.
     - Item <number of the child>: <letter>.
 
     Apply each answered option. Items <numbers> still wait for the user.
-    Apply no option for them. Continue the work, and report in the
+    Apply no option for them. Continue the work. Report in the
     final-report layout when it is done or when an item needs the user.
 
 ## Plan approval message
@@ -154,9 +155,11 @@ After the user approves the plan of a child.
     The user approved the plan `<plan file>` on the branch `<branch>` on
     <date>. <The changes that the user asked for, in the words of the
     user.> Implement the plan by delegation, as the `plans` skill says.
-    Run the checks and the review that the `finish-work` skill requires.
-    Open the pull request into `main`, and wait for its CI checks. Report
-    in the final-report layout. Do not merge your pull request.
+
+    Run the checks that the `finish-work` skill requires. Also run the
+    review that it requires. Open the pull request into `main`. Wait for
+    its CI checks. Report in the final-report layout. Do not merge your
+    pull request.
 
 ## Fix request
 
@@ -174,23 +177,25 @@ The gaps of the merge check, one block for each gap.
     cause with its evidence, for example the run of the same check on
     `main`.
 
-    Run the checks and the review that the `finish-work` skill requires.
-    Commit and push. Wait for the CI checks, and report in the
-    final-report layout. Do not merge the pull request.
+    Run the checks that the `finish-work` skill requires. Also run the
+    review that it requires. Commit your changes. Push the branch.
+
+    Wait for the CI checks. Report in the final-report layout. Do not
+    merge the pull request.
 
 ## Merge-main message
 
 After a merge that changes a file of another child.
 
-    `main` moved under your branch: <owner/repo>#<n> merged as <commit>,
-    and it changed <files>. Merge `origin/main` into your branch with the
-    `git-merge` skill. Run the checks, push, and report in the
-    final-report layout. Do not start other work.
+    `main` moved under your branch: <owner/repo>#<n> merged as <commit>
+    with changes to <files>. Merge `origin/main` into your branch with
+    the `git-merge` skill. Run the checks. Push the merge. Then report in
+    the final-report layout. Do not start other work.
 
 ## Stack message
 
 After each merge below the top of a stack.
 
     Pull request #<n> of your stack merged as <commit>. Run
-    `gh stack sync`, and report the next pull request of the stack. Do no
+    `gh stack sync`. Report the next pull request of the stack. Do no
     other work.
