@@ -177,11 +177,19 @@ action. The `delegating` skill gives its route.
   must be completable on the branch before the PR merges, or by the merge
   itself. Never add a required TODO that depends on the PR already being
   merged.
-- Put post-merge work, including smoke tests that need the merged or
-  deployed change, in a `## Post-merge follow-up (non-blocking)` section
-  outside the milestones. It does not affect completion. When the change
-  deletes the plan, each unchecked task becomes a follow-up item.
+- Put post-merge work in a `## Post-merge follow-up (non-blocking)`
+  section outside the milestones. Post-merge work changes something after
+  the merge, such as a deploy, a release step, or an operator step. It
+  does not affect completion. When the change deletes the plan, each
+  unchecked task becomes a follow-up item.
 - Keep smoke tests that can run before merge as required milestone TODOs.
+- When a check of the change cannot run before the merge, do not record
+  it. A check only tests the change, as a smoke test, a proof run, or a
+  review of the first real use does. It cannot run when it needs
+  something that the agent cannot get before the merge, such as a
+  deploy, a real event, a device, or an outside account. The final
+  report and the pull request description name it as a check that could
+  not run, with what it needs. It gets no TODO and no follow-up item.
 - When the pull request opens before the work is complete, replace the
   branch sentence with `[PR #<number>](<url>) is open.`
 

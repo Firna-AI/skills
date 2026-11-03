@@ -79,5 +79,6 @@ Depends on: every other milestone
 
 ## Post-merge follow-up (non-blocking)
 
-- [ ] <Smoke test or task that needs the merged or deployed change. It
-      becomes a follow-up item when the plan is deleted.>
+- [ ] <Work that needs the merged or deployed change, such as a deploy or
+      a release step. It becomes a follow-up item when the plan is
+      deleted. A check that cannot run before the merge does not go here.>
