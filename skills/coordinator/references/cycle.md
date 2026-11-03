@@ -175,7 +175,7 @@ variables.
 
 | Condition | Read it with |
 | --- | --- |
-| The state, the draft, and the merge state | `gh pr view <n> --repo <owner/repo> --json state,mergeCommit,headRefName,isDraft,mergeable,mergeStateStatus,headRefOid`. Read the state first, as "The state of a pull request" says. |
+| The state, the draft, the merge state, and the reviews | `gh pr view <n> --repo <owner/repo> --json state,mergeCommit,headRefName,isDraft,mergeable,mergeStateStatus,headRefOid,reviewDecision`. Read the state first, as "The state of a pull request" says. |
 | The final report | The last report of the child. The report also gives the merge method from `AGENTS.md`. |
 | The required checks | `gh pr checks <n> --repo <owner/repo> --required`. "no required checks reported" means that the branch has none. |
 | The other checks | `gh pr checks <n> --repo <owner/repo> --json name,bucket,workflow`. |
@@ -192,10 +192,10 @@ workflow, the check did not fail on `main`.
 | A check that still runs, or the merge state `UNKNOWN` | Nothing in this cycle. |
 | A report that does not say complete and reviewed, or a draft | Send the fix request. |
 | A defect in the diff, or a file outside the scope of the child | Send the fix request, with the line and the fact that shows the defect. |
-| A required check that fails for a cause outside the change, and an open fix pull request for it that the child names | The merge check waits for the fix pull request. Name the fix pull request under **Open**. While it is open, no other row on a failed check or on the merge state `BLOCKED` applies to this check. So raise no item for the check in that time. |
+| A required check that fails for a cause outside the change, and an open or merged fix pull request for it that the child names | The merge check waits for the fix pull request. Name the fix pull request under **Open**. While it is open, raise no item for this failure. Apply the other rows to other blockers. When it merges, send the merge-main message once, in place of the other rows for this failure. The next report of the child gets those rows. |
 | A check that fails only on the branch | Send the fix request once. When the child shows a cause outside the change, in a report or after the fix request, raise an item. |
 | A check that is not required and fails on `main` too | The condition holds. Name the check in the report. |
-| A required check that fails on `main` too, or the merge state `BLOCKED` with no check that runs | Raise an item. |
+| A required check that fails on `main` too, or the merge state `BLOCKED` with no check that runs | Raise an item unless the fix row currently handles this blocker. It handles only its named CI failure. |
 | The merge state `DIRTY` or `BEHIND` | Send the merge-main message. |
 | An open item of the change | Wait for the answer of the user. |
 
