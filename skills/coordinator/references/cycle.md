@@ -18,7 +18,7 @@ conductor --json workspace create --project-id <id> --branch main \
 - Take the agent, the model, and the effort from the
   `default orchestrator` action of the `models` skill. When the user
   named an agent or a model for this change, use it. Say so in the child
-  prompt, and record it under the user instructions of the board.
+  prompt. Record it under the user instructions of the board.
 - The command prints `workspaceId`, `sessionId`, and
   `initialMessage.messageId`. Record the three ids on the board, at the
   stage `new`.
@@ -40,11 +40,11 @@ conductor --json message create --session <orchestrator> \
 ## Read a result
 
 - The reader is `scripts/last-report.sh <session-id> <message-id>`. It
-  reads the session status and the whole transcript, so run it at any
+  reads the session status and the whole transcript. So run it at any
   status.
 - The reader reads the latest request, also one that the user typed in
   the child. So a newer report can come for the same message id. Read
-  each active child in each cycle, and act on its current result.
+  each active child in each cycle. Act on its current result.
 - The board stops a second action with three records: the stage of the
   child, each relayed item, and the retry record. The record of an item
   holds its state and its version. The retry record is in the next
@@ -54,9 +54,9 @@ conductor --json message create --session <orchestrator> \
 - The merge check runs again on the same final report in each cycle,
   until it passes, or until the pull request merged or closed. That is
   not a second action.
-- When the report of a child says that the user answered one of its
-  items there, mark that item closed on the board. Do not send the
-  answer again.
+- The report of a child can say that the user answered one of its items
+  there. Then mark that item closed on the board. Do not send the answer
+  again.
 - A final report has the labels of the final-report layout, such as
   **Changed**, **Decisions**, **Checks**, and **Open**. A question has
   numbered items with lettered options. Any other text is progress text.
@@ -65,9 +65,9 @@ conductor --json message create --session <orchestrator> \
   **Open**.
 - The `Updated` field of `conductor session status` is not the time of
   the last event. The age in the result of the reader is.
-- A `waiting:` result from a workspace that slept is stale, because the
-  agent sends no task list when it starts again. The same tasks on the
-  board from the last cycle show it.
+- A `waiting:` result from a workspace that slept is stale. The agent
+  sends no task list when it starts again. The same tasks on the board
+  from the last cycle show that the result is stale.
 
 ## Relayed items
 
@@ -86,18 +86,19 @@ When you give an item in full, save its text in
 text. After a compaction, a re-print reads the item there.
 
 The child gives a newer version when its report gives the item with a
-sentence on the change that the board does not hold, or when a field that
-"Open items" names differs from the saved text. An answered item that the
-child asks again is a newer version too. Give the item in full
-again, with the sentence on the change, and record the new version. The
-item is open again, also when the user answered it. The same holds when
-you change one of your own items.
+sentence on the change that the board does not hold. The child also gives
+one when a field that "Open items" names differs from the saved text. An
+answered item that the child asks again is a newer version too.
+
+Give the item in full again, with the sentence on the change. Record the
+new version. The item is open again, also when the user answered it. The
+same holds when you change one of your own items.
 
 Before you send an answer, compare the version on the board with the
 current report of the child. Make this comparison before you record a
 newer version. When the item changed after the version that the user
 answered, send nothing for it. Set its state to "open, answered <letter>
-before the change". Give the changed item in full, and ask the user to
+before the change". Give the changed item in full. Ask the user to
 confirm the answer or to choose again.
 
 ## Stages
@@ -114,25 +115,25 @@ child to a later stage. Otherwise the board handled it.
 
 | Stage | The child | On a new final report or question | On a result that the board handled |
 | --- | --- | --- | --- |
-| `new` | works on its first report | Root questions of a brainstorm: relay them, and set `brainstorm`. A pushed plan that waits for approval: relay it, and set `plan`. An open pull request: set `merge check`. | Nothing. |
-| `brainstorm` | waits for the answers to its root questions | A pushed plan that waits for approval: relay it, and set `plan`. An open pull request: set `merge check`. | Send the answers message when the user answers. Otherwise nothing. |
-| `plan` | waits for the approval of its plan | A report that the user approved the plan in the child: set `implementing`. An open pull request: set `merge check`. | When the user approves, send the plan approval message, and set `implementing`. When the user asks for changes, send them with the answers message. Otherwise nothing. |
+| `new` | works on its first report | Root questions of a brainstorm: relay them. Then set `brainstorm`. A pushed plan that waits for approval: relay it. Then set `plan`. An open pull request: set `merge check`. | Nothing. |
+| `brainstorm` | waits for the answers to its root questions | A pushed plan that waits for approval: relay it. Then set `plan`. An open pull request: set `merge check`. | Send the answers message when the user answers. Otherwise nothing. |
+| `plan` | waits for the approval of its plan | A report that the user approved the plan in the child: set `implementing`. An open pull request: set `merge check`. | When the user approves, send the plan approval message. Then set `implementing`. When the user asks for changes, send them with the answers message. Otherwise nothing. |
 | `implementing` | implements the plan, reviews it, and opens the pull request | A report with an open pull request: set `merge check`. | Nothing. |
-| `merge check` | has an open pull request | Run the merge check. When it passes, merge, as "Merge and after" says. | The same: run the merge check again, and merge when it passes. |
+| `merge check` | has an open pull request | Run the merge check. When it passes, merge, as "Merge and after" says. | The same: run the merge check again. Merge when it passes. |
 | `merge queued` | has its pull request in the merge queue of GitHub | Read the pull request, as "A queued merge" says. | Read the pull request again, as "A queued merge" says. |
 | `merged` | is merged and archived | Nothing. Drop the line one week after the merge. | Nothing. |
 | `blocked` | waits for an item of the user, or for another child to merge | Check whether the blocker is gone. Then set the stage that the work needs. | The same. |
 
 Relay a plan that waits for approval as one item. Its **Location** is the
-plan file and the branch. Its options are: A, approve the plan. B,
-approve it with the changes that the user names. C, stop the change.
+plan file and the branch. Option A approves the plan. Option B approves
+it with the changes that the user names. Option C stops the change.
 
 ## Errors and retries
 
 - A refusal, a usage limit, an input limit, and a missing or revoked
   credential are blocks, as the `delegating` skill says. Raise the item
-  at once, with no retry. Quote the error, and give its reset time when
-  it has one. Only the user can override the action of the child.
+  at once, with no retry. Quote the error. Give its reset time when it
+  has one. Only the user can override the action of the child.
 - A session is lost when its error says that its thread or its session
   is gone, such as "thread not found". Start one session in the workspace
   of the child with `conductor session create --workspace <id>`, the
@@ -140,7 +141,7 @@ approve it with the changes that the user names. C, stop the change.
   its id as the orchestrator.
 - Cancel a stalled session with `conductor session cancel <id>`. Then
   send the retry message in the same cycle. After a cancel, the
-  transcript keeps the running state, so the reader prints
+  transcript keeps the running state. So the reader prints
   `pending: working` for up to 30 minutes.
 - Send the retry message once for each other error.
 - After the one retry, a new error or a request without a final report or
@@ -157,20 +158,20 @@ holds its number. The stage `merged` needs no read. The merge check and
 as `blocked`, read it with the `gh pr view` query of "Merge and after".
 
 Read the merge fields, `mergeable` and `mergeStateStatus`, only when the
-state is `OPEN`. A merged pull request reads `UNKNOWN` there, and a
-closed one can read `CLEAN`.
+state is `OPEN`. A merged pull request reads `UNKNOWN` there. A closed
+one can read `CLEAN`.
 
 | The state | Do this |
 | --- | --- |
 | `OPEN` | Act by the stage. |
 | `MERGED`, below the top of a stack | Act as "A stack of pull requests" says. |
-| `MERGED`, any other pull request | Act as "After the merge" says, and set `merged`. |
-| `CLOSED` | Someone closed the pull request without a merge. Raise one item, and set `blocked`. |
+| `MERGED`, any other pull request | Act as "After the merge" says. Then set `merged`. |
+| `CLOSED` | Someone closed the pull request without a merge. Raise one item. Then set `blocked`. |
 
 ## The merge check
 
-`<owner/repo>` comes from the board, and `gh api` takes it in its path or
-its variables.
+`<owner/repo>` comes from the board. `gh api` takes it in its path or its
+variables.
 
 | Condition | Read it with |
 | --- | --- |
@@ -191,6 +192,7 @@ workflow, the check did not fail on `main`.
 | A check that still runs, or the merge state `UNKNOWN` | Nothing in this cycle. |
 | A report that does not say complete and reviewed, or a draft | Send the fix request. |
 | A defect in the diff, or a file outside the scope of the child | Send the fix request, with the line and the fact that shows the defect. |
+| A required check that fails for a cause outside the change, and an open fix pull request for it that the child names | The merge check waits for the fix pull request. Name the fix pull request under **Open**. While it is open, no other row on a failed check or on the merge state `BLOCKED` applies to this check. So raise no item for the check in that time. |
 | A check that fails only on the branch | Send the fix request once. When the child shows a cause outside the change, in a report or after the fix request, raise an item. |
 | A check that is not required and fails on `main` too | The condition holds. Name the check in the report. |
 | A required check that fails on `main` too, or the merge state `BLOCKED` with no check that runs | Raise an item. |
@@ -206,7 +208,7 @@ gh pr view <n> --repo <owner/repo> --json state,mergeCommit,headRefName
 
 - Use the merge method that the `AGENTS.md` of the repository names, or
   `--squash`. Do not add `--delete-branch`. In a repository with a merge
-  queue, `gh` refuses that flag, and sends no merge.
+  queue, `gh` refuses that flag. So it sends no merge.
 - `--match-head-commit` stops the merge when the child pushed after your
   check. A refusal that names a merge state, such as `BEHIND`, `DIRTY`,
   or `BLOCKED`, means that `main` moved. In both cases, check again in
@@ -214,9 +216,9 @@ gh pr view <n> --repo <owner/repo> --json state,mergeCommit,headRefName
 - Raise each other error of the merge command as an item that quotes
   the error. Examples are a ruleset error and a permission error.
 - After the merge command, read the state with the `gh pr view` query
-  above. On `OPEN`, GitHub queued the pull request. Set `merge queued`,
-  and read it again in the next cycle. Act on `MERGED` and `CLOSED` as
-  "The state of a pull request" says.
+  above. On `OPEN`, GitHub queued the pull request. Set `merge queued`.
+  Read the pull request again in the next cycle. Act on `MERGED` and
+  `CLOSED` as "The state of a pull request" says.
 
 ### A queued merge
 
@@ -231,7 +233,7 @@ gh api graphql -f query='query($o:String!,$r:String!,$n:Int!){repository(owner:$
 | --- | --- |
 | `MERGED` or `CLOSED` | Act as "The state of a pull request" says. On `MERGED`, first run the `gh pr view` query of "Merge and after". It gives `mergeCommit` and `headRefName`. |
 | `OPEN`, and `isInMergeQueue` is true | Nothing in this cycle. |
-| `OPEN`, `isInMergeQueue` false, and a removal event after your merge command | The queue removed the pull request. Set `merge check`, and run the merge check. When it passes, raise an item that quotes GitHub's reason, and do not merge. The open item stops the merge until the user answers. So the pull request does not go back into the queue in each cycle. |
+| `OPEN`, `isInMergeQueue` false, and a removal event after your merge command | The queue removed the pull request. Set `merge check`. Run the merge check. When it passes, raise an item that quotes GitHub's reason. Do not merge until the user answers that item. So the pull request does not go back into the queue in each cycle. |
 | `OPEN`, `isInMergeQueue` false, and no such removal event | GitHub waits to add the pull request to the queue. Nothing in this cycle. |
 
 The last removal event of the pull request gives GitHub's reason, such
@@ -266,8 +268,8 @@ conductor workspace archive <workspaceId>
    repository and its name from `conductor --json workspace get <id>`.
 2. Take the orchestrator session that the user names. When the user names
    none, take the first session that `conductor workspace session <id>`
-   lists, and name it in the report. A workspace without an open session
-   gets a new orchestrator, as "Errors and retries" says.
+   lists. Name it in the report. A workspace without an open session gets
+   a new orchestrator, as "Errors and retries" says.
 3. Read the session with the reader. When the table in `SKILL.md` allows
    a send, send the handover message.
 4. Set the stage from its report:
@@ -283,10 +285,9 @@ each other. Only the bottom pull request targets `main`.
 
 - Run the merge check when the report of the child gives the whole stack.
 - Merge from the bottom, one pull request at a time.
-- After each merge below the top, delete its branch, send the merge-main
-  messages, and name the follow-up items, as "After the merge" says. Send
-  the stack message. Set `merge check`, and check the next pull request
-  in a later cycle.
+- After each merge below the top, do the steps of "After the merge" for
+  its pull request. Do not archive the child yet. Send the stack message.
+  Set `merge check`. Check the next pull request in a later cycle.
 - After the top pull request merges, the child gets "After the merge"
   and `merged`, as "The state of a pull request" says.
 
