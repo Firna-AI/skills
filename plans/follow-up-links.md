@@ -13,11 +13,10 @@ The change adds two optional lines to the first lines of an item: **Depends
 on** and **Do with**. `follow-ups.sh` prints the links under each item, and
 the rules for the next item use them. The score and the order do not change.
 
-The user adds the lines to the items of other repositories by hand. Open items
-there propose to print the outcome of the **Action** line beside the kind:
-`follow-up-list-approval-state.md` in `mokly-ai/mokly` and
-`follow-up-list-hides-item-choices.md` in `mokly-ai/mokly-cloud`. This plan
-does not change the line of an item, so it does not conflict with them.
+The user adds the lines to the items of other repositories by hand. Two open
+items there, `follow-up-list-approval-state.md` in `mokly-ai/mokly` and
+`follow-up-list-hides-item-choices.md` in `mokly-ai/mokly-cloud`, would print
+the **Action** outcome beside the kind. This plan does not change that line.
 
 The user answered both decisions on 2026-11-03 and asked for no change, so I
 took the answers as the approval of the plan.
@@ -138,9 +137,8 @@ The lines of an item:
 - 2026-11-02: The lines are `- **Depends on:**` and `- **Do with:**`.
   **Depends on** is the word of the milestone line. **Related** keeps its
   wider meaning.
-- 2026-11-02: Both lines are optional and come after **Reason**. Each line
-  holds only item names. The **Related** line still says what each link
-  means.
+- 2026-11-02: Both lines are optional and come after **Reason**. They hold
+  only item names, and **Related** still says what each link means.
 - 2026-11-03: A line names each item by its path,
   `plans/follow-ups/<name>.md`, as "Writing an item" asks for every
   follow-up item. The script reads the last part of each name, so a bare
@@ -284,9 +282,9 @@ Depends on: 1, 2
 The orchestrator runs the gate, the review, and the pull request.
 
 - [x] Run the targeted tests and the complete gate named in `AGENTS.md`.
-- [ ] Commit with Conventional Commits and push the branch. Watch CI as the
+- [x] Commit with Conventional Commits and push the branch. Watch CI as the
       `finish-work` skill says.
-- [ ] Review the complete local diff against `origin/main` with the
+- [x] Review the complete local diff against `origin/main` with the
       `implementation-review` skill after the push. Report the findings,
       then apply the fix rule: fix the `fix now` findings, record
       follow-up items under `plans/follow-ups/` for the rest, re-review
@@ -298,3 +296,5 @@ The orchestrator runs the gate, the review, and the pull request.
       and the follow-up items that the change adds. It says that an existing
       install gets the change when `update.sh` or `install.sh` runs there.
       Then watch CI as the `finish-work` skill says.
+
+Review: round 1 fixed findings 1 and 2. Round 2 deferred findings 3 and 4.
