@@ -148,6 +148,10 @@ A kind that is not in this list has no rule of its own.
   the bullet above.
 - Gates: a slow, custom, or low-value gate, lint, or check is not a test
   finding. The `testing` skill says how to fix it.
+- A check that cannot run before the merge, such as a smoke test that
+  needs the deploy, is not a finding. Do not raise it. The working agent
+  names it in the final report and the pull request description, as
+  "Completion boundary" in the `plans` skill says.
 - UX wording: user-facing text. A copy defect is text that has a typo or
   breaks a rule under `## Copy` in the `product-ui` skill. Give a copy
   defect the category UX wording, not repository rule. A fix keeps the
