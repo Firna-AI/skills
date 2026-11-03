@@ -9,11 +9,6 @@ and an agent takes "the next item" in that order. An item can say in its
 it together with another item. That line is prose. The script does not read
 it, and the rule for the next item ignores it.
 
-In `mokly-ai/mokly` and `mokly-ai/mokly-cloud`, 153 of 341 items have a
-**Related** line. For example, `mokly-cloud-index-v9.md` in `mokly-ai/mokly`
-scores 8/10 and lists first, but it needs `release-detail-content-ids.md`,
-which scores 5/10.
-
 The change adds two optional lines to the first lines of an item. **Depends
 on** names the items to fix first. **Do with** names the items that one branch
 fixes together. `follow-ups.sh` prints the links of each item under its line,
@@ -155,6 +150,9 @@ The lines of an item:
 - 2026-11-03: A link line can wrap. The script reads the line of the label
   and each indented line after it, up to the next list item or blank line.
   143 of the 165 items of `mokly-ai/mokly` wrap their first lines.
+- 2026-11-03, Milestone 1: Commas separate the names. A long line wraps onto
+  indented lines, not into a list. The script still reads an indented list,
+  so that the reader is lenient.
 - 2026-11-03: The plan has no list of replaced ways. **Related** keeps the
   meaning of each link, and an item without the lines stays valid.
 
@@ -176,15 +174,7 @@ The listing:
   the count line. An item without links lists as before.
 - 2026-11-03: A link from an item to itself is ignored.
 
-The listing of the gzip example:
-
-```text
- 7/10  High    plans/follow-ups/cloud-gzip-decoder-rollout.md  Deploy the Mokly Cloud gzip decoder  [Post-merge task]
-               needed by: cloud-gzip-listing-rollout.md
-               do with: cloud-parent-usage-lists.md, cloud-without-review-json.md
- 7/10  High    plans/follow-ups/cloud-gzip-listing-rollout.md  Enable gzip Blob uploads in Mokly Cloud  [Post-merge task]
-               depends on: cloud-gzip-decoder-rollout.md
-```
+"Listing the items" in the reference shows the gzip example.
 
 The rules:
 
@@ -192,15 +182,18 @@ The rules:
   **Depends on** line. One rule then covers every wait.
 - 2026-11-02: When an agent takes the next item, it fixes each open item on
   the **Depends on** line first, or in the same branch. The open items of the
-  **Do with** group go into the same branch.
+  **Do with** group go into the same branch. From Milestone 1, the rules
+  apply again to each item that joins, so that a chain is followed.
 - 2026-11-03: An item waits for the user when its kind is Needs decision or
   its **Action** line says `ask the user`, as 26 Outside the scope items of
   the mokly repositories do. The agent gives it to the user and does not
   start the items that depend on it. It still fixes the rest of a **Do with**
-  group, because an open item blocks only dependent work.
-- 2026-11-03: When the user names one item, the agent names its open
-  **Depends on** and **Do with** items, and takes them only when the user
-  asks, because only the user starts work on an item. The named item starts
+  group, because an open item blocks only dependent work. From Milestone 1,
+  all such items go to the user in one message, and "an item that waits for
+  the user" replaces "an item that needs a decision" in the reference.
+- 2026-11-03: When the user names one item, the agent names all items that
+  the rules for the next item add, and takes them only when the user asks,
+  because only the user starts work on an item. The named item starts
   only after its **Depends on** items are fixed or join the branch.
 - 2026-11-03: Two items that depend on each other go into one branch.
 - 2026-11-03: The links of a review item become lines. A link of the kind
@@ -208,6 +201,9 @@ The rules:
   **Depends on**, on the item that must wait. A link of the kind "the same
   cause", "the same code", or "a shared wider fix" becomes **Do with** when
   one branch can fix both items.
+- 2026-11-03, Milestone 1: A link that holds only for one option of an open
+  decision stays in **Related**. The branch that applies the answer writes
+  the line, because a false link misleads more than no link.
 - 2026-11-03: `README.md` does not describe the listing, so it needs no
   change. The plans `SKILL.md` has 225 lines, so it gets no new line, only
   the words "with the links of each item" in its sentence about the listing.
@@ -237,26 +233,28 @@ Depends on: none
 The `docs implementor` adds the two lines to the template, and states their
 rules and the listing in the reference. The script follows in Milestone 2.
 
-- [ ] `skills/plans/templates/follow-up.md`: add the optional
+- [x] `skills/plans/templates/follow-up.md`: add the optional
       `**Depends on:**` and `**Do with:**` lines after **Reason**. Each
       placeholder says what the line names, and that the line is left out
       when it names no item.
-- [ ] `skills/plans/references/follow-up-items.md`, "Writing an item": when to
+- [x] `skills/plans/references/follow-up-items.md`, "Writing an item": when to
       write each line, the form of a name, a wrapped line, both sides of a
       link, the reason in **Related**, and the link kinds of a review.
-- [ ] Same file, "Work with more than one open question": the parent item
+- [x] Same file, "Work with more than one open question": the parent item
       names each open decision item on its **Depends on** line.
-- [ ] Same file, "Working on an item": the rules for the next item, for an
+- [x] Same file, "Working on an item": the rules for the next item, for an
       item that waits for the user, for a named item, for two items that
       depend on each other, and for the branch that deletes an item.
-- [ ] Same file, "Listing the items": the four link lines and an example.
+- [x] Same file, "Listing the items": the four link lines and an example.
       "The priority score": the links do not change the score or the order.
-- [ ] `skills/plans/SKILL.md`, "Follow-up items": the sentence about the
+- [x] `skills/plans/SKILL.md`, "Follow-up items": the sentence about the
       listing says "with the links of each item".
-- [ ] Walk the recorded cases of four repositories in
+- [x] Walk the recorded cases of four repositories in
       `.context/follow-up-links/brainstorm.md` with the new text, as the
       `writing-skills` skill says. Save the walk in the same folder.
-- [ ] Run `scripts/check.sh` and the trailing-whitespace check.
+- [x] Run `scripts/check.sh` and the trailing-whitespace check.
+
+Walk: `.context/follow-up-links/m1-walk.md`.
 
 ## Milestone 2: The listing
 

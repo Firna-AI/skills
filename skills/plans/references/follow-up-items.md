@@ -57,7 +57,26 @@ not have the plan, the review report, or the findings file.
 - When one item covers the problem of another, merge the two items. A
   parent item and its decision items stay apart. When two linked items
   stay apart, give each a **Related** line. Name the other file, and say
-  what the link means.
+  what the link means. Two optional link lines after the **Reason** line
+  also give the order and the branch of the work:
+  - The **Depends on** line names each item to fix before this item, or
+    in the same branch. Only the item that must wait gets the line.
+  - The **Do with** line names each item that one branch can fix together
+    with this item. Write the link on both items.
+  - A link line holds only names. The **Related** line still says what
+    each link means.
+  - Name each item by its path, as `plans/follow-ups/<name>.md`.
+    `scripts/follow-ups.sh` also reads a bare file name or a Markdown
+    link. Separate the names with commas. Wrap a long line onto indented
+    lines, not into a list.
+  - The item layout of the `decisions-and-findings` skill gives each link
+    a kind. "Work that waits for the answer" and "options that conflict"
+    become **Depends on**, on the item that must wait. "The same cause",
+    "the same code", and "a shared wider fix" become **Do with** when one
+    branch can fix both items. Each other link stays in **Related** only.
+  - A link that holds only for one option of an open decision stays in
+    **Related** only. The branch that applies the answer writes the link
+    line when the chosen option makes the link hold.
 - Before you commit the item, read it as a reader without context. Add
   each fact that you had to look up somewhere else.
 
@@ -78,10 +97,11 @@ that work.
   that its question needs.
 - The parent item holds the approach, the requirements, the design
   calls, and each answer of the user with its date.
-- The **Reason** of the parent item names each open decision item. While
-  a decision item is open, the parent item has the kind Needs decision
-  and `Action: ask the user`. Its work depends on an open item, so the
-  decision test holds.
+- The **Reason** of the parent item names each open decision item. The
+  **Depends on** line of the parent item also names each open decision
+  item. While a decision item is open, the parent item has the kind Needs
+  decision and `Action: ask the user`. Its work depends on an open item,
+  so the decision test holds.
 - The **Related** line of each decision item names the parent item and
   the other decision items of the work. It says that the work waits for
   the answer.
@@ -103,8 +123,9 @@ The score adds the points of the grades on the first line of the item:
 
 Severity counts most. Each other grade moves an item by one severity
 grade at most. Items with the same score list High severity first, then
-by path. Do not write the score in the item. The script reads the grades
-each time, so the score follows each change of a grade.
+by path. The link lines do not change the score or the order. Do not
+write the score in the item. The script reads the grades each time, so
+the score follows each change of a grade.
 
 The `decisions-and-findings` skill gives the scales of severity,
 likelihood, and effort. Grade the other two when you write the item:
@@ -133,19 +154,42 @@ with a missing grade. Add the missing grade when you next edit the item.
   the item that records the failure, and deletes the item. The
   `finish-work` skill says when a fix pull request starts.
 - When the user asks for the next item, or for more than one, take the
-  items in the order of `scripts/follow-ups.sh`.
+  items in the order of `scripts/follow-ups.sh`. For each item:
+  - Fix each open item on its **Depends on** line first, or in the same
+    branch.
+  - Take the open items of its **Do with** group into the same branch.
+    The **Do with** group is every open item that a chain of **Do with**
+    links reaches, in both directions.
+  - Apply the same rules to each item that you add in this way.
+- An item waits for the user when its kind is Needs decision or its
+  **Action** line says `ask the user`. For such an item:
+  - Give it to the user. Put all such items in one message.
+  - Do not start an item that depends on it.
+  - Still fix the other items of its **Do with** group, because an open
+    item blocks only dependent work.
+- A parent item is one case of the rule for an item that waits for the
+  user. Its **Depends on** line names its open decision items. Do not
+  start the work of a parent item while it names an open decision item.
+  Give the user its open decision items instead, in one message.
+- When the user names one item, tell the user which items the rules for
+  the next item add. Take them only when the user asks, because only the
+  user starts work on an item. Start the named item only after each open
+  item on its **Depends on** line is fixed or joins the branch.
+- Fix two items that depend on each other in one branch.
 - The branch that fixes an item deletes its file. Name the item in the
   commit message.
-- When the user answers an item that needs a decision, apply the answer in
-  a branch, and delete the item in that branch.
-- Do not start the work of a parent item while it names an open decision
-  item. Give the user its open decision items instead, in one message.
+- When the user answers an item that waits for the user, apply the answer
+  in a branch, and delete the item in that branch.
 - To apply the answer to a decision item, record the choice and its date
   in the parent item. Delete the decision item in the same branch. After
   the last answer, update the **Reason**, the **Kind**, and the **Action**
   of the parent item.
 - When the user drops an item, delete its file. When the user drops a
   parent item, also delete its decision items.
+- Each branch that deletes an item also updates each reference to it.
+  "Removals and renames" in the `git-commit` skill says how. Remove the
+  name of the item from each link line. Remove a link line that then
+  names no item.
 
 ## Listing the items
 
@@ -154,3 +198,29 @@ highest priority score first. Each line gives the score out of 10, the
 severity, the path, the title, and the kind. Its last line gives the
 number of open items. The final report and the reminder after the merge
 use that number.
+
+Under the line of an item, the listing prints up to four lines. It
+prints a line only when the line has a name. The lines come in this
+order:
+
+- `depends on:` the open items on the **Depends on** line of the item.
+- `needed by:` the open items that name the item on their **Depends on**
+  line.
+- `do with:` the other open items of the **Do with** group of the item.
+- `no such item:` each name on a link line of the item that matches no
+  open item. Such a name counts as fixed, and the script still exits 0.
+
+Each of these lines gives the bare file names in C-locale order,
+separated by ", ". The lines start at the column of the path. The listing
+ignores a link from an item to itself.
+
+In this example, the second item depends on the first. One branch can
+fix the first item together with two other items.
+
+```text
+ 7/10  High    plans/follow-ups/cloud-gzip-decoder-rollout.md  Deploy the Mokly Cloud gzip decoder  [Post-merge task]
+               needed by: cloud-gzip-listing-rollout.md
+               do with: cloud-parent-usage-lists.md, cloud-without-review-json.md
+ 7/10  High    plans/follow-ups/cloud-gzip-listing-rollout.md  Enable gzip Blob uploads in Mokly Cloud  [Post-merge task]
+               depends on: cloud-gzip-decoder-rollout.md
+```
