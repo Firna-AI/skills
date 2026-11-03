@@ -262,18 +262,20 @@ Depends on: 1
 
 The `non-ui implementor` makes `follow-ups.sh` print the links.
 
-- [ ] Add the three tests of the design to `tests/follow_ups_test.sh`. Run
+- [x] Add the three tests of the design to `tests/follow_ups_test.sh`. Run
       them against the current script, and see each fail on an assertion.
-- [ ] Change `skills/plans/scripts/follow-ups.sh` and its header comment, as
+- [x] Change `skills/plans/scripts/follow-ups.sh` and its header comment, as
       the design says.
-- [ ] Run `bash tests/follow_ups_test.sh` with gawk, with `gawk --posix`, and
+- [x] Run `bash tests/follow_ups_test.sh` with gawk, with `gawk --posix`, and
       with mawk or the BWK `awk` when one is available. Name each `awk` that
       could not run. Save the output under `.context/follow-up-links/`.
-- [ ] Smoke test: run the script over `.context/follow-up-links/repos/`, and
+- [x] Smoke test: run the script over `.context/follow-up-links/repos/`, and
       compare the output with the saved listings in the same folder. Then
       add the links of the gzip example to copies of its four items, and
       check the lines. Save the output in the same folder.
-- [ ] Run `scripts/check.sh` and `shellcheck` on the changed scripts.
+- [x] Run `scripts/check.sh` and `shellcheck` on the changed scripts.
+
+Evidence: `.context/follow-up-links/m2-*`. I fixed a name that ends a sentence.
 
 ## Milestone 3: Verification, commit, review, and pull request
 
@@ -281,7 +283,7 @@ Depends on: 1, 2
 
 The orchestrator runs the gate, the review, and the pull request.
 
-- [ ] Run the targeted tests and the complete gate named in `AGENTS.md`.
+- [x] Run the targeted tests and the complete gate named in `AGENTS.md`.
 - [ ] Commit with Conventional Commits and push the branch. Watch CI as the
       `finish-work` skill says.
 - [ ] Review the complete local diff against `origin/main` with the
