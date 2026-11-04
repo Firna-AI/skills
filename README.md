@@ -219,10 +219,12 @@ another branch.
 
 ## Adding a repository
 
-1. Copy `skills/agents-md/templates/AGENTS.md` to the repository root and
-   fill it in.
-2. Keep `CLAUDE.md` as a symlink to `AGENTS.md`.
-3. For an existing monolithic `AGENTS.md`, use the `agents-md` skill.
+1. Update the shared skills, as step 1 of the migration procedure in the
+   `agents-md` skill says.
+2. Copy `skills/agents-md/templates/AGENTS.md` from the updated skills to
+   the repository root and fill it in.
+3. Keep `CLAUDE.md` as a symlink to `AGENTS.md`.
+4. For an existing monolithic `AGENTS.md`, use the `agents-md` skill.
 
 ## Writing a skill
 

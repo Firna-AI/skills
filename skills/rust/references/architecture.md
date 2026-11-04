@@ -8,6 +8,10 @@
   a version so that the newest version is used instead of a guessed version
   in `Cargo.toml`. For workspace internal crates, add them manually with
   `dependency = { workspace = true }`.
+- Declare each crates.io dependency in the manifest of the package that
+  uses it. The root `[workspace.dependencies]` table lists only the
+  workspace internal crates and the organization's crates from Git, such
+  as `internal-error`.
 - Every crate has its own `README.md` that is good enough to publish; see
   the `documentation` skill for the required sections.
 - If there is only a single implementation and the interface is local to one
@@ -82,6 +86,12 @@ side-effect boundaries.
   databases, Docker, subprocesses, clocks, network calls, or other impure
   dependencies. Integration tests can use real implementations to validate
   end-to-end behaviour.
+- When the unit tests of another crate mock an exported trait, put
+  `#[unimock(api = <Trait>Mock)]` on the trait without a `cfg` gate.
+  `cfg(test)` holds only for the tests of the crate itself, so other
+  crates cannot see a gated mock. Use
+  `#[cfg_attr(test, unimock(api = <Trait>Mock))]` when only the crate
+  itself uses the mock.
 - Pass back mocked data with a clause that does not lock the order:
   - `some_call` for the value of one call.
   - `each_call` for the value of each matching call. Its return type must

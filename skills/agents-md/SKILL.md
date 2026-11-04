@@ -13,10 +13,12 @@ when to read it. [templates/AGENTS.md](templates/AGENTS.md) is the template.
 
 ## New repository
 
-1. Copy the template to the repository root as `AGENTS.md`.
-2. Fill every section. Delete each line and section that the template
+1. Update the shared skills, as step 1 of the migration procedure says.
+2. Copy the template from the updated skills to the repository root as
+   `AGENTS.md`.
+3. Fill every section. Delete each line and section that the template
    marks for deletion when the repository has none of that.
-3. Create `CLAUDE.md` as a symlink to `AGENTS.md`.
+4. Create `CLAUDE.md` as a symlink to `AGENTS.md`.
 
 ## Section map for a monolith
 
@@ -33,6 +35,7 @@ when to read it. [templates/AGENTS.md](templates/AGENTS.md) is the template.
 | Readme, Docs, Protocol Docs | `documentation` |
 | Mockups | `mockups` |
 | Plans | `plans` |
+| Plans: the plan index `plans/README.md` and each plan whose work has merged | `plans`. See step 4 of the migration procedure |
 | Rust and its subsections | `rust` |
 | Databases | `databases` |
 | Git: format, body length, examples, deletion audit, dead code, stale references, live and history | `git-commit` |
@@ -73,22 +76,50 @@ when to read it. [templates/AGENTS.md](templates/AGENTS.md) is the template.
      rule. The user decides.
    - **Uncovered general rule**: a rule that belongs in a shared skill but
      is not there yet. The user decides. Never drop it silently.
-4. Send the checkpoint message described below and wait for the answers.
+   - **Stale**: a rule that names a path, crate, command, or tool that the
+     repository does not have, often because the rule file came from
+     another repository. Drop it. When a shared skill holds the general
+     part of the rule, only the named part is stale.
+4. Find the plan files that the old plan rules made, and the repository
+   docs that repeat a shared skill:
+   - **Plan files**: the plan index `plans/README.md` and each plan whose
+     work has merged. Delete them with the steps of "Deleting the plan" in
+     the `plans` skill. Those steps turn each live item of a plan into a
+     follow-up item first. The pull request description keeps the record
+     of each deleted plan. An open plan stays and gets the status
+     paragraph that the `plans` skill describes.
+   - **Docs**: for example a file under `docs/dev/` or
+     `docs/implementation-review-prompt.md`. Delete such a doc when
+     nothing needs it. When code or a gate needs the file, such as a check
+     that the file exists, cut it instead. A cut doc keeps only the
+     repository facts and one sentence that points to the skill. A rule
+     for work across the repository moves to `## Repository rules`, so
+     that each fact lives in one place.
+5. Search `docs/` and every `README.md` for each command or step that a
+   conflict decision can replace. An example is an old review command
+   that a doc gives as a completion step.
+6. Send the checkpoint message described below and wait for the answers.
    The new `AGENTS.md` replaces content on `origin/main`, so change no
    tracked file in this repository before this checkpoint.
-5. Write the new `AGENTS.md` from the template with the decisions applied.
+7. Write the new `AGENTS.md` from the template with the decisions applied.
    Fill every section. Move each package-specific rule to its `README.md`.
    Keep `CLAUDE.md` as a symlink to `AGENTS.md`.
-6. Delete the approved files: the `docs/dev/*.md` files now covered by
-   skills, and `docs/implementation-review-prompt.md` if the shared review
-   prompt replaces it. Then search `docs/`, `plans/`, and every `README.md`
-   for links to them. Update references in live content to name the skill
-   instead. Do not change the words of history; replace a failing history
-   link with a GitHub permalink. See the `git-commit` skill.
-7. Run the repository's Markdown and link checks. Commit with the
-   `git-commit` skill, for example
-   `docs(agents): point AGENTS.md at shared skills`, and push.
-8. Send the final report described below.
+8. Make the changes of step 4, except each entry that the user keeps.
+   Delete each file whose deletion the user approved. Then search `docs/`,
+   `plans/`, and every `README.md` for links to the deleted files. Update
+   references in live content to name the skill instead of a deleted doc.
+   Do not change the words of history. Replace a failing history link with
+   a GitHub permalink, as the `git-commit` skill says.
+9. A hit of step 5 needs a fix when a decision replaced its command or
+   step. Fix such a hit in a `README.md` that is not a protocol doc in the
+   same change. A change to a protocol doc also brings the cleanup that
+   the `documentation` skill asks for when you touch the doc. So fix a hit
+   in a protocol doc only when the doc has fewer than 250 lines and names
+   no code. Otherwise record a follow-up item, as the `plans` skill says.
+10. Run the repository's Markdown and link checks. Commit with the
+    `git-commit` skill, for example
+    `docs(agents): point AGENTS.md at shared skills`, and push.
+11. Send the final report described below.
 
 ## Communicating with the user
 
@@ -99,14 +130,19 @@ This task has one checkpoint message and one final report.
 **The checkpoint message**, after classification and before any change:
 
 - One line with the counts: rules covered, kept, moved, conflicting,
-  uncovered.
+  uncovered, stale.
 - One line with the `futex-ai/skills` commit from step 1.
 - The repository-specific rules you will keep, grouped by template section,
   and the package-specific rules you will move, grouped by `README.md`.
   One line each. Do not quote the old file at length.
+- The changes that need no decision, one line each. List each stale rule
+  with the search that shows what is missing. List each file of step 4
+  with its action and its evidence. The user's answer to the checkpoint
+  approves this list, unless the user keeps an entry.
+- Each hit of step 5, with its file and line.
 - The numbered decisions. Every conflict, every uncovered rule, and every
-  file deletion is one decision. Give the repository's wording and the
-  shared skill's wording when there is one.
+  file deletion that step 4 does not cover is one decision. Give the
+  repository's wording and the shared skill's wording when there is one.
   - A conflict offers: A, use the shared rule; B, keep the repository's rule
     as an override under `## Repository rules`; C, change the shared skill
     and apply it everywhere.
@@ -114,13 +150,14 @@ This task has one checkpoint message and one final report.
     proposed text; B, keep it as a repository rule; C, drop it.
   - A deletion offers: A, delete and update links; B, keep the file.
 - A short list of what happens after the answers: write the file, move
-  the package-specific rules, delete the approved files, update links, run
-  checks, commit, push.
+  the package-specific rules, delete and cut the files, fix the hits,
+  update links, run checks, commit, push.
 
 **The final report**, after the commit, adds to the standard report:
 
 - The line count of `AGENTS.md` before and after.
-- The package-specific rules moved, the files deleted, and the links
-  updated.
+- The package-specific rules moved and the stale rules dropped.
+- The plan files deleted, the docs cut or deleted, any other file
+  deleted, and the links updated.
 - The proposed shared-skill changes, with their text, so that the user can
   apply them in the skills repository.
