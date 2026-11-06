@@ -1,6 +1,6 @@
 ---
 name: documentation
-description: Use before you edit a README.md, a crate README, anything under docs/, an architecture doc, or a protocol doc, before you add a rule to AGENTS.md or CLAUDE.md, when a behaviour change could leave a doc stale, when the code and a protocol doc disagree, when you decide whether a sentence belongs in a protocol doc, a README, a plan, a test, or the code, and when a change or a review option conflicts with a protocol doc.
+description: Use before you write or edit a README.md, a crate README, anything under docs/, an architecture doc, a protocol doc, or a code comment, before you add a rule to AGENTS.md or CLAUDE.md, when a behaviour change could leave a doc stale, when the code and a protocol doc disagree, when you decide whether a sentence belongs in a protocol doc, a README, a plan, a test, or the code, and when a change or a review option conflicts with a protocol doc.
 ---
 
 # Documentation
@@ -29,6 +29,19 @@ Each fact lives in one place. Other docs link to it.
 | Work that waits until after the merge | A follow-up item under `plans/follow-ups/` |
 | Cases and examples | The tests |
 | An API surface, a schema, a type list | Generated reference |
+
+## READMEs and code comments
+
+A `README.md` or a code comment holds no decision number, decision
+status, milestone name, or branch status. A `README.md` also holds no
+plan reference. Write one of these instead:
+
+- A current fact about the code, for example:
+  "Production code does not call these boundaries yet."
+- A link to the protocol doc that holds the requirement.
+
+A plan holds its decisions and milestones. A protocol doc can cite a
+decision number next to a requirement.
 
 ## Workspace README
 
