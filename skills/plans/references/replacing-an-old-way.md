@@ -37,7 +37,7 @@ complete while a converter remains.
 Some consumers cannot move in the same change. Examples are an export of a
 published package, stored user data, and a client that is already
 deployed. A converter for such a consumer is a decision for the user. Write
-it as a decision of the plan, with the time when the converter goes.
+it in the decisions file of the plan, with the time when the converter goes.
 
 ## The words that show a converter
 

@@ -6,8 +6,10 @@ answer, or to re-print the items with the `findings` skill. A changed
 open item also goes into the next message in full, as the "Open items"
 section of the skill says.
 
-- Read the findings file of the branch first, when it exists. The
-  `implementation-review` skill gives its path.
+- Read the findings file of the branch and the decisions file of the plan
+  first, when they exist. The `implementation-review` skill gives the path
+  of the findings file. The `plans` skill gives the path of the decisions
+  file.
 - Restate every field. Do not point to an earlier message for a field.
 - Keep the recorded option letters of each item.
 - When the record gives no wider fix, look for one. Add the wider fix that

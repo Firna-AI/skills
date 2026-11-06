@@ -15,8 +15,8 @@ layout.
     class
   - a problem that the review lists under `Outside the scope`
   - an unchecked post-merge task of a plan that the change deletes
-  - the work and the open decisions of a plan that will not merge, such
-    as the plan of a closed workspace
+  - the work of a plan that will not merge, such as the plan of a closed
+    workspace, and the open decisions of its decisions file
 - Name the file after the problem in concise kebab-case, for example
   `plans/follow-ups/cap-retry-loop.md`.
 - Before you add an item, search `plans/follow-ups/` for the same problem.

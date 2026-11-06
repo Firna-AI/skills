@@ -25,7 +25,8 @@ Each fact lives in one place. Other docs link to it.
 | A rule for work on one application, package, or feature | The `README.md` next to its code |
 | A rule for work across the repository | The repository `AGENTS.md`, under `## Repository rules` |
 | How the code works: mechanics, call order, module layout | The code and its doc comments |
-| The design of one change, its dated decisions, and history | The plan under `plans/` while the change is open, then the pull request description |
+| The design and the history of one change | The plan under `plans/` while the change is open, then the pull request description |
+| The dated decisions of one change | The decisions file beside the plan while the change is open, then the pull request description |
 | Work that waits until after the merge | A follow-up item under `plans/follow-ups/` |
 | Cases and examples | The tests |
 | An API surface, a schema, a type list | Generated reference |
@@ -131,11 +132,11 @@ review.
   the choice, the rejected alternative, and the reason, in one or two
   sentences. Its purpose is to stop an agent from proposing the rejected
   alternative again.
-- Do not keep a dated decision log in a protocol doc. The plan holds the
-  dated record of each decision. When the change deletes its plan, the
-  pull request description keeps that record. When a later decision
-  supersedes an earlier one, that record holds the history, and the
-  protocol doc shows only the decision in force.
+- Do not keep a dated decision log in a protocol doc. The decisions file
+  of the plan holds the dated record of each decision. When the change
+  deletes its plan, the pull request description keeps that record. When
+  a later decision supersedes an earlier one, that record holds the
+  history, and the protocol doc shows only the decision in force.
 - Do not name source files, functions, hooks, modules, or internal call
   order. Do not record history, such as what the code did before a change.
   Do not give implementation tips. Do not list every case: state the rule
