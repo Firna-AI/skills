@@ -45,13 +45,19 @@ EOF
 test_shows_the_action_outcome_beside_the_kind() {
   local plans="$1/plans" out expected
   write_item "$plans" choice "Choose the upload policy" "- **Severity:** High. **Effort:** Medium. **Confidence:** High. **Harder later:** No." "- **Kind:** Outside the scope." '
+```markdown
+- **Action:** fix after merge, apply A, because the example says so.
+```
+
 - **Action:** ask the user, because the owner must choose the policy.'
   write_item "$plans" later "Fix the upload log" "- **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** Yes." "- **Kind:** Outside the scope." '
 - **Terms:**
   - **Action:** the last line of an item.
 
 - **Action:** fix after merge, apply B, because each upload adds a log entry.'
-  write_item "$plans" task "Enable uploads" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Post-merge task."
+  write_item "$plans" task "Enable uploads" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Post-merge task." '
+- **Terms:**
+  - **Action:** the last line of an item.'
   out="$(follow_ups "$plans")"
   expected=" 8/10  Medium  $plans/follow-ups/later.md  Fix the upload log  [Outside the scope | fix after merge]
  7/10  High    $plans/follow-ups/choice.md  Choose the upload policy  [Outside the scope | ask the user]

@@ -198,8 +198,8 @@ Depends on: 1, 2
 
 The orchestrator runs the gate, the review, and the pull request.
 
-- [ ] Run the targeted tests and the complete gate named in `AGENTS.md`.
-- [ ] Commit with Conventional Commits and push the branch. Watch CI as the
+- [x] Run the targeted tests and the complete gate named in `AGENTS.md`.
+- [x] Commit with Conventional Commits and push the branch. Watch CI as the
       `finish-work` skill says.
 - [ ] Review the diff of this change with the `implementation-review`
       skill after the push. Its base is `origin/calummoore/follow-up-dependencies`
