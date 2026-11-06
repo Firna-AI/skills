@@ -155,15 +155,17 @@ Depends on: none
 The `docs implementor` states the new line in the reference. The script
 follows in Milestone 2.
 
-- [ ] `skills/plans/references/follow-up-items.md`, "Listing the items":
+- [x] `skills/plans/references/follow-up-items.md`, "Listing the items":
       each line also gives the outcome of the top-level **Action** line
       after the kind, as `[Outside the scope | ask the user]`. An item
       without that line shows only its kind.
-- [ ] Walk the survey cases of
+- [x] Walk the survey cases of
       `.context/follow-up-list-pending-choices/brainstorm.md` with the new
       text, as the `writing-skills` skill says. Save the walk under
       `.context/follow-up-list-action-outcome/`.
-- [ ] Run `scripts/check.sh` and the trailing-whitespace check.
+- [x] Run `scripts/check.sh` and the trailing-whitespace check.
+
+Walk: `.context/follow-up-list-action-outcome/m1-walk.md`.
 
 ## Milestone 2: The listing
 
@@ -182,8 +184,10 @@ The `non-ui implementor` makes `follow-ups.sh` print the outcome.
 - [ ] Smoke test: run the script over the items of this repository and of
       `.context/follow-up-list-pending-choices/repos/`. Compare the output
       with the listings in `.context/follow-up-list-action-outcome/baseline/`.
-      Check that 179 lines show `ask the user`, and that only the tag
-      changed. Save the output in the same folder.
+      Check that 180 lines show `ask the user`: the 179 of the survey and
+      `plans/follow-ups/after-merge-reminder-omits-waiting-items.md`, which
+      this branch adds. Check that only the tag changed. Save the output in
+      the same folder.
 - [ ] Run `scripts/check.sh` and `shellcheck` on the changed scripts.
 
 ## Milestone 3: Verification, commit, review, and pull request
