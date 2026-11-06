@@ -10,12 +10,14 @@ the same tag for both. The change makes the listing print the outcome of
 the **Action** line beside the kind, as `[Outside the scope | ask the user]`.
 
 The user chose this approach, B of decision 1, on 2026-11-03. The options
-check of the same day added F. F keeps all of B and lets a post-merge task
-that waits for the user carry an **Action** line. Decision 1 waits for the
-user again, between B and F.
+check of the same day added F, which also lets a post-merge task that
+waits for the user carry an **Action** line. The user chose B again on
+2026-11-06, and that answer approves this plan.
 
-The change does not change the kind or an existing item, and it needs no
-migration. It adds no count of the waiting items. The branch starts from
+The change does not change the kind, the template, or an item, and it
+needs no migration. A post-merge task that waits for the user still lists
+without an outcome, as B says. The change adds no count of the waiting
+items. The branch starts from
 `calummoore/follow-up-dependencies`, the branch of PR #85. That pull
 request changes the same lines of the script, its tests, and the
 reference.
@@ -23,17 +25,14 @@ reference.
 Contract owners:
 
 - [Follow-up items](../skills/plans/references/follow-up-items.md), the
-  sections "Writing an item", "Working on an item", and "Listing the
-  items".
-- [The follow-up template](../skills/plans/templates/follow-up.md), with
-  F only.
+  section "Listing the items".
 
 The plan has no list of replaced ways. The change adds the outcome to the
 line of an item and replaces nothing.
 
 ## Decision 1: Follow-up list hides pending user choices
 
-- **Answer:** B, chosen by the user on 2026-11-03. The options check of the same day added F and recommends it, so the user chooses again.
+- **Answer:** B, chosen by the user on 2026-11-03, and chosen again on 2026-11-06 after the options check added F.
 - **Severity:** Medium. **Effort:** Small.
 - **Source:** Review of PR #247 in `mokly-ai/mokly`. Record: `plans/follow-ups/follow-up-list-approval-state.md` in that repository.
 - **Category:** Process.
@@ -119,15 +118,6 @@ The line of an item:
   reads one. `plans/follow-ups/after-merge-reminder-omits-waiting-items.md`
   holds that question.
 
-With F only:
-
-- The template gives a post-merge task an optional last line,
-  `- **Action:** ask the user, because <reason>`, for a task that cannot
-  start before the user answers. The line keeps the `- ` form also in a
-  task that writes its other fields as paragraphs.
-- When the user answers, the branch that records the answer removes the
-  line, or deletes the task when the answer drops it.
-
 The scope:
 
 - No item of this repository changes. Each **Action** line of the six
@@ -156,25 +146,19 @@ The script and the test:
 - The test asserts the exact listing. It fails when the script ignores
   the **Action** line, reads the indented entry, or adds a bar to an item
   without the line. The existing tests of the exact output prove that an
-  item without the line lists as before. F needs no other test, because
-  the reader does not depend on the kind.
+  item without the line lists as before.
 
 ## Milestone 1: Documentation
 
 Depends on: none
 
 The `docs implementor` states the new line in the reference. The script
-follows in Milestone 2. This milestone starts after the user answers
-decision 1.
+follows in Milestone 2.
 
 - [ ] `skills/plans/references/follow-up-items.md`, "Listing the items":
       each line also gives the outcome of the top-level **Action** line
       after the kind, as `[Outside the scope | ask the user]`. An item
       without that line shows only its kind.
-- [ ] With F only: the post-merge task layout in
-      `skills/plans/templates/follow-up.md` and "Writing an item" get the
-      optional **Action** line of the design. "Working on an item" says
-      what the answer does to the line.
 - [ ] Walk the survey cases of
       `.context/follow-up-list-pending-choices/brainstorm.md` with the new
       text, as the `writing-skills` skill says. Save the walk under
