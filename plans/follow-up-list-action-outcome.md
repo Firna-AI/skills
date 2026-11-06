@@ -173,22 +173,24 @@ Depends on: 1
 
 The `non-ui implementor` makes `follow-ups.sh` print the outcome.
 
-- [ ] Add the test of the design to `tests/follow_ups_test.sh`. Run it
+- [x] Add the test of the design to `tests/follow_ups_test.sh`. Run it
       against the current script, and see it fail on an assertion.
-- [ ] Change `skills/plans/scripts/follow-ups.sh` and its header comment,
+- [x] Change `skills/plans/scripts/follow-ups.sh` and its header comment,
       as the design says.
-- [ ] Run `bash tests/follow_ups_test.sh` with gawk, with `gawk --posix`,
+- [x] Run `bash tests/follow_ups_test.sh` with gawk, with `gawk --posix`,
       and with mawk or the BWK `awk` when one is available. Name each
       `awk` that could not run. Save the output under
       `.context/follow-up-list-action-outcome/`.
-- [ ] Smoke test: run the script over the items of this repository and of
+- [x] Smoke test: run the script over the items of this repository and of
       `.context/follow-up-list-pending-choices/repos/`. Compare the output
       with the listings in `.context/follow-up-list-action-outcome/baseline/`.
       Check that 180 lines show `ask the user`: the 179 of the survey and
       `plans/follow-ups/after-merge-reminder-omits-waiting-items.md`, which
       this branch adds. Check that only the tag changed. Save the output in
       the same folder.
-- [ ] Run `scripts/check.sh` and `shellcheck` on the changed scripts.
+- [x] Run `scripts/check.sh` and `shellcheck` on the changed scripts.
+
+Evidence: `.context/follow-up-list-action-outcome/`: `m2-test-before.txt`, `m2-tests-gawk.txt`, `m2-tests-gawk-posix.txt`, `m2-run-all.txt`, `m2-new-test.json`, `m2-smoke/`, `m2-check.txt`, `m2-shellcheck.txt`, `m2-awk-availability.txt`.
 
 ## Milestone 3: Verification, commit, review, and pull request
 
