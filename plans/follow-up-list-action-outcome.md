@@ -201,12 +201,14 @@ The orchestrator runs the gate, the review, and the pull request.
 - [x] Run the targeted tests and the complete gate named in `AGENTS.md`.
 - [x] Commit with Conventional Commits and push the branch. Watch CI as the
       `finish-work` skill says.
-- [ ] Review the diff of this change with the `implementation-review`
+- [x] Review the diff of this change with the `implementation-review`
       skill after the push. Its base is `origin/calummoore/follow-up-dependencies`
       while PR #85 is open, and `origin/main` after it merges. Report the
       findings, then apply the fix rule: fix the `fix now` findings,
       record follow-up items under `plans/follow-ups/` for the rest,
       re-review once, and report.
+
+Review: `.context/reviews/calummoore/follow-up-list-pending-choices/findings.md`.
 - [ ] Delete this plan when the `plans` skill says, under "Deleting the
       plan".
 - [ ] Open the pull request. Its description gives the decision and the

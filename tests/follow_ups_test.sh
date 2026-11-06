@@ -58,11 +58,14 @@ test_shows_the_action_outcome_beside_the_kind() {
   write_item "$plans" task "Enable uploads" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Post-merge task." '
 - **Terms:**
   - **Action:** the last line of an item.'
+  write_item "$plans" period "Fix the growing log" "- **Severity:** Medium. **Effort:** Medium. **Confidence:** High. **Harder later:** No." "- **Kind:** Fix after merge." '
+- **Action:**  fix after merge . Apply C, because the log grows.'
   out="$(follow_ups "$plans")"
   expected=" 8/10  Medium  $plans/follow-ups/later.md  Fix the upload log  [Outside the scope | fix after merge]
  7/10  High    $plans/follow-ups/choice.md  Choose the upload policy  [Outside the scope | ask the user]
+ 5/10  Medium  $plans/follow-ups/period.md  Fix the growing log  [Fix after merge | fix after merge]
  4/10  Low     $plans/follow-ups/task.md  Enable uploads  [Post-merge task]
-open follow-up items: 3"
+open follow-up items: 4"
   assert_eq "$expected" "$out" "listing with Action outcomes"
 }
 

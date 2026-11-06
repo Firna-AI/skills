@@ -13,6 +13,7 @@
   - "Prove that each test can fail" in the `testing` skill asks to see each new test fail on an assertion. When the test comes before the code, that run happens before the code exists.
   - Such a run shows only that the whole change is missing. It does not show that each rule of the test can fail alone.
   - `test_shows_the_action_outcome_beside_the_kind` in `tests/follow_ups_test.sh` failed once, before `follow-ups.sh` of the `plans` skill read the **Action** line. A review then made three broken copies of the script: keep the first top-level **Action** line, accept an indented line, and match the label anywhere in a line. Each copy passed every test, so the branch added two cases.
+  - A second review of the same test found more broken copies that passed: cut the outcome only at the first comma, and keep the spaces around the outcome. The branch added one more case. A copy that also reads a left-margin `**Action:**` line without the leading `- ` still passes every test.
   - In `mokly-ai/mokly-cloud`, `plans/follow-ups/catalogue-sync-order-test-gap.md` records a test that checks the result of a Stripe catalogue sync but not the order of its requests.
 - **Problem:** The `testing` skill accepts one failing run for a test that holds cases for several rules. A break of one rule can then pass every test.
 - **Impact if no action:** A later change can break one rule of a tested behaviour while the gate passes. Only a review finds such a gap, and only by chance.

@@ -5,7 +5,7 @@
 - **Added:** 2026-11-03, from the branch `calummoore/follow-up-dependencies`, review round 2, finding 4.
 - **Location:** `skills/plans/scripts/follow-ups.sh`, the reader of the first list at lines 76 to 83. `skills/plans/references/follow-up-items.md`, "Writing an item", line 72. `tests/follow_ups_test.sh`, the case table of `test_lists_items_by_score_with_the_count` at line 38.
 - **Reason:** The bug needs an item with no blank line after its first list, and no real item has such a layout.
-- **Do with:** `plans/follow-ups/link-title-adds-false-names.md`.
+- **Do with:** `plans/follow-ups/link-title-adds-false-names.md`, `plans/follow-ups/action-reader-takes-later-lines.md`.
 
 - **Terms:**
   - **Link line:** the optional `**Depends on:**` or `**Do with:**` line in the first list of a follow-up item. It names other items.
