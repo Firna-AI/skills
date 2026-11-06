@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+# Prepare an Amp orb for this repository. Amp runs this script once for a fresh
+# orb and again when it restores a stale snapshot, so every step is idempotent.
+#
+# Template from the agents-setup skill. Replace <project> with the repository
+# name. Delete each function and step that the repository does not need, and
+# add the steps that CI runs before its gate.
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+step() {
+  local name="$1" start
+  shift
+  start=$SECONDS
+  echo "==> $name"
+  "$@"
+  echo "<== $name ($((SECONDS - start))s)"
+}
+
+skills_home="$HOME/.futex/skills"
+environment_file="$HOME/.config/<project>-orb/environment.sh"
+
+# Amp and supervised services start in non-interactive login shells, which
+# read ~/.bash_profile. Setup rewrites the environment file on every run and
+# adds one line that sources it.
+persist_environment() {
+  mkdir -p "$(dirname "$environment_file")"
+  cat > "$environment_file" <<EOF
+case ":\$PATH:" in
+  *":$HOME/.cargo/bin:"*) ;;
+  *) export PATH="$HOME/.cargo/bin:\$PATH" ;;
+esac
+# CI builds Rust without debug info. A debug test build can fill tens of GB.
+export CARGO_PROFILE_DEV_DEBUG=0
+export CARGO_PROFILE_TEST_DEBUG=0
+# sccache is off until measurements show a gain. See install_sccache.
+# export RUSTC_WRAPPER=/usr/local/bin/sccache
+# export CARGO_INCREMENTAL=0
+EOF
+  local line=". \"$environment_file\""
+  if ! grep -Fqx "$line" "$HOME/.bash_profile" 2>/dev/null; then
+    printf '\n# <project> orb toolchain\n%s\n' "$line" >> "$HOME/.bash_profile"
+  fi
+}
+
+# Only when the gate or a test reads the full history or the tags.
+fetch_history() {
+  if [[ "$(git rev-parse --is-shallow-repository)" == "true" ]]; then
+    git fetch --quiet --unshallow --tags origin
+  else
+    git fetch --quiet --tags origin
+  fi
+}
+
+# Check first, so that a warm run skips apt-get update.
+install_system_packages() {
+  local missing=()
+  command -v jq >/dev/null 2>&1 || missing+=(jq)
+  if (( ${#missing[@]} == 0 )); then
+    echo "System packages are installed."
+    return
+  fi
+  sudo apt-get update -qq
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "${missing[@]}"
+}
+
+install_rust() {
+  if [[ ! -x "$HOME/.cargo/bin/rustup" ]]; then
+    curl --proto '=https' --tlsv1.2 -fsSL https://sh.rustup.rs |
+      sh -s -- -y --no-modify-path --profile minimal --default-toolchain none
+  fi
+  # rustup reads the channel and the components from rust-toolchain.toml.
+  rustup toolchain install
+}
+
+# sccache is off: <the measurements of the agents-setup skill, section 3>.
+# To turn it on, uncomment the "Install sccache" step and the two exports in
+# persist_environment.
+install_sccache() {
+  local version="<version>" binary=/usr/local/bin/sccache
+  if [[ "$("$binary" --version 2>/dev/null)" == "sccache $version" ]]; then
+    echo "sccache $version is installed."
+    return
+  fi
+  local name="sccache-v$version-x86_64-unknown-linux-musl"
+  local base="https://github.com/mozilla/sccache/releases/download/v$version"
+  local work
+  work="$(mktemp -d)"
+  curl -fsSL "$base/$name.tar.gz" -o "$work/$name.tar.gz"
+  curl -fsSL "$base/$name.tar.gz.sha256" -o "$work/sha256"
+  echo "$(cat "$work/sha256")  $work/$name.tar.gz" | sha256sum --check --status
+  tar -xzf "$work/$name.tar.gz" -C "$work"
+  sudo install -m 0755 "$work/$name/sccache" "$binary"
+  rm -rf "$work"
+}
+
+# install.sh links the shared skills into ~/.claude/skills, which Amp reads.
+# Amp reads the always-on rules from ~/.config/AGENTS.md. update.sh exits 0
+# when it cannot update, so a failed fetch does not stop setup.
+install_shared_skills() {
+  if [[ ! -d "$skills_home/.git" ]]; then
+    mkdir -p "$(dirname "$skills_home")"
+    git clone --quiet https://github.com/futex-ai/skills.git "$skills_home"
+  fi
+  "$skills_home/scripts/update.sh"
+  "$skills_home/scripts/install.sh" --quiet
+  ln -sfn "$skills_home/global/AGENTS.md" "$HOME/.config/AGENTS.md"
+}
+
+# Only when tests commit as their own identity in repositories under
+# <fixture directory>. Amp's commit signer rejects those commits.
+disable_fixture_signing() {
+  local key="includeIf.gitdir:$repo_root/<fixture directory>/.path"
+  git config --global "$key" /etc/gitconfig.d/amp-signing-off
+}
+
+step "Persist the toolchain in the login profile" persist_environment
+# shellcheck disable=SC1090
+. "$environment_file"
+step "Fetch the full Git history and tags" fetch_history
+step "Install system packages" install_system_packages
+step "Install the Rust toolchain" install_rust
+# step "Install sccache" install_sccache
+step "Install the shared skills" install_shared_skills
+step "Turn off commit signing for test fixtures" disable_fixture_signing
+# Install the dependencies from the lockfiles, then prebuild for the snapshot.
+step "Build the Rust test binaries" cargo test --workspace --no-run --quiet

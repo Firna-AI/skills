@@ -48,6 +48,7 @@ skill at that moment instead of guessing the rule.
 - Targeted tests: `<command for one file or name pattern>`
 - Typecheck: `<command>` <delete if the repository has no TypeScript>
 - Early check (format, lint, file length): `<command>`
+- Smoke test: `<command>` <delete if none>
 - Complete gate: `<command>`. <How failures report, for example "A local
   run stops at the first failed suite.">
 - Format: `<command>`

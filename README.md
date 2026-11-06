@@ -63,6 +63,7 @@ Codex, and with any other agent that reads the
 | `mockups` | Before you create or change a mockup, a screen component, or a user flow. |
 | `product-ui` | Before you change a user-facing screen, state, or copy, or hardcode data in a screen. |
 | `agents-md` | A repository has no `AGENTS.md`, still has a monolithic one, or needs its rules aligned with the shared skills. |
+| `agents-setup` | A repository has no `.agents/setup`, or the user asks to set up, align, or speed up its Amp orb setup. Before you add sccache, `RUSTC_WRAPPER`, or another build cache to a setup script or to the Amp env vars. |
 | `writing-skills` | Before you create or edit a skill or its description. Opt-in: linked only with `install.sh --opt-in`. |
 | `models` | Before you delegate work, start a subagent or a reviewer, or choose an agent, a model, or an effort. Also when a skill names an action. |
 
@@ -219,10 +220,12 @@ another branch.
 
 ## Adding a repository
 
-1. Copy `skills/agents-md/templates/AGENTS.md` to the repository root and
-   fill it in.
-2. Keep `CLAUDE.md` as a symlink to `AGENTS.md`.
-3. For an existing monolithic `AGENTS.md`, use the `agents-md` skill.
+1. Update the shared skills, as step 1 of the migration procedure in the
+   `agents-md` skill says.
+2. Copy `skills/agents-md/templates/AGENTS.md` from the updated skills to
+   the repository root and fill it in.
+3. Keep `CLAUDE.md` as a symlink to `AGENTS.md`.
+4. For an existing monolithic `AGENTS.md`, use the `agents-md` skill.
 
 ## Writing a skill
 
