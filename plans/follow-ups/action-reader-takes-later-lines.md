@@ -1,0 +1,35 @@
+# Text after the Action line can replace its outcome
+
+- **Severity:** Medium. **Likelihood:** Rare. **Effort:** Medium. **Confidence:** High. **Harder later:** No.
+- **Kind:** Fix after merge.
+- **Added:** 2026-11-06, from the branch `calummoore/follow-up-list-pending-choices`, review round 2, finding 2.
+- **Location:** `skills/plans/scripts/follow-ups.sh`, the reader of the **Action** line at lines 77 to 83, and the reader of the grades and the kind at lines 94 to 96. `skills/plans/references/follow-up-items.md`, "Listing the items", the paragraph at lines 207 to 215. `tests/follow_ups_test.sh`, `test_shows_the_action_outcome_beside_the_kind`.
+- **Reason:** No real item has a second top-level **Action** line yet, so the bug needs an unusual item, and the fix costs the same later.
+- **Do with:** `plans/follow-ups/first-list-end-misses-body-blocks.md`, `plans/follow-ups/link-title-adds-false-names.md`.
+
+- **Terms:**
+  - **Outcome:** the words of the **Action** line of an item before the first comma or period, such as `ask the user`. The listing prints it beside the kind, as `[Outside the scope | ask the user]`.
+  - **Top-level line:** a line that starts at the left margin, not an indented entry of a list.
+  - **First list:** the list of grades and fields directly after the title of an item, which ends at the first blank line.
+- **Background:**
+  - `follow-ups.sh` of the `plans` skill lists the open follow-up items. Each line ends with the kind and the outcome of the item.
+  - The script takes the outcome from the last top-level line that starts with `- **Action:** `. "Listing the items" states this rule. The reason was that the layout puts the **Action** line last.
+  - On 2026-11-06, 275 of the 328 items with an **Action** line in six repositories held text after that line. The text includes logs, history, and the **User answers** and **Design calls** lists of parent items. Four items have a fence at the left margin after the line. None has a second top-level **Action** line.
+  - A scratch copy of the script that skipped fenced blocks still took the outcome from a plain list entry or an HTML comment after the real line.
+  - The reader of the grades and the kind takes the first match of each label on any line. When the first list lacks a grade, a label in the body counts. In a scratch item without **Likelihood**, the text `**Likelihood:** Rare` in **Background** cut the score from 8 to 6. "The priority score" says that the score uses the grades on the first line of the item.
+- **Problem:** A top-level `- **Action:**` line after the real **Action** line, in a fence, a list, or a comment, replaces the outcome of the item. A grade label in the body can also change the score of an item whose first list lacks that grade.
+- **Impact if no action:** The listing can show `[Outside the scope | fix after merge]` for an item that waits for the user, and hide a pending choice. A score can move an item up or down the list.
+- **Root question:** How does the listing take each field only from the item's own field, whatever other text the item holds?
+- **Options:**
+  - **A.** Skip fenced blocks in the **Action** reader. Add a case with a fenced example after the real line. A plain list entry after the real line still wins. Effort: Small.
+  - **B.** Give every field reader one shared filter that skips fenced blocks. The filter must still pass fence lines to the first-list reader of the link lines, or a fence no longer ends the first list. Effort: Medium.
+  - **C.** Take the outcome from the first top-level **Action** line that is not in a fenced block. Close a fence only with its own character and at least its own length. Change "last" to "first" in the header comment and in "Listing the items". Add two cases: a fenced example and a plain list entry after the real line. A fence that never closes before the real line hides the outcome. Effort: Small.
+  - **D.** Do C. Also read the grades and the kind only from the first list of the item, as the link reader does. Add a case with a grade label in the body to the grade tests. Share one first-list reader with the two items on the **Do with** line. Effort: Medium.
+- **Left out:**
+  - The first top-level line with no fence check. It fails for a fenced example before the real line, which the listing test already checks.
+  - A separate metadata format, or an external Markdown parser. The first changes every item, and the second breaks the bash and POSIX `awk` design that macOS needs.
+  - Only the fixed outcome words. An example with a real outcome still wins.
+- **Wider fix:** D. Each field then comes only from its place in the layout, so no shape of other text can change a field.
+- **Previous examples:** Commit `06a6be5` made the link reader read only the first list. `plans/follow-ups/first-list-end-misses-body-blocks.md` records body blocks that the first-list reader still takes.
+- **Recommendation:** D. It fixes the outcome and the grades with one rule, and the branch can fix the two items on the **Do with** line too. C is the direct fix when the branch must change only the **Action** reader.
+- **Action:** fix after merge, apply D, because the bug is Rare and Medium, no real item meets it yet, and the fix costs the same later.

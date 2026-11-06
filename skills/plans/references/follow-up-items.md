@@ -196,10 +196,23 @@ with a missing grade. Add the missing grade when you next edit the item.
 ## Listing the items
 
 `scripts/follow-ups.sh` in the `plans` skill lists the open items,
-highest priority score first. Each line gives the score out of 10, the
-severity, the path, the title, and the kind. Its last line gives the
-number of open items. The final report and the reminder after the merge
-use that number.
+highest priority score first. The line of an item gives the score out of
+10, the severity, the path, and the title. It ends with the kind of the
+item and the outcome of its **Action** line, as
+`[Outside the scope | ask the user]`. The two parts show whether the item
+waits for the user, as "Working on an item" says. The last line of the
+listing gives the number of open items. The final report and the reminder
+after the merge use that number.
+
+In the item, the script reads the outcome from the last line that starts
+with `- **Action:** ` at the left margin. An item without such a line
+shows only its kind, as `[Post-merge task]`. An indented line, such as a
+**Terms** entry with the same label, does not count. The outcome is the
+text after the label, up to the first comma or period. The listing shows
+both parts also when they repeat one fact, as
+`[Fix after merge | fix after merge]`. The outcome does not change the
+score, the order, the `?` mark, the lines under the item, or the number of
+open items.
 
 Under the line of an item, the listing prints up to four lines. It
 prints a line only when the line has a name. The lines come in this

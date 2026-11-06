@@ -7,6 +7,7 @@
 # open items. Under each item, list dependencies, reverse links, the whole
 # do-with group, and names with no open item. Read links from the first list
 # after the title. Links do not change the order.
+# Show the outcome of the last top-level Action line beside the kind.
 # Usage: follow-ups.sh [plans-dir]   (default: ./plans)
 set -euo pipefail
 dir="${1:-plans}"
@@ -73,6 +74,13 @@ score_item() {
     BEGIN { split("Severity|Likelihood|Effort|Confidence|Harder later|Kind", labels, "|") }
     !has_title && sub(/^# /, "") { title = $0; has_title = 1; next }
     {
+      if ($0 ~ /^- \*\*Action:\*\* /) {
+        outcome = $0
+        sub(/^- \*\*Action:\*\* /, "", outcome)
+        sub(/[,.].*$/, "", outcome)
+        sub(/^[[:space:]]+/, "", outcome)
+        sub(/[[:space:]]+$/, "", outcome)
+      }
       if (has_title && !list_done) {
         if ($0 ~ /^- /) {
           in_list = 1
@@ -102,7 +110,7 @@ score_item() {
       printf "%d\t%d\t%s\t%d\t%s\t%s\t%2d/10%-2s%-8s%s  %s  [%s]\n", score, rank, FILENAME, marked,
         names(text["Depends on"]), names(text["Do with"]),
         score, (marked ? "?" : ""), severity, FILENAME, (title == "" ? "No title" : title),
-        (kind == "" ? "No kind" : kind)
+        (kind == "" ? "No kind" : kind) (outcome == "" ? "" : " | " outcome)
     }
   ' "$1"
 }

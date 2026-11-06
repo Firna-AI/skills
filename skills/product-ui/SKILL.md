@@ -30,6 +30,8 @@ repository's `AGENTS.md` under `## Product`.
 - Do not recreate the pattern on a box with a pseudo-element, inset
   shadow, gradient, outline, or separate adjacent bar. A bar with
   rounded ends is the same pattern.
+- A thick strip in an accent or status colour on the top, right, or
+  bottom edge of a box is the same pattern. Do not use it either.
 - A left-edge border on an element that is not a box is fine, in any
   colour. Examples are a pull quote and a release timeline rail.
 - On a box, use the component system's typography, spacing, icons, or
@@ -37,7 +39,8 @@ repository's `AGENTS.md` under `## Product`.
   tinted fill also works.
 - Neutral structural borders such as column dividers and nesting indent
   guides are layout, not emphasis, and remain fine.
-- This applies to product code and to mockups.
+- This applies to product code, Storybook stories, mockups, protocol
+  docs, and plans. A protocol doc or a plan must not ask for the pattern.
 
 ## Environments
 

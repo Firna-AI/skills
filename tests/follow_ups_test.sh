@@ -42,6 +42,33 @@ first-list Terms entry|- **Terms:**\n  - **Depends on:** retry.md is the item to
 EOF
 }
 
+test_shows_the_action_outcome_beside_the_kind() {
+  local plans="$1/plans" out expected
+  write_item "$plans" choice "Choose the upload policy" "- **Severity:** High. **Effort:** Medium. **Confidence:** High. **Harder later:** No." "- **Kind:** Outside the scope." '
+```markdown
+- **Action:** fix after merge, apply A, because the example says so.
+```
+
+- **Action:** ask the user, because the owner must choose the policy.'
+  write_item "$plans" later "Fix the upload log" "- **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** Yes." "- **Kind:** Outside the scope." '
+- **Terms:**
+  - **Action:** the last line of an item.
+
+- **Action:** fix after merge, apply B, because each upload adds a log entry.'
+  write_item "$plans" task "Enable uploads" "- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No." "- **Kind:** Post-merge task." '
+- **Terms:**
+  - **Action:** the last line of an item.'
+  write_item "$plans" period "Fix the growing log" "- **Severity:** Medium. **Effort:** Medium. **Confidence:** High. **Harder later:** No." "- **Kind:** Fix after merge." '
+- **Action:**  fix after merge . Apply C, because the log grows.'
+  out="$(follow_ups "$plans")"
+  expected=" 8/10  Medium  $plans/follow-ups/later.md  Fix the upload log  [Outside the scope | fix after merge]
+ 7/10  High    $plans/follow-ups/choice.md  Choose the upload policy  [Outside the scope | ask the user]
+ 5/10  Medium  $plans/follow-ups/period.md  Fix the growing log  [Fix after merge | fix after merge]
+ 4/10  Low     $plans/follow-ups/task.md  Enable uploads  [Post-merge task]
+open follow-up items: 4"
+  assert_eq "$expected" "$out" "listing with Action outcomes"
+}
+
 test_lists_the_links_of_an_item_under_it() {
   local plans="$1/plans" out expected scenario links
   write_item "$plans" upload "Enable uploads" "- **Severity:** High. **Effort:** Medium. **Confidence:** High. **Harder later:** No." "- **Kind:** Post-merge task." "- **Depends on:** plans/follow-ups/alpha.md, [beta.md](./beta.md),

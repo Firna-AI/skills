@@ -5,7 +5,7 @@
 - **Added:** 2026-11-03, from the branch `calummoore/follow-up-dependencies`, review round 2, finding 3.
 - **Location:** `skills/plans/scripts/follow-ups.sh`, the function `names()` at lines 46 to 61 and the function `link_fields()` at lines 64 to 72. `tests/follow_ups_test.sh`, the case table of `test_lists_the_links_of_an_item_under_it` at line 83.
 - **Reason:** The bug needs a link title that no real item has yet, and the fix does not cost more later.
-- **Do with:** `plans/follow-ups/first-list-end-misses-body-blocks.md`.
+- **Do with:** `plans/follow-ups/first-list-end-misses-body-blocks.md`, `plans/follow-ups/action-reader-takes-later-lines.md`.
 
 - **Terms:**
   - **Link line:** the optional `**Depends on:**` or `**Do with:**` line in the first list of a follow-up item. It names other items.
