@@ -82,7 +82,7 @@ implementor. It keeps the gate, the review, and the pull request.
 | 1 | Brainstorm | Orchestrator and the `brainstorming` action | `brainstorming`, `models`, `delegating`, `decisions-and-findings` |
 | 2 | Plan | Orchestrator | `plans`, `delegating`, `documentation`, `testing`, `decisions-and-findings`, `implementation-review`, `finish-work`, `git-commit` |
 | 3 | Milestone 1: mockups | `ui implementor` | `delegating`, `mockups`, `product-ui`, `typescript` |
-| 4 | Milestone 2: docs | `docs implementor` | `delegating`, `documentation` |
+| 4 | Milestone 2: docs | `docs implementor`, and the `external docs implementor` for external docs | `delegating`, `documentation` |
 | 5 | Backend milestones | `non-ui implementor` | `delegating`, `rust`, `databases`, `shared-types`, `testing`, `finish-work` |
 | 6 | UI milestones | `ui implementor` | `delegating`, `product-ui`, `typescript`, `shared-types`, `mockups`, `testing`, `finish-work` |
 | 7 | Verify | Orchestrator | `finish-work`, `testing`, `documentation` |

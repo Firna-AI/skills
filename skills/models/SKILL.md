@@ -19,7 +19,8 @@ else does. The `delegating` skill says where and how each action runs.
 | `default orchestrator` | codex | `gpt-6.1-sol` | `max` | The session that manages a workspace. It plans, delegates the milestones, checks the delegated work, and reports. |
 | `non-ui implementor` | codex | `gpt-6.1-sol` | `max` | Code that is not UI: backend, scripts, tests, and tooling. |
 | `ui implementor` | claude | `opus-5-5-1m` | `max` | Screens, components, styles, and mockups. |
-| `docs implementor` | claude | `opus-5-5-1m` | `max` | Docs, protocol docs, READMEs, and plans. |
+| `docs implementor` | claude | `opus-5-5-1m` | `max` | Internal docs, for the team: protocol docs, architecture docs, READMEs, and plans. |
+| `external docs implementor` | codex | `gpt-6.1-sol` | `max` | External docs, for readers outside the team: user guides, API guides, help articles, and release notes. |
 | `first-pass review agent` | codex | `gpt-6.1-sol` | `max` | The implementation review and plan reviews. |
 | `second-pass review agent` | claude | `opus-5-5-1m` | `max` | The finding checks of a review, the options check of plan decisions, and investigations of a decision or a finding. |
 
