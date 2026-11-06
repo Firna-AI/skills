@@ -137,9 +137,9 @@ body. The format enables automated changelogs and readable history.
   - each intentional merge decision with the paths it affects
   - each design call under the decision test in the
     `decisions-and-findings` skill, when the change has no plan
-  - for a change that deletes its plan: each user decision of its
-    decisions file and each design call of the plan, with its date, and a
-    permalink to each file at the commit before the deletion
+  - for a change that deletes its plan: each user decision and design
+    call of the change, with its date, and a permalink to each file that
+    the change deletes, at the commit before the deletion
   - each follow-up item that the change adds or deletes
   - the finding that a fix commit resolves, by number
 - When a later commit changes what the pull request description says,

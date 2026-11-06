@@ -36,8 +36,8 @@ Keep the plan in these cases:
 4. Delete the plan and its decisions file, and name both in the commit
    message.
 5. Write the pull request description with the `git-commit` skill. It
-   gives each user decision of the decisions file and each design call of
-   the plan, with its date. It links to each file with a permalink at the
+   gives each user decision and design call of the change, with its date.
+   It links to each file that the change deletes, with a permalink at the
    commit before the deletion.
 
 ## After the deletion

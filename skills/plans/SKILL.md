@@ -59,6 +59,9 @@ filled 64% of the lines.
   [templates/decisions.md](templates/decisions.md) is its layout. The plan
   links to the file once. Agents open the file only when they need the
   options or the reasons of a decision.
+- An older plan is a plan that already holds decision text. It keeps that
+  text until the user approves a move, and that text stays the record of
+  its decisions. Each new decision goes to the decisions file.
 - The decisions file is the dated record of each decision: the choice,
   the alternatives, the reason, and the date. The protocol doc keeps only
   the decision in force. When the change deletes its plan, its pull
@@ -235,8 +238,9 @@ plan that is already on `main` without the user's approval.
   reports go in the review folder of the branch, beside its findings
   file. The `implementation-review` skill gives the folder.
 - A plan keeps only its summary, replaced ways, milestones, TODOs,
-  contracts, design calls, user approvals, and short review summaries.
-  Agents read the whole plan, so logs in a plan slow every session.
+  contracts, design calls, user approvals, and short review summaries. An
+  older plan also keeps its decision text, as the section "Decisions"
+  says. Agents read the whole plan, so logs in a plan slow every session.
 - A decisions file keeps only its items and their answer lines.
 
 ## Live and history
