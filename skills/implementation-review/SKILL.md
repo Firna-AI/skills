@@ -158,6 +158,17 @@ after the merge.
    items. Then stop. The `finish-work` skill gives the next steps: the
    pull request, the CI step, and the report. Do not start a third fix
    round without the user.
+
+   A review can still run after the second fix round, for example on
+   the answers of the user. Give each confirmed `fix now` finding of that
+   review the outcome `fix after merge`, because the two fix rounds are
+   used. Give a critical finding `ask the user` instead, so that the user
+   decides on a third fix round. A finding is critical when it is a
+   security problem, can lose data, or is a High product bug with the
+   likelihood Common. Record a follow-up item for each of these findings.
+   None of them holds the pull request, or the merge of a workspace branch
+   into its primary branch. The `delegating` skill says which work an
+   open finding blocks.
 7. In the final message, keep three lists: the fixed findings, the
    deferred findings, and the findings that need a decision. Build them
    from the findings file. Give each fixed finding its number, its

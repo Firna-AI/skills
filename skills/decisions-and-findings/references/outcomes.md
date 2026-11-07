@@ -90,12 +90,17 @@ builds the change. The working agent makes the final call, because it
 knows the purpose of the branch. When the working agent changes the
 proposed outcome, it gives one sentence of reason.
 
+In the outcome rules, the merge is the merge into `main`. A workspace
+branch that targets a primary branch, as the `delegating` skill
+describes, merges into that branch first. That merge waits for no
+finding.
+
 ### The Action line
 
 Each finding ends with one `Action` line:
 
 - `Action: fix now, apply <letter>`. The agent applies the option in this
-  branch, before the merge.
+  branch, before the merge into `main`.
 - `Action: fix after merge, apply <letter>, because <reason>`. The agent
   records a follow-up item. A later branch applies the option without the
   user.
