@@ -14,8 +14,8 @@ Goal: <the result that counts as done, for example "milestone 3 of
 
 Context:
 - Read `AGENTS.md` first, then the plan at `plans/<plan-name>.md`.
-- <the plan's decisions that apply, and what the earlier milestones
-  established>
+- <the decisions that apply, from the decisions file of the plan, and what
+  the earlier milestones established>
 - <the protocol docs, mockups, or files to read first>
 - <the commands from `AGENTS.md`: targeted tests, early check, complete
   gate>

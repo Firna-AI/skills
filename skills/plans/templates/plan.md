@@ -3,11 +3,15 @@
 Status: Active. On branch `<branch>`, no pull request yet. The pull request that completes the work deletes this plan, as the `plans` skill says. <When a pull request opens before the work is complete, the branch sentence becomes "[PR #123](<url>) is open.">
 
 <One or two short paragraphs: the problem, the chosen approach, and what the
-change does not cover. Record each user decision with its date, the
-alternatives, and the reason. Record each design call that you made yourself
-with its date and reason, marked as your call. The design and the history of
-the change live here, not in the protocol docs. The pull request description
-keeps them after the plan is deleted.>
+change does not cover. Record each design call that you made yourself with
+its date and reason, marked as your call. The design and the history of the
+change live here, not in the protocol docs. Each user decision lives in the
+decisions file, not here. The pull request description keeps them after the
+plan is deleted.>
+
+Decisions: [<plan-name>.decisions.md](<plan-name>.decisions.md). <Keep this
+line only when the change has decisions. The `plans` skill says what the file
+holds.>
 
 Contract owners:
 
@@ -71,11 +75,11 @@ Depends on: every other milestone
       then apply the fix rule: fix the `fix now` findings, record
       follow-up items under `plans/follow-ups/` for the rest, re-review
       once, and report.
-- [ ] Delete this plan when the `plans` skill says, under "Deleting the
-      plan".
-- [ ] Open the pull request. Its description gives the decisions and the
-      design calls of this plan with their dates, a permalink to this plan,
-      and the follow-up items that the change adds.
+- [ ] Delete this plan and its decisions file when the `plans` skill says,
+      under "Deleting the plan".
+- [ ] Open the pull request. Its description gives the decisions of the
+      decisions file and the design calls of this plan with their dates, a
+      permalink to each file, and the follow-up items that the change adds.
 
 ## Post-merge follow-up (non-blocking)
 

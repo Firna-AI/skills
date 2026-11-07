@@ -37,8 +37,8 @@ name the blocker, and list the checks that did run.
   only under the flaky-test rule of the `testing` skill.
 - Documentation-only or plan-only changes, including initial plan creation,
   do not require the gate. Validate the changed Markdown and review the diff
-  instead. For a plan with a new decision, run the options check over it,
-  as the `plans` skill says.
+  instead. For a new decision in the decisions file of a plan, run the
+  options check over it, as the `plans` skill says.
 
 ## 3. Keep the spec aligned
 
@@ -166,9 +166,9 @@ the failure, as [references/ci.md](references/ci.md) says.
       Removed findings named under **Checks**.
 - [ ] Findings file of the branch up to date, with each check merged in.
 - [ ] Options check run over the new plan decisions.
-- [ ] When the change has a plan, the plan deleted or kept as the `plans`
-      skill says. The pull request description gives its record and the
-      follow-up items.
+- [ ] When the change has a plan, the plan and its decisions file deleted
+      or kept as the `plans` skill says. The pull request description
+      gives their record and the follow-up items.
 - [ ] Pull request opened once the implementation was complete or the user
       asked.
 - [ ] CI watched to its end after the last change that can start CI. Each

@@ -75,8 +75,8 @@ An option is blocked when:
   is everything on `origin/main` that is not dead code under the
   predicate in the `git-commit` skill. It includes live code, its tests,
   an API, a doc, a mockup, a plan, a migration, and schema. A deletion of
-  dead code is not blocked. The plan of the change and a follow-up item
-  that the change fixes are not functionality.
+  dead code is not blocked. The plan of the change, its decisions file,
+  and a follow-up item that the change fixes are not functionality.
 - It deletes, skips, or weakens a test of live code or a gate, or raises
   a time limit. A removal under the removal rule of the `testing` skill
   is not blocked.
@@ -126,10 +126,10 @@ A kind that is not in this list has no rule of its own.
   `documentation` skill says. The wider fix for the class is already in
   force, the `documentation` skill, so propose no other wider fix. The
   doc side changes without the user only in these cases:
-  - The diff changes behaviour that a requirement states, and the plan
-    records the user's decision for that change. The doc update is the
-    named option. Without a recorded decision, the finding waits for the
-    user, because the user decides which side is right.
+  - The diff changes behaviour that a requirement states, and a recorded
+    user decision covers that change. The doc update is the named option.
+    Without a recorded decision, the finding waits for the user, because
+    the user decides which side is right.
   - The doc names source files, functions, or internal mechanics, or it
     records history. The fix moves that content to its home: the crate
     README for entry points, the plan for history, and the code for

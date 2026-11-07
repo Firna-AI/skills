@@ -7,7 +7,9 @@ description: Use before you write any code or start an implementation, when the 
 
 A plan records the work needed to align the implementation with the spec
 docs, its milestones, and its TODOs. Plans live under `plans/`, one file per
-change. [templates/plan.md](templates/plan.md) is the starting point.
+change. The decisions of the change go in a decisions file beside the plan,
+as the section "Decisions" says. [templates/plan.md](templates/plan.md) is
+the starting point.
 
 ## Creating a plan
 
@@ -20,9 +22,10 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
 - When no user message or recorded decision chooses the approach of the
   change, brainstorm first with the `brainstorming` skill. The plan starts
   from the approach that the brainstorm chose.
-- A new plan is a plan-only change. Write the plan. Run the options check
-  over its decisions, as the section below says. Commit it. Push the
-  branch. Then report, as the `finish-work` skill says.
+- A new plan is a plan-only change. Write the plan, and its decisions file
+  when the change has decisions. Run the options check over the decisions,
+  as the section "Decisions" says. Commit. Push the branch. Then report, as
+  the `finish-work` skill says.
 - The status paragraph names the branch and says that no pull request
   exists yet. Do not open a pull request to fill the status paragraph.
   The pull request opens when the implementation is complete, or when
@@ -37,31 +40,53 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
   can hold about a plan.
 - Each plan describes the work needed for complete alignment with the spec
   docs.
-- The plan is the dated record of each decision: the choice, the
-  alternatives, the reason, and the date. The protocol doc keeps only the
-  decision in force. History, such as what the code did before the change,
-  belongs in the plan, not in a protocol doc. When the change deletes the
-  plan, its pull request description keeps the dated record.
-- The plan also records each design call that you make yourself: the
-  choice, the reason, and the date. The `decisions-and-findings` skill
-  says which questions are design calls. Put each call in the design of
-  the change, marked as your call.
+- History, such as what the code did before the change, belongs in the
+  plan, not in a protocol doc.
+- The plan records each design call that you make yourself: the choice,
+  the reason, and the date. The `decisions-and-findings` skill says which
+  questions are design calls. Put each call in the design of the change,
+  marked as your call.
 
 ## Decisions
 
+A decision is an item with the source Design or Implementation that waits
+for the user. An item with the source Review follows the
+`implementation-review` skill. Agents read the whole plan on every turn,
+and decision text can fill most of it. In one recorded plan, decision text
+filled 64% of the lines.
+
+- Do not write a decision into the plan. Put each decision in the
+  decisions file of the change, `plans/<plan-name>.decisions.md`.
+  [templates/decisions.md](templates/decisions.md) is its layout. The plan
+  links to the file once. Agents open the file only when they need the
+  options or the reasons of a decision.
+- An older plan is a plan that already holds decision text. It keeps that
+  text until the user approves a move, and that text stays the record of
+  its decisions. Each new decision goes to the decisions file.
+- The decisions file is the dated record of each decision: the choice,
+  the alternatives, the reason, and the date. The protocol doc keeps only
+  the decision in force. When the change deletes its plan, its pull
+  request description keeps the dated record.
 - Write each decision in the layout of the `decisions-and-findings`
   skill. Its options rule applies: write the root question, widen and
   narrow the approaches, and name each assumption that all options share.
-- When you add a decision to a plan, run the options check of the
-  `implementation-review` skill over it. Do this before you report the
-  decision. The check is a fresh read-only `second-pass review agent`
-  with the second-pass prompt of that skill, the decisions, and the path
-  of the plan. It checks that the options are complete and that the
-  recommendation is the best one.
-- Merge the result of the check into the plan before you commit. A new
-  option keeps the letter that the check gave it. When the recommendation
-  changed, the **Recommendation** line gives the new letter and names the
-  first one. Save the check's report under `.context/<plan-name>/`.
+- When you add a decision to the decisions file, run the options check
+  of the `implementation-review` skill over it. Do this before you report
+  the decision. The check is a fresh read-only `second-pass review agent`
+  with the second-pass prompt of that skill, the decisions, and the paths
+  of the plan and the decisions file. It checks that the options are
+  complete and that the recommendation is the best one.
+- Merge the result of the check into the decisions file before you
+  commit. A new option keeps the letter that the check gave it. When the
+  recommendation changed, the **Recommendation** line gives the new
+  letter and names the first one. Save the check's report under
+  `.context/<plan-name>/`.
+- When the user answers, add the answer line below the title of the
+  item, as the template shows. Keep the rest of the item as the user saw
+  it. Then change the design, the TODOs, and the protocol docs to match
+  the answer. The plan says what to build. It does not list the answers,
+  the rejected options, or the reasons. A TODO can name the item by its
+  number.
 
 ## Milestones
 
@@ -85,8 +110,8 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
   that tooling.
 - As the last TODO of the mockup milestone, update the design and the
   TODOs of the plan. Do this for each problem that the mockups show. Add
-  a decision when the decision test of the `decisions-and-findings` skill
-  says so.
+  a decision to the decisions file when the decision test of the
+  `decisions-and-findings` skill says so.
 - The documentation milestone comes directly after the mockup milestone.
   When the plan has no mockup work, the documentation milestone is
   Milestone 1. It updates the relevant documentation and protocol or spec
@@ -137,7 +162,8 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
   request. An older plan without these TODOs follows the same rule.
 - Record each open or deferred finding, each blocked or split-off
   wider fix, and each problem outside the review scope as a follow-up
-  item, not as a line in the plan. The section "Follow-up items" says how.
+  item, not as a line in the plan or in its decisions file. The section
+  "Follow-up items" says how.
 - An open finding blocks only dependent work, as the `delegating` skill says.
 
 ## Replacing an old way
@@ -198,30 +224,32 @@ lists the open items, highest priority score first.
 
 ## Deleting the plan
 
-The pull request of the change deletes its plan, so that a plan does not
-stay on `main` after its work merges.
+The pull request of the change deletes its plan and its decisions file, so
+that they do not stay on `main` after the work merges.
 [references/deleting-a-plan.md](references/deleting-a-plan.md) says when
 the plan goes, when it stays, and the steps. Do not delete a completed
 plan that is already on `main` without the user's approval.
 
 ## Evidence
 
-- Do not put evidence logs in plan files: command output, test and gate
-  results or timings, smoke-test output, search results, audit records,
-  test-title inventories, and full reviewer reports. Save them under
-  `.context/<plan-name>/`, which Git ignores. Under the related milestone,
-  add one line that names the file. Review reports go in the review folder
-  of the branch, beside its findings file. The `implementation-review`
-  skill gives the folder.
+- Do not put evidence logs in a plan or its decisions file: command
+  output, test and gate results or timings, smoke-test output, search
+  results, audit records, test-title inventories, and full reviewer
+  reports. Save them under `.context/<plan-name>/`, which Git ignores.
+  Under the related milestone, add one line that names the file. Review
+  reports go in the review folder of the branch, beside its findings
+  file. The `implementation-review` skill gives the folder.
 - A plan keeps only its summary, replaced ways, milestones, TODOs,
-  contracts, decisions, design calls, user approvals, and short review
-  summaries. Agents read the whole plan, so logs in a plan slow every
-  session.
+  contracts, design calls, user approvals, and short review summaries. An
+  older plan also keeps its decision text, as the section "Decisions"
+  says. Agents read the whole plan, so logs in a plan slow every session.
+- A decisions file keeps only its items and their answer lines.
 
 ## Live and history
 
 In an active plan, completed milestones and checked TODOs are history; all
 other content is live. In a completed plan, open findings and
-unchecked post-merge follow-ups are live; all other content is history. Do
+unchecked post-merge follow-ups are live; all other content is history. In
+a decisions file, an answered item is history, and an open item is live. Do
 not change the words of history. See the `git-commit` skill for stale
 references and history links.
