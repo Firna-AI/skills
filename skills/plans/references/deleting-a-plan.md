@@ -27,7 +27,9 @@ Keep the plan in these cases:
    file yet, into a follow-up item. Follow "Writing an item" in
    [follow-up-items.md](follow-up-items.md). Read the whole entry and
    each entry that it names. Keep every fact. Merge an entry into the
-   item of the entry that covers it.
+   item of the entry that covers it. A check that cannot run before the
+   merge gets no item. Name it in the pull request description, as
+   "Completion boundary" in the `plans` skill says.
 2. Check that the protocol docs hold each decision in force. Move content
    that works as a doc, such as a roadmap, to its home under the
    `documentation` skill.

@@ -139,6 +139,8 @@ body. The format enables automated changelogs and readable history.
     call of the plan with its date, and a permalink to the plan at the
     commit before the deletion
   - each follow-up item that the change adds or deletes
+  - each check that could not run before the merge, with what it needs,
+    as the `plans` skill says under "Completion boundary"
   - the finding that a fix commit resolves, by number
 - When a later commit changes what the pull request description says,
   update the description.
