@@ -17,6 +17,10 @@ layout.
   - an unchecked post-merge task of a plan that the change deletes
   - the work and the open decisions of a plan that will not merge, such
     as the plan of a closed workspace
+- Do not add an item for a check that cannot run before the merge, such
+  as a smoke test that needs the deploy. This holds also when the check
+  comes from a finding or a post-merge task. "Completion boundary" in the
+  `plans` skill says where the check goes instead.
 - Name the file after the problem in concise kebab-case, for example
   `plans/follow-ups/cap-retry-loop.md`.
 - Before you add an item, search `plans/follow-ups/` for the same problem.
