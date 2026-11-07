@@ -81,6 +81,10 @@ name the blocker, and list the checks that did run.
   item for each other finding and for each wider fix that you split off,
   as the `plans` skill says. Run the checks. Commit and push. Re-review
   once. Then stop the fix rounds and go on to step 6.
+- A review can find a `fix now` finding after the second fix round. That
+  finding waits for the user's call on a third fix round. Record a
+  follow-up item for it. It does not hold the pull request, as the
+  `implementation-review` skill says.
 
 ## 6. Pull request
 

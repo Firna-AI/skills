@@ -158,6 +158,13 @@ after the merge.
    items. Then stop. The `finish-work` skill gives the next steps: the
    pull request, the CI step, and the report. Do not start a third fix
    round without the user.
+
+   A review can still run after the second fix round, for example on
+   the answers of the user. Each confirmed `fix now` finding of that
+   review waits for the user's call on a third fix round. Record a
+   follow-up item for it. It does not hold the pull request, or the merge
+   of a workspace branch into its primary branch. The `delegating` skill
+   says which work it blocks.
 7. In the final message, keep three lists: the fixed findings, the
    deferred findings, and the findings that need a decision. Build them
    from the findings file. Give each fixed finding its number, its
