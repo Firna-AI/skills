@@ -193,7 +193,7 @@ is one file under `plans/follow-ups/`. It holds every fact that the work
 needs. Its layout is [templates/follow-up.md](templates/follow-up.md). Read
 [references/follow-up-items.md](references/follow-up-items.md) before you
 add, fix, or drop an item, or choose the next one. `scripts/follow-ups.sh`
-lists the open items, highest priority score first.
+lists the open items with the links of each item, highest priority score first.
 
 ## Deleting the plan
 
