@@ -5,6 +5,8 @@
 - **Added:** <YYYY-MM-DD>, from <the branch or the pull request, and the item number when there is one.>
 - **Location:** <Each file path and line, or "None" when the work has no place in the code. Do not point to the body.>
 - **Reason:** <One sentence: the fact about this work that makes it wait until after the merge. Do not only repeat the kind.>
+- **Depends on:** <Each item to fix before this item, or in the same branch, by its path, as `plans/follow-ups/<name>.md`. Leave the line out when it names no item.>
+- **Do with:** <Each item that one branch can fix together with this item, by its path. Leave the line out when it names no item.>
 
 <The body. It holds every fact that the work needs. A reader with only the
 repository and this file can understand it, decide, and do the work. Do
