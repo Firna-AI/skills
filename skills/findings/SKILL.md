@@ -30,7 +30,7 @@ the user asks for it.
    earlier item, but the records keep it. The records are:
    - the findings file of the branch, at the path that the
      `implementation-review` skill gives,
-   - the plan of the change, with its decisions, and the follow-up items
+   - the plan of the change, its decisions file, and the follow-up items
      that the change added,
    - the brainstorm notes under `.context/`.
 2. Add each item of this conversation that the records do not hold.

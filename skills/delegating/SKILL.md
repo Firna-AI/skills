@@ -40,9 +40,9 @@ Output. The templates are
 - **Goal:** the result that counts as done.
 - **Context:** everything that the agent needs, pasted in. Give the
   errors, the test names, the paths, the commands from `AGENTS.md`, and
-  the skills to read. Point to the plan, and give its decisions and what
-  the earlier milestones established. Keep logs out of the plan, because
-  a delegated agent reads the whole plan on every turn.
+  the skills to read. Point to the plan. Paste the decisions that apply
+  and what the earlier milestones established. Keep logs out of the plan,
+  because a delegated agent reads the whole plan on every turn.
 - **Steps:** the procedure, with the agent's own checks and TODO ticks.
 - **Constraints:** the files that it may change, and what it must not
   do. Examples: change files outside the scope, merge `main`, increase a

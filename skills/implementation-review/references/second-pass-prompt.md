@@ -10,11 +10,12 @@ finding check gets this prompt after the prompt in
 When the user asked for a wider review, replace the second sentence of
 both prompts with that scope.
 
-In the plan flow, the check runs over the decisions of a plan. The
-`plans` skill says when. Give this prompt to a fresh read-only context,
-together with the decisions and the path of the plan. Run it in the
-working tree that holds the plan, before you commit the plan. Replace the
-second sentence of the prompt with the path of the plan.
+In the plan flow, the check runs over the new decisions in the decisions
+file of a plan. The `plans` skill says when. Give this prompt to a fresh
+read-only context, together with the decisions and the paths of the plan
+and its decisions file. Run it in the working tree that holds both files,
+before you commit them. Replace the second sentence of the prompt with the
+two paths.
 
 The options check does not change an `Action` line. An open item stays
 open, also when the options check finds an option that is not blocked.
@@ -37,8 +38,8 @@ For each item:
 
 1. Read the code that the item is about: the code at its location, or the
    code that it names. Read the code that causes the problem, and the code
-   that owns the thing that the item is about. Read the plan and the
-   protocol doc that the item names.
+   that owns the thing that the item is about. Read the plan, its
+   decisions file, and the protocol doc that the item names.
 2. Check the root question. When the item writes it in the words of the
    current mechanism, or splits one problem into several symptoms, write
    a better one.

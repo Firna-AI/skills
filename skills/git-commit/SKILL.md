@@ -10,8 +10,8 @@ explicit user approval. Functionality includes live code, its tests, APIs,
 docs, mockups, plans, migrations, and schema. Dead code needs no approval.
 The section "Dead code" below says when code is dead. A test that the
 removal rule of the `testing` skill covers needs no approval either. The
-plan of the change and a follow-up item that the change fixes are not
-functionality.
+plan of the change, its decisions file, and a follow-up item that the
+change fixes are not functionality.
 The change deletes them, as the `plans` skill says. Merges and rebases
 have their own procedure in the `git-merge` skill.
 
@@ -105,6 +105,8 @@ Record each plan edit in the commit or PR description.
   other content is live.
 - In a completed plan, open findings and unchecked post-merge
   follow-ups are live; all other content is history.
+- In a decisions file, an answered item is history, and an open item is
+  live.
 - Do not change the words of history.
 - When the repository's link check fails on a link inside history content,
   replace the link with a GitHub permalink at a commit where the target
@@ -136,8 +138,8 @@ body. The format enables automated changelogs and readable history.
   - each design call under the decision test in the
     `decisions-and-findings` skill, when the change has no plan
   - for a change that deletes its plan: each user decision and design
-    call of the plan with its date, and a permalink to the plan at the
-    commit before the deletion
+    call of the change, with its date, and a permalink to each file that
+    the change deletes, at the commit before the deletion
   - each follow-up item that the change adds or deletes
   - the finding that a fix commit resolves, by number
 - When a later commit changes what the pull request description says,

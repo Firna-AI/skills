@@ -118,10 +118,11 @@ recommended approach.
   plan. Then make the change at once.
 - Wait when the user says to wait. When an answer opens a question that
   can change the approach, ask it in the next round first.
-- An item that stays open goes into the plan as an open decision.
-- The plan starts from the chosen approach. It records the other
-  approaches with their reasons, each decision with its date, and each
-  design call.
+- The plan starts from the chosen approach, and it records each design
+  call.
+- The decisions file of the plan holds each item of the brainstorm in
+  full, with its answer and date. An item that stays open goes there as
+  an open item. The `plans` skill gives the layout.
 
 ## Checklist
 
