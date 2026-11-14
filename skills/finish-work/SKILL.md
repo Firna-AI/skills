@@ -87,8 +87,9 @@ name the blocker, and list the checks that did run.
 - A review can find a `fix now` finding after the second fix round. Give
   it `fix after merge` and a follow-up item. Only a critical finding goes
   to the user, for a third fix round. The `implementation-review` skill
-  says which findings are critical. No such finding holds the pull
-  request.
+  says which findings are critical. A `fix after merge` finding does not
+  hold the pull request. A critical finding holds it until the user
+  answers, as step 6 says.
 
 ## 6. Pull request
 
@@ -100,13 +101,20 @@ name the blocker, and list the checks that did run.
 - When the change has a plan, read "Deleting the plan" in the `plans`
   skill before you open the pull request. It says when the plan goes,
   when it stays, and the steps.
-- Open the pull request when the implementation is complete, or when the
-  user asks for it. Before that, report the branch. Do not ask for
-  permission to open it. Do not end the report with a wait for the
-  user's request. Write the title and
-  the description with the `git-commit` skill. The description lists each
-  follow-up item that the change adds, so that the user can bring one
-  back into the branch before the merge.
+- Open the pull request when the implementation is complete and no
+  finding waits for the user, or when the user asks for it. Do not ask
+  for permission to open it. A finding waits for the user when its
+  outcome is `ask the user`. A deferred finding with a follow-up item
+  does not wait.
+- When a finding waits for the user, do not open the pull request.
+  Report the branch and the findings. Open the pull request when the
+  user has answered each finding and the fixes are reviewed, or when the
+  user asks for it.
+- A workspace branch that merges into a primary branch follows the
+  `delegating` skill. An open finding never blocks that merge.
+- Write the title and the description with the `git-commit` skill. The
+  description lists each follow-up item that the change adds, so that the
+  user can bring one back into the branch before the merge.
 
 ## 7. CI
 
@@ -174,8 +182,8 @@ the failure, as [references/ci.md](references/ci.md) says.
 - [ ] When the change has a plan, the plan deleted or kept as the `plans`
       skill says. The pull request description gives its record and the
       follow-up items.
-- [ ] Pull request opened once the implementation was complete or the user
-      asked.
+- [ ] Pull request opened without a request once the implementation was
+      complete and no finding waited for the user, or when the user asked.
 - [ ] CI watched to its end after the last change that can start CI. Each
       failure fixed in the branch, given to a fix pull request, or
       reported.
