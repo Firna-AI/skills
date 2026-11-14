@@ -25,8 +25,9 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
   branch. Then report, as the `finish-work` skill says.
 - The status paragraph names the branch and says that no pull request
   exists yet. Do not open a pull request to fill the status paragraph.
-  The pull request opens when the implementation is complete, or when
-  the user asks for it. See the `finish-work` skill.
+  The pull request opens when the implementation is complete and no
+  finding waits for the user, or when the user asks for it. See the
+  `finish-work` skill.
 - One plan file per change, named after the change in concise kebab-case,
   for example `tool-request-error-contract-alignment.md`. Do not combine
   unrelated work in one plan.
