@@ -18,7 +18,7 @@ Context:
   established>
 - <the protocol docs, mockups, or files to read first>
 - <the commands from `AGENTS.md`: targeted tests, early check, complete
-  gate>
+  gate, and whether CI runs the complete gate on each pull request>
 - Read these skills before the matching step: <`finish-work`,
   `git-commit`, `product-ui`, ...>.
 - The primary branch is `<primary-branch>`. Start your branch from it,
@@ -33,11 +33,12 @@ Steps:
 1. <the first step>
 2. <the next step>
 3. Add `Branch:` and your branch name to the TODO lines in your scope.
-   Tick the TODOs that you complete. Run the complete gate from
-   `AGENTS.md`.
+   Tick the TODOs that you complete. Run the checks of the `finish-work`
+   skill. It says where the complete gate runs.
 4. Commit with the `git-commit` skill and push your branch.
 5. Open a pull request into `<primary-branch>` with
-   `gh pr create --base <primary-branch>`.
+   `gh pr create --base <primary-branch>`. Watch its CI to the end, as
+   the `finish-work` skill says.
 
 Constraints:
 - Change only <the files or the directory>.

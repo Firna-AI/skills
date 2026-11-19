@@ -10,16 +10,16 @@ as a prohibition. Then answer each recorded excuse. Then list the words
 that show the agent is about to skip the rule.
 
 ```markdown
-Run the complete gate once before you say work is complete. A filtered
-run is partial verification. It does not replace the gate.
+The complete gate must pass once before you say work is complete. A
+filtered run is partial verification. It does not replace the gate.
 
 | The excuse | The answer |
 | --- | --- |
 | "The targeted tests pass. That is enough." | They cover the change. The gate covers what the change broke elsewhere. |
 | "The gate takes 20 minutes and the user is waiting." | Say that the gate runs and how long it takes. The user can skip it. You cannot. |
 
-Red flags: you wrote "should be fine", you plan to run the gate after
-the push, or you call a partial run "the tests".
+Red flags: you wrote "should be fine", you plan to report before the
+gate ends, or you call a partial run "the tests".
 ```
 
 The rows above show the layout only. Build real rows from the excuses in
