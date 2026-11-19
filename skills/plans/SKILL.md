@@ -180,6 +180,10 @@ action. The `delegating` skill gives its route.
   must be completable on the branch before the PR merges, or by the merge
   itself. Never add a required TODO that depends on the PR already being
   merged.
+- The last two milestone TODOs wait for every other milestone TODO, so
+  each other TODO must be completable before the PR opens. The CI run of
+  the PR is not a TODO. An older TODO that runs the complete gate means
+  the checks that the `finish-work` skill requires before the PR.
 - Put post-merge work, including smoke tests that need the merged or
   deployed change, in a `## Post-merge follow-up (non-blocking)` section
   outside the milestones. It does not affect completion. When the change

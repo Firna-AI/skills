@@ -27,10 +27,11 @@ name the blocker, and list the checks that did run.
 - The complete gate must pass once before you say work is complete.
 - When `AGENTS.md` says that CI runs the complete gate on each pull
   request, the CI run of the last commit is the complete gate. Do not
-  also run it locally. Step 7 watches the run.
-- When `AGENTS.md` does not say so, run the gate locally. A local run
-  usually stops at the first failed suite. After a failure, fix it. Rerun
-  only the failing tests, or the failed suite. Then rerun the gate.
+  also run it locally. Step 6 does not wait for it. Step 7 watches it.
+- When `AGENTS.md` does not say so, or no CI run starts, run the gate
+  locally. A local run usually stops at the first failed suite. After a
+  failure, fix it. Rerun only the failing tests, or the failed suite.
+  Then rerun the gate.
 - Any selected test run, filtered run, or single suite is partial
   verification. Only the complete gate proves the work.
 - If a test that the diff does not touch fails and then passes on a rerun,
@@ -39,7 +40,7 @@ name the blocker, and list the checks that did run.
 - A flaky test that the diff adds or changes may be fixed without asking
   only under the flaky-test rule of the `testing` skill.
 - Documentation-only or plan-only changes, including initial plan creation,
-  need no local gate run. Validate the changed Markdown and review the diff
+  do not require the gate. Validate the changed Markdown and review the diff
   instead. For a plan with a new decision, run the options check over it,
   as the `plans` skill says.
 
@@ -171,8 +172,7 @@ the failure, as [references/ci.md](references/ci.md) says.
 - [ ] Targeted tests pass at 100%.
 - [ ] Each new asynchronous or browser test passed 10 of 10 runs.
 - [ ] Smoke test done for new features.
-- [ ] Complete gate passed once, in CI or locally as step 2 says, or the
-      blocker is explained.
+- [ ] Complete gate passed as step 2 says, or the blocker is explained.
 - [ ] Docs, protocol docs, mockups, READMEs, and plan updated in the same
       change.
 - [ ] Preservation audit clean: each deletion removes no functionality

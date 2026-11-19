@@ -44,10 +44,11 @@ message with the text of each `fix now` finding and the option to apply.
 ## Integrate and close
 
 ```sh
-git fetch origin <branch> <primary-branch>
-git merge-base --is-ancestor origin/<primary-branch> origin/<branch>
+git fetch origin <branch>
 git merge --no-ff origin/<branch>
-# run the merge audit first, and the combined gate as below
+# run the merge audit first
+git push origin HEAD:<branch>
+# push the primary branch only when the CI of HEAD passed, as below
 git push origin <primary-branch>
 ```
 
@@ -55,19 +56,21 @@ Merge the branch on the primary branch when its review is done, also
 when findings stay open. Merge it again after each fix round. Directly
 after each merge commit, run the merge audit from the `git-merge` skill.
 
-The complete gate must pass on the merged tree before the push:
+The complete gate must pass on the merged tree before the push of the
+primary branch:
 
 - When `AGENTS.md` says that CI runs the complete gate on each pull
-  request, the CI of the branch's pull request is the combined gate. That
-  CI tests the branch merged with the primary branch as it was at the
-  start of the run. So it proves the merged tree only when the branch
-  contains the head of the primary branch. The `merge-base` command checks
-  this. When it exits with a status other than 0, merge the primary
-  branch into the branch with the `git-merge` skill, and push the branch.
-  Then watch its CI, as the `finish-work` skill says. Merge when the CI of
-  the last commit of the branch passed.
-- When `AGENTS.md` does not say so, run the complete gate from
-  `AGENTS.md` on the merged tree.
+  request, push the merge commit to the branch first. The merge commit
+  holds the primary branch, so the CI of the branch's pull request tests
+  the tree of that commit. Watch that CI with the `ci-wait.sh` script of
+  the `finish-work` skill, on `HEAD`. When it passed, push the primary
+  branch. It then holds the commit that CI tested. When you change the
+  commit after that run, push it to the branch again and watch again.
+- When `AGENTS.md` does not say so, or no CI run starts, run the
+  complete gate from `AGENTS.md` on the merged tree.
+
+The branch then holds the merge commit. So the next fix request tells
+the workspace session to pull its branch first.
 
 After the last merge, close the work item:
 
