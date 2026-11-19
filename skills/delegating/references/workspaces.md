@@ -47,31 +47,21 @@ message with the text of each `fix now` finding and the option to apply.
 git fetch origin <branch>
 git merge --no-ff origin/<branch>
 # run the merge audit first
-git push origin HEAD:<branch>
-# push the primary branch only when the CI of HEAD passed, as below
 git push origin <primary-branch>
 ```
 
-Merge the branch on the primary branch when its review is done, also
-when findings stay open. Merge it again after each fix round. Directly
-after each merge commit, run the merge audit from the `git-merge` skill.
+Merge the branch on the primary branch when its review is done and its
+last commit passed the complete gate, also when findings stay open.
+Where CI runs the gate, check the CI of its pull request with the
+`ci-wait.sh` script of the `finish-work` skill, on that commit. Merge
+the branch again after each fix round. Directly after each merge commit,
+run the merge audit from the `git-merge` skill. Then push.
 
-The complete gate must pass on the merged tree before the push of the
-primary branch:
-
-- When `AGENTS.md` says that CI runs the complete gate on each pull
-  request, push the merge commit to the branch first. The merge commit
-  holds the primary branch, so the CI of the branch's pull request tests
-  the tree of that commit. Watch that CI with the `ci-wait.sh` script of
-  the `finish-work` skill, on `HEAD`, and act on its result as that
-  skill says. When it passed, push the primary branch. It then holds the
-  commit that CI tested. When you change the commit after that run, push
-  it to the branch again and watch again.
-- When `AGENTS.md` does not say so, run the complete gate from
-  `AGENTS.md` on the merged tree.
-
-The branch then holds the merge commit. So the next fix request tells
-the workspace session to pull its branch first.
+The merged tree gets no CI run before the push. The CI of the next pull
+request into the primary branch, or of its pull request into `main`,
+tests it. When `AGENTS.md` does not say that CI runs the complete gate
+on each pull request, run the complete gate from `AGENTS.md` on the
+merged tree before the push.
 
 After the last merge, close the work item:
 
