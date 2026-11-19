@@ -27,6 +27,7 @@ Each fact lives in one place. Other docs link to it.
 | How the code works: mechanics, call order, module layout | The code and its doc comments |
 | The design of one change, its dated decisions, and history | The plan under `plans/` while the change is open, then the pull request description |
 | Work that waits until after the merge | A follow-up item under `plans/follow-ups/` |
+| Which behaviour of a page is not built yet, and which work builds it | A status line below the title of that page |
 | Cases and examples | The tests |
 | An API surface, a schema, a type list | Generated reference |
 
@@ -34,7 +35,8 @@ Each fact lives in one place. Other docs link to it.
 
 A `README.md` or a code comment holds no decision number, decision
 status, milestone name, or branch status. A `README.md` also holds no
-plan reference. Write one of these instead:
+plan reference. The link of a status line is the one exception, as
+"Status lines" below says. Write one of these instead:
 
 - A current fact about the code, for example:
   "Production code does not call these boundaries yet."
@@ -197,3 +199,21 @@ Protocol docs describe the current requirements. They are not fixed rules.
   `decisions-and-findings` skill and the deletion audit in the `git-commit`
   skill send some options to the user. Recommend such an option on its
   merits, and let the user decide.
+
+## Status lines
+
+A status line is one line directly below the title of a page. It says
+which behaviour of the page is not built yet. The repository `AGENTS.md`
+names the kinds of page that can carry a status line. Other pages carry
+none.
+
+- Link the heading of the plan milestone, or the follow-up item, that
+  owns the missing behaviour. Do not link the plan as a whole. The exact
+  link lets the commit that ends the work find the line. When the line
+  names more than one missing behaviour, link the owner of each.
+- The page has no other link to that milestone or item.
+- When the line links a follow-up item, add the page to the
+  **Done when** field of that item.
+- Remove the line when the behaviour exists. When only part of it exists,
+  narrow the line to the part that is still missing. The `plans` skill
+  says which commit does this.

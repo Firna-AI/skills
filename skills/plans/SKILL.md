@@ -120,6 +120,11 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
 ## TODOs
 
 - Tick TODOs as you complete them.
+- The commit that completes a milestone, by ticking its last unchecked
+  TODO, also removes or narrows each status line that links that
+  milestone. Search `docs/` and every `README.md` for links to the
+  milestone heading. The `documentation` skill defines a status line and
+  says when to narrow it.
 - When you discover a TODO that the PR needs, add it under the relevant
   milestone, then continue with the active TODO.
 - Break a complex TODO into sub-tasks.

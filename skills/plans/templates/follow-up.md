@@ -25,4 +25,8 @@ the kind:
   **Background**, **Task**, **Impact if no action**, **Needs**, and
   **Done when**. **Needs** gives what the task needs, such as the
   deployed change or credentials, or "Nothing". **Done when** gives the
-  result that shows that the task is complete.>
+  result that shows that the task is complete.
+
+When a status line links the item, **Done when** also names the page of
+each status line that the item ends. An item of a kind without
+**Done when** then ends with that field, after **Action**.>

@@ -136,6 +136,10 @@ with a missing grade. Add the missing grade when you next edit the item.
   items in the order of `scripts/follow-ups.sh`.
 - The branch that fixes an item deletes its file. Name the item in the
   commit message.
+- The commit that closes an item, by deleting its file, also removes or
+  narrows each status line that links the item. The **Done when** field
+  of the item names their pages. Search `docs/` and every `README.md` for
+  links to the item too. The `documentation` skill defines a status line.
 - When the user answers an item that needs a decision, apply the answer in
   a branch, and delete the item in that branch.
 - Do not start the work of a parent item while it names an open decision
