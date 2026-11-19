@@ -28,10 +28,9 @@ name the blocker, and list the checks that did run.
 - When `AGENTS.md` says that CI runs the complete gate on each pull
   request, the CI run of the last commit is the complete gate. Do not
   also run it locally. Step 6 does not wait for it. Step 7 watches it.
-- When `AGENTS.md` does not say so, or no CI run starts, run the gate
-  locally. A local run usually stops at the first failed suite. After a
-  failure, fix it. Rerun only the failing tests, or the failed suite.
-  Then rerun the gate.
+- When `AGENTS.md` does not say so, run the gate locally. A local run
+  usually stops at the first failed suite. After a failure, fix it. Rerun
+  only the failing tests, or the failed suite. Then rerun the gate.
 - Any selected test run, filtered run, or single suite is partial
   verification. Only the complete gate proves the work.
 - If a test that the diff does not touch fails and then passes on a rerun,

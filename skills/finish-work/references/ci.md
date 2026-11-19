@@ -26,6 +26,8 @@ step.
   same commit.
 - Some repositories run CI on pull requests only. There, a push before the
   pull request opens starts no run.
+- When you watch the pull request of another branch, as an orchestrator
+  does for a workspace branch, add its number to each `gh pr view` call.
 
 Act on the exit status of the script:
 
@@ -34,12 +36,15 @@ Act on the exit status of the script:
   `cancelled`. Read the failure, as the next section says.
 - 2: a run still ran at the deadline, 60 minutes by default. Report it
   under **Checks** as pending.
-- 3: no run started in the grace period, 120 seconds by default. When a
-  pull request is open, check it for a conflict with
+- 3: no run started in the grace period, 120 seconds by default. Before
+  the pull request opens, this result is normal where CI runs on pull
+  requests only. When a pull request is open, check it for a conflict with
   `gh pr view --json mergeable --jq .mergeable`. Check again while it says
   `UNKNOWN`. `CONFLICTING` means that CI cannot start. Then merge the base
   branch, as step 1 of "Find the cause" says, and watch again. Otherwise,
-  the change starts no CI.
+  the change starts no CI. When this watch started after the pull request
+  opened, CI did not run the complete gate. Run it locally, as step 2 of
+  the `finish-work` skill says.
 - 4: a usage error, no `gh`, or three failed `gh` calls in a row. Correct
   the call. Run the script again. When it fails again, report the blocker
   under **Checks**.

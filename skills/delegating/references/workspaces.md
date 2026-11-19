@@ -63,11 +63,12 @@ primary branch:
   request, push the merge commit to the branch first. The merge commit
   holds the primary branch, so the CI of the branch's pull request tests
   the tree of that commit. Watch that CI with the `ci-wait.sh` script of
-  the `finish-work` skill, on `HEAD`. When it passed, push the primary
-  branch. It then holds the commit that CI tested. When you change the
-  commit after that run, push it to the branch again and watch again.
-- When `AGENTS.md` does not say so, or no CI run starts, run the
-  complete gate from `AGENTS.md` on the merged tree.
+  the `finish-work` skill, on `HEAD`, and act on its result as that
+  skill says. When it passed, push the primary branch. It then holds the
+  commit that CI tested. When you change the commit after that run, push
+  it to the branch again and watch again.
+- When `AGENTS.md` does not say so, run the complete gate from
+  `AGENTS.md` on the merged tree.
 
 The branch then holds the merge commit. So the next fix request tells
 the workspace session to pull its branch first.
