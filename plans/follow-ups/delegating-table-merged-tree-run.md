@@ -1,0 +1,35 @@
+# Delegating table still asks for a merged-tree run
+
+- **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** No.
+- **Kind:** Fix after merge.
+- **Added:** 2026-11-19, from the branch `calummoore/full-test-gate-relaxation`, review finding 5.
+- **Location:** `skills/delegating/SKILL.md:159`.
+- **Reason:** The branch that found it had used its two review fix rounds, so the review rule defers a finding that is not critical.
+
+- **Terms:**
+  - **Orchestrator:** the agent that owns a plan, gives work items to workspace sessions, and merges their branches into the primary branch.
+  - **Primary branch:** the branch of a plan. Each workspace branch merges into it, and it merges into `main` at the end.
+  - **Merged tree:** the primary branch directly after the orchestrator merges one workspace branch into it.
+- **Background:**
+  - Step 2 of "Check, merge, and continue" in `skills/delegating/SKILL.md` says: merge a workspace branch when its review is done and its branch passed the complete gate. Push it. Then start the milestones that depend on it.
+  - On 2026-11-19 the user decided that CI need not test the combined primary branch after each merge, before other work starts from it. The user answered "no" to that question.
+  - `skills/delegating/references/workspaces.md` says that the merged tree gets no CI run before the push. The CI of the next pull request into the primary branch, or of its pull request into `main`, tests it.
+  - Where `AGENTS.md` does not say that CI runs the complete gate, the orchestrator still runs it locally on the merged tree before the push.
+  - Under step 2, a table answers a recorded excuse: "[...] passed in all ten phases on the tree before the last two merges. [...] The commits after that run change only Markdown." The answer is: "The gate proves the tree that it ran on. Run it on the merged tree, or name the CI run that did."
+- **Problem:** The answer still asks for a gate run on each merged tree. The decision of 2026-11-19 removed that run where CI runs the gate.
+- **Impact if no action:** Agents get two different instructions. They can run the gate again, or wait for CI, before they continue.
+- **Root question:** How does step 2 answer the recorded excuse of an old gate result, now that a merge needs a pass on the last commit of the branch, and a merged-tree run only where CI does not run the gate?
+- **Options:**
+  - **A.** Rewrite the answer with the CI timing and the local condition. It repeats the procedure of the workspace reference. Effort: Small.
+  - **B.** Replace the answer with a pointer to the procedure in the workspace reference. The row then has no answer of its own, but the `writing-skills` skill says that each row gives the excuse and the answer. Effort: Small.
+  - **C.** Remove the row. Its answer still holds where CI does not run the gate, so the deletion needs the user's approval. Effort: Small.
+  - **D.** Keep the record and "The gate proves the tree that it ran on." Replace the rest of the answer with: "Only a pass on the last commit of the branch counts. The workspace reference says when the merged tree needs its own run." Effort: Small.
+  - **E.** Move the row to the workspace reference, after the paragraph that keeps the local run where CI does not run the gate. Step 2 then loses its answer where CI runs the gate. Effort: Small.
+- **Left out:**
+  - Change nothing: step 2 and its table keep two different answers.
+  - A merged-tree check before dependent work where CI runs the gate: it contradicts the user's decision of 2026-11-19.
+- **Wider fix:** None. The `documentation` skill already requires every restated rule to agree.
+- **Previous examples:** None found.
+- **Related:** `plans/follow-ups/orchestrator-ci-recovery-wrong-checkout.md`, the same code. Both change the orchestrator's check before a merge, so apply both in one change.
+- **Recommendation:** D. It keeps an answer to the recorded excuse at the rule that stays, and it copies no timing rule.
+- **Action:** fix after merge, apply D, because the branch that found it had used its two review fix rounds.
