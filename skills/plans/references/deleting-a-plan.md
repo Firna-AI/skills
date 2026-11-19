@@ -32,7 +32,9 @@ Keep the plan in these cases:
    that works as a doc, such as a roadmap, to its home under the
    `documentation` skill.
 3. Search `docs/`, `plans/`, and every `README.md` for links to the plan.
-   Remove each link.
+   Remove each link. When the link is in a status line, remove the line
+   if its behaviour exists. Otherwise link the line to the follow-up item
+   that now owns the behaviour.
 4. Delete the plan, and name it in the commit message.
 5. Write the pull request description with the `git-commit` skill. It
    gives each user decision and design call of the plan with its date. It
