@@ -29,6 +29,12 @@ together, or run the agents one after the other. Related failures often
 share one root cause. Fix that cause first, then split what remains. A
 small change in an area that another agent edits stays with you.
 
+A shared piece is new code that two or more work items need, such as a
+base control or a calculation. Do not start those work items in parallel
+until the shared piece is on the primary branch. A branch does not see
+what a parallel branch adds, so each branch builds its own copy. Build
+the shared piece first, then start the work items that use it.
+
 ## The prompt
 
 Each prompt has the fields Scope, Goal, Context, Steps, Constraints, and
