@@ -33,6 +33,12 @@ branch merges `main`.
 
 ## Resolving conflicts
 
+- Run the conflict resolution as the `merge-conflict resolver` action
+  from the `models` skill. When your session runs the agent, the model,
+  and the effort of that action, resolve the conflicts yourself.
+  Otherwise, delegate them, as the `delegating` skill says. The session
+  that started the merge commits it, runs the audit in "After each merge
+  commit", and pushes.
 - Resolve conflicts path-by-path. Never bulk-take `--ours` or `--theirs`
   for a tree, directory, or feature.
 - Merge one branch at a time; Git skips remerge diffs for octopus merges.
