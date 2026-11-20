@@ -18,6 +18,8 @@ message to another agent.
 - Save the full report of each pass in the review folder:
   `round-<number>-review.md` for the review, and
   `round-<number>-checks.md` for the finding checks of that round.
+- Save the marked picture of a finding as `screenshots/<number>.png` in
+  the review folder, with the finding number.
 - Each branch has its own file. Do not edit the file of another branch.
   To pass a finding to another agent, give it the text of the entry.
 

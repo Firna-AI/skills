@@ -61,6 +61,9 @@ first round, and read the file itself after a context summary.
    "Merging a check report" of the findings file reference says. Name each
    removed finding in one line under **Checks** in the final message. Give
    its number, its title, and the check that failed.
+7. For each confirmed finding with a **Screenshot** line, take the marked
+   picture, as the screenshot rules of the `decisions-and-findings` skill
+   say. Put it in the finding's entry in the findings file.
 
 ## Finding format
 
@@ -83,6 +86,9 @@ gives the layout that shows them to the user.
 - The background: enough codebase and feature context for a reader with
   no prior knowledge.
 - The problem: what is wrong, in plain words and defined terms.
+- When the problem shows on a screen, a **Screenshot** line from the
+  reviewer: the screen, the state, and what to mark. The working agent
+  takes the marked picture after the checks.
 - The impact of making no change.
 - The root question, in the words of the goal.
 - Solution options labelled A, B, and so on, from the smallest effort to

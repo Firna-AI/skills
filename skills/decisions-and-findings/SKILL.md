@@ -49,6 +49,13 @@ item. It holds the two outcome rules. The decision test says when an item
 waits for the user. The fix rule says how the agent acts on a finding
 that does not wait.
 
+## Screenshots
+
+Read [references/screenshots.md](references/screenshots.md) before you
+give an item whose problem shows on a screen, such as a product screen, a
+mockup, or a rendered doc. It says when to give a marked picture, and how
+to capture, mark, check, store, and link it.
+
 ## Simplified Technical English
 
 Write in Simplified Technical English (ASD-STE100):
@@ -143,6 +150,7 @@ Do not number questions inside an item.
   - **<Term>:** <One sentence: what it is, and where it lives when that helps the reader find it.>
 - **Background:** <Two to five sentences: what the feature does and where it is. Use plain words and defined terms only.>
 - **Problem:** <One to three sentences that say what is wrong. Use plain words and defined terms only.>
+- **Screenshot:** <Only when the problem shows on a screen. One sentence: what the picture shows and what the box marks. Then the marked picture as an inline image and as a file link.>
 - **Impact if no action:** <One or two sentences.>
 - **Root question:** <One question in the words of the goal, not of the current mechanism. The options answer it.>
 - **Options:**
@@ -163,8 +171,8 @@ final report lists it under **Open**, for a separate branch. Its
 follow-up item uses this layout, as the `plans` skill says.
 
 Keep every label, also when the user asks for more detail or for a shorter
-answer. An item leaves out **Terms** and **Related** only under their
-rules. For more detail, write **Background** as a list with one fact in
+answer. An item leaves out **Terms**, **Screenshot**, and **Related**
+only under their rules. For more detail, write **Background** as a list with one fact in
 each item.
 
 ## Options
