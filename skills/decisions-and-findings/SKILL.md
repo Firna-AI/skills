@@ -150,7 +150,7 @@ Do not number questions inside an item.
   - **<Term>:** <One sentence: what it is, and where it lives when that helps the reader find it.>
 - **Background:** <Two to five sentences: what the feature does and where it is. Use plain words and defined terms only.>
 - **Problem:** <One to three sentences that say what is wrong. Use plain words and defined terms only.>
-- **Screenshot:** <Only when the problem shows on a screen. One sentence: what the picture shows and what the box marks. Then the marked picture as an inline image and as a file link.>
+- **Screenshot:** <Only when the problem shows on a screen. One sentence: what the picture shows and what the box marks. In a message, then the marked picture as an inline image and as a file link. In a saved file, then its path as text.>
 - **Impact if no action:** <One or two sentences.>
 - **Root question:** <One question in the words of the goal, not of the current mechanism. The options answer it.>
 - **Options:**

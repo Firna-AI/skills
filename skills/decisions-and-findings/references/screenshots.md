@@ -23,7 +23,8 @@ does not have to open the app to find the problem.
   pictures. The reviewer gives a **Screenshot** line that names the
   screen, the state, and what to mark. The working agent takes the
   picture after the finding checks, for each confirmed finding with that
-  line. Then it replaces the line in the findings file.
+  line. Then it replaces the line in the findings file, as "Saved files"
+  below says.
 
 ## Capture
 
@@ -75,15 +76,17 @@ show no secret. Fix and look again when one of these fails.
   `screenshots/<number>.png` in the review folder of the branch. The
   `implementation-review` skill gives the review folder. Use the finding
   number.
-- For another item, save it as `.context/<topic>/screenshots/<number>.png`.
+- For another item, save it as
+  `.context/<topic>/screenshots/<number>-<short name>.png`. Item numbers
+  start again in each message, so the short name keeps an earlier picture.
 - Do not commit a picture. The `.context/` folder is git-ignored.
 
-## Link
+## Link in a message
 
-Give the picture in the **Screenshot** field in three parts: one
-sentence that says what the picture shows and what the box marks, the
-inline image, and a link to the file. Use the path from the repository
-root in both links:
+In a message to the user, give the picture in the **Screenshot** field in
+three parts: one sentence that says what the picture shows and what the
+box marks, the inline image, and a link to the file. Use the path from
+the repository root in both links:
 
 ```markdown
 - **Screenshot:** The Save and Cancel buttons overlap on the invoice form. The red box marks them.
@@ -93,12 +96,25 @@ root in both links:
   [Open 1.png](.context/reviews/<branch>/screenshots/1.png)
 ```
 
-The sentence must explain the problem without the picture. A follow-up
-item, a commit message, and a pull request description give the sentence
-only. They cannot link a file under `.context/`.
+The sentence must explain the problem without the picture.
+
+## Saved files
+
+A saved file gives the sentence and the path as text, with no image and
+no link. Saved files are the findings file and the other notes under
+`.context/`. A Markdown link in a saved file resolves from the folder of
+that file, so a path from the repository root breaks there.
+
+```markdown
+- **Screenshot:** The Save and Cancel buttons overlap on the invoice form. The red box marks them. Picture: `.context/reviews/<branch>/screenshots/1.png`.
+```
+
+A plan, a follow-up item, a commit message, and a pull request
+description give the sentence only. Git tracks them or GitHub shows them,
+and neither can reach a file under `.context/`.
 
 ## Again
 
-When you give an item again, give its picture again. Take a new picture
-when a commit changed the screen or the code at the item's location since
-the last picture.
+When you give an item again in a message, build the inline image and the
+file link from the recorded path. Take a new picture when a commit changed
+the screen or the code at the item's location since the last picture.

@@ -63,7 +63,7 @@ first round, and read the file itself after a context summary.
    its number, its title, and the check that failed.
 7. For each confirmed finding with a **Screenshot** line, take the marked
    picture, as the screenshot rules of the `decisions-and-findings` skill
-   say. Put it in the finding's entry in the findings file.
+   say. Put its sentence and its path in the finding's entry, as text.
 
 ## Finding format
 
