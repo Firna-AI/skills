@@ -126,6 +126,22 @@ uses Medium for it. A missing Harder later counts as No. A grade that is
 not on its scale counts as missing. A `?` after the score marks an item
 with a missing grade. Add the missing grade when you next edit the item.
 
+## Keeping an item current
+
+An item copies the decisions and the facts that its work needs, so that
+it stands alone. A later change can make such a copy wrong.
+
+- A change that replaces a decision, or edits a protocol section, also
+  updates each item that names that decision or section. An item names
+  a decision or a section in its **Location** or in its body. Make the
+  update in the same change.
+- To find these items, search `plans/follow-ups/` for the path and the
+  heading of each protocol section that the change edits. Also search for
+  the words of each decision that the change replaces: its subject and
+  its old choice.
+- In each item that you find, correct each field that the change makes
+  wrong. Give the new decision with its choice and its date.
+
 ## Working on an item
 
 - Work on an item only when the user asks for it. The one exception is a

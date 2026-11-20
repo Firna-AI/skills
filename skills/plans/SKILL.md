@@ -199,8 +199,10 @@ A follow-up item records work that waits until after the merge. Each item
 is one file under `plans/follow-ups/`. It holds every fact that the work
 needs. Its layout is [templates/follow-up.md](templates/follow-up.md). Read
 [references/follow-up-items.md](references/follow-up-items.md) before you
-add, fix, or drop an item, or choose the next one. `scripts/follow-ups.sh`
-lists the open items, highest priority score first.
+add, fix, or drop an item, or choose the next one. Read it also when a
+change replaces a decision or edits a protocol section. Such a change
+updates each item that names that decision or section.
+`scripts/follow-ups.sh` lists the open items, highest priority score first.
 
 ## Deleting the plan
 
