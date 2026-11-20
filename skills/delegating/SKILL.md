@@ -133,7 +133,7 @@ Codex and Claude sessions. One combined gate verified them.
   is fine. Anything larger goes back to the delegate.
 - The plan file is the one shared file. A workspace adds `Branch:` and
   its branch name to the TODO lines that it owns, and it ticks only those
-  lines. You resolve a plan conflict path by path at the merge.
+  lines. Resolve a plan conflict path by path with the `git-merge` skill.
 - Keep the ledger, the prompts, and the reports under
   `.context/<plan-name>/`, as the workspace reference says.
 - The workspace agent commits with the `git-commit` skill, pushes its

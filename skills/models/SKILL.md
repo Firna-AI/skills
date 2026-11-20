@@ -21,6 +21,7 @@ else does. The `delegating` skill says where and how each action runs.
 | `ui implementor` | claude | `opus-5-5-1m` | `max` | Screens, components, styles, and mockups. |
 | `docs implementor` | claude | `opus-5-5-1m` | `max` | Internal docs, for the team: protocol docs, architecture docs, READMEs, and plans. |
 | `external docs implementor` | codex | `gpt-6.1-sol` | `max` | External docs, for readers outside the team: user guides, API guides, help articles, and release notes. |
+| `merge-conflict resolver` | codex | `gpt-6.1-sol` | `max` | The conflict resolution of a merge or a rebase, path by path, as the `git-merge` skill says. |
 | `first-pass review agent` | codex | `gpt-6.1-sol` | `max` | The implementation review and plan reviews. |
 | `second-pass review agent` | claude | `opus-5-5-1m` | `max` | The finding checks of a review, the options check of plan decisions, and investigations of a decision or a finding. |
 
