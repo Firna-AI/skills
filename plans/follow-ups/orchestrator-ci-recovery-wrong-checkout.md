@@ -1,0 +1,37 @@
+# Orchestrator CI recovery runs in the wrong checkout
+
+- **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** No.
+- **Kind:** Fix after merge.
+- **Added:** 2026-11-19, from the branch `calummoore/full-test-gate-relaxation`, review finding 4.
+- **Location:** `skills/delegating/references/workspaces.md:53`, `skills/finish-work/references/ci.md:29`.
+- **Reason:** The branch that found it had used its two review fix rounds, so the review rule defers a finding that is not critical.
+
+- **Terms:**
+  - **Orchestrator:** the agent that owns a plan, gives work items to workspace sessions, and merges their branches into the primary branch.
+  - **Primary branch:** the branch of a plan. Each workspace branch merges into it, and it merges into `main` at the end.
+  - **`ci-wait.sh`:** the script of the `finish-work` skill that waits for the CI runs of one commit and ends with a status from 0 to 4.
+- **Background:**
+  - Each workspace agent opens a pull request into the primary branch and watches its CI, as the `finish-work` skill says. It runs the CI procedure of `skills/finish-work/references/ci.md` in its own checkout.
+  - Before a merge, `skills/delegating/references/workspaces.md` tells the orchestrator to check the CI of the branch's pull request with `ci-wait.sh`, on the last commit of the branch.
+  - The orchestrator runs that check in its own checkout, which is the primary branch. The workspace reference gives no action for a status other than 0.
+  - `ci.md` says: "When you watch the pull request of another branch, as an orchestrator does for a workspace branch, add its number to each `gh pr view` call."
+  - The other steps of `ci.md` use `HEAD` and the current checkout: the local gate run for status 3, and the `git rev-list` and `git diff` commands of "Find the cause".
+- **Problem:** When the check ends with a status other than 0, the CI procedure acts on the primary branch, not on the workspace branch. A local gate run for status 3 tests the primary branch before it holds the workspace changes. The diagnosis can label a failure of the workspace branch as unrelated.
+- **Impact if no action:** An untested workspace commit can reach the primary branch, or a fix can land on the wrong branch. The CI of the pull request into `main` still tests the result before `main`.
+- **Root question:** When the CI of a workspace branch's last commit does not pass, who acts on the result, and on which tree?
+- **Options:**
+  - **A.** Run the local gate in the workspace checkout, and use the watched commit in each diagnosis command. It needs access to the workspace machine, which the orchestrator reaches only through a session. Effort: Small.
+  - **B.** Make the workspace checkout the context of the whole CI procedure when the orchestrator runs it. It needs the same access. Effort: Small.
+  - **C.** Keep the orchestrator's check read-only, and give each status one action in the workspace reference. 0: merge. 1: do not merge, and send the script output to the workspace session as a fix request. 2: do not merge, and watch again. 3: merge, then run the complete gate on the merged tree before the push. Replace the bullet in `ci.md` about another branch with one line that sends an orchestrator to the `delegating` skill. Cost: one round trip to the workspace session for each failed run. Effort: Small.
+  - **D.** Do C, but for status 3, accept the local gate run that the workspace agent reports on the same commit. Cost: the proof then rests on the report, and the `delegating` skill says "Never accept the report alone". Effort: Small.
+  - **E.** Name the watched commit and its pull request once, at the top of the status list in `ci.md`. Use them in each command, and run a local gate in a detached worktree of that commit. Cost: each command of a procedure that every agent reads gets a parameter, and the orchestrator repeats work that the workspace agent did. Effort: Small.
+- **Left out:**
+  - Change nothing: the local gate run tests the primary branch.
+  - A pull request number alone: it cannot direct Git commands or a gate run.
+  - Push the merge commit to the workspace branch and wait for its CI: the user removed that wait on 2026-11-19.
+  - Merge on the workspace's report alone: it breaks "Never accept the report alone".
+- **Wider fix:** C. Only the agent of a branch runs the CI recovery of that branch, so no step of `ci.md` can act on another branch.
+- **Previous examples:** The bullet in `ci.md` about another branch patched only the `gh pr view` calls.
+- **Related:** `plans/follow-ups/delegating-table-merged-tree-run.md`, the same code. Both change the orchestrator's check before a merge, so apply both in one change.
+- **Recommendation:** C. The workspace agent already runs the CI procedure in its own checkout and takes fix requests, so a read-only check removes the wrong checkout from every step.
+- **Action:** fix after merge, apply C, because the branch that found it had used its two review fix rounds.

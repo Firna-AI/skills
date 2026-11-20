@@ -149,11 +149,10 @@ Codex and Claude sessions. One combined gate verified them.
    area. Then read the diff yourself and re-run the checks. Confirm
    every ticked TODO and the push, and run the deletion audit from the
    `git-commit` skill. Never accept the report alone.
-2. When its review is done, merge the branch into the primary branch with
-   the `git-merge` skill. Run the complete gate from `AGENTS.md` on the
-   merged tree, then push. Each workspace ran the gate on its own tree
-   only. The combined gate proves the milestone. Then start the milestones
-   that depend on it, unless step 6 blocks one.
+2. When its review is done and its branch passed the complete gate, merge
+   the branch into the primary branch with the `git-merge` skill. Push
+   it, as the workspace reference says. Then start the milestones that
+   depend on it, unless step 6 blocks one.
 
    | The record says | The answer |
    | --- | --- |
@@ -194,7 +193,7 @@ Codex and Claude sessions. One combined gate verified them.
 - [ ] Every prompt has the six fields, from Scope to Output.
 - [ ] Each workspace branch starts and merges from the primary branch.
 - [ ] Delegates ran their actions. A blocked step went to the user.
-- [ ] You ran the combined gate and closed each merged workspace.
+- [ ] Each merge followed step 2, and you closed each merged workspace.
 - [ ] The ledger and the reports are under `.context/`, not in the plan.
 - [ ] Open findings never block a workspace merge. They block dependent
       work only and close before the final pull request.

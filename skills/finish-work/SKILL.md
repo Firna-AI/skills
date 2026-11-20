@@ -24,10 +24,13 @@ name the blocker, and list the checks that did run.
 
 ## 2. The complete gate
 
-- Run the complete gate once before you say work is complete.
-- A local run usually stops at the first failed suite. After a failure, fix
-  it. Rerun only the failing tests, or the failed suite. Then rerun the
-  complete gate.
+- The complete gate must pass once before you say work is complete.
+- When `AGENTS.md` says that CI runs the complete gate on each pull
+  request, the CI run of the last commit is the complete gate. Do not
+  also run it locally. Step 6 does not wait for it. Step 7 watches it.
+- When `AGENTS.md` does not say so, run the gate locally. A local run
+  usually stops at the first failed suite. After a failure, fix it. Rerun
+  only the failing tests, or the failed suite. Then rerun the gate.
 - Any selected test run, filtered run, or single suite is partial
   verification. Only the complete gate proves the work.
 - If a test that the diff does not touch fails and then passes on a rerun,
@@ -107,7 +110,8 @@ name the blocker, and list the checks that did run.
   outcome is `ask the user`. A deferred finding with a follow-up item
   does not wait.
 - When a finding waits for the user, do not open the pull request.
-  Report the branch and the findings. Open the pull request when the
+  Report the branch and the findings. When CI runs the complete gate, say
+  that it runs when the pull request opens. Open the pull request when the
   user has answered each finding and the fixes are reviewed, or when the
   user asks for it.
 - A workspace branch that merges into a primary branch follows the
@@ -167,7 +171,7 @@ the failure, as [references/ci.md](references/ci.md) says.
 - [ ] Targeted tests pass at 100%.
 - [ ] Each new asynchronous or browser test passed 10 of 10 runs.
 - [ ] Smoke test done for new features.
-- [ ] Complete gate passed once, or the blocker is explained.
+- [ ] Complete gate passed as step 2 says, or the blocker is explained.
 - [ ] Docs, protocol docs, mockups, READMEs, and plan updated in the same
       change.
 - [ ] Preservation audit clean: each deletion removes no functionality

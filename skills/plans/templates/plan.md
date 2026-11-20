@@ -64,7 +64,8 @@ Depends on: every other milestone
 
 <Summary.>
 
-- [ ] Run the targeted tests and the complete gate named in `AGENTS.md`.
+- [ ] Run the checks that the `finish-work` skill requires before the pull
+      request.
 - [ ] Commit with Conventional Commits and push the branch.
 - [ ] Review the complete local diff against `origin/main` with the
       `implementation-review` skill after the push. Report the findings,

@@ -46,14 +46,22 @@ message with the text of each `fix now` finding and the option to apply.
 ```sh
 git fetch origin <branch>
 git merge --no-ff origin/<branch>
-# run the merge audit and the complete gate first
+# run the merge audit first
 git push origin <primary-branch>
 ```
 
-Merge the branch on the primary branch when its review is done, also
-when findings stay open. Merge it again after each fix round. Directly
-after each merge commit, run the merge audit from the `git-merge` skill.
-Run the complete gate from `AGENTS.md`, then push.
+Merge the branch on the primary branch when its review is done and its
+last commit passed the complete gate, also when findings stay open.
+Where CI runs the gate, check the CI of its pull request with the
+`ci-wait.sh` script of the `finish-work` skill, on that commit. Merge
+the branch again after each fix round. Directly after each merge commit,
+run the merge audit from the `git-merge` skill. Then push.
+
+The merged tree gets no CI run before the push. The CI of the next pull
+request into the primary branch, or of its pull request into `main`,
+tests it. When `AGENTS.md` does not say that CI runs the complete gate
+on each pull request, run the complete gate from `AGENTS.md` on the
+merged tree before the push.
 
 After the last merge, close the work item:
 

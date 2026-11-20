@@ -57,6 +57,10 @@ skill at that moment instead of guessing the rule.
 
 ## CI
 
+<Which workflow runs the complete gate, and on which events, for example
+"GitHub Actions runs the complete gate from `.github/workflows/ci.yml` on
+each pull request." Say so when CI does not run the complete gate.>
+
 <Whether an agent can merge its fix pull request for an unrelated CI
 failure into `main`. Only the user turns agent merges on, with a merge
 method, as in `on, squash`.>
