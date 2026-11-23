@@ -5,6 +5,18 @@ This file gives the procedure for a CI failure that "Find the cause" in
 gets one fix in its own pull request from `main`: the fix pull request.
 One fix there reaches every open branch.
 
+Conductor and Conductive are apps that run each workspace on its own
+machine. Step 3 claims the failure with a claim branch and a draft pull
+request from it: the claim pull request. Some steps differ by app:
+
+- In Conductor, the claim pull request becomes the fix pull request. The
+  fix workspace pushes to the claim branch.
+- In Conductive, a new workspace always works on a new branch of its own:
+  the workspace branch. The app follows only that branch for its pull
+  request bar, its checks, and its GitHub events. So the fix pull request
+  comes from the workspace branch. The claim pull request closes with a
+  link to it.
+
 1. Apply the decision test of the `decisions-and-findings` skill to the
    fix. The fix waits for the user when it needs a credential, a secret, a
    runner, a skipped test, or a gate change. It also waits when the cause
@@ -18,16 +30,25 @@ One fix there reaches every open branch.
 
 2. Search for an owner. An owner is an open pull request or a workspace
    that fixes the failure. Search the open pull requests, the remote
-   branches under `ci-fix/`, the Conductor workspaces named `ci-fix:`, and
-   the follow-up items on `origin/main`:
+   branches under `ci-fix/`, the workspaces named `ci-fix:` in your app,
+   and the follow-up items on `origin/main`:
 
    ```sh
    gh pr list --state open --search "<failed step>"
    git ls-remote --heads origin 'ci-fix/*'
-   conductor workspace list --name "ci-fix:" --repo <repository>
+   conductor workspace list --name "ci-fix:" --repo <repository>  # Conductor
+   conductive workspaces list --repository <repository-id> \
+     --query "ci-fix:" --archived false                           # Conductive
    git fetch origin main
    git grep -il "<failed step>" origin/main -- plans/follow-ups
    ```
+
+   In Conductive, `conductive repositories list` gives the repository id.
+   Each workspace in the list gives its branch. A fix pull request in
+   Conductive comes from such a branch, not from `ci-fix/`.
+   `gh pr list --state all --head <branch>` gives the pull requests of a
+   branch. A closed claim pull request links its fix pull request in a
+   comment.
 
    When an owner exists, name it in the report. Then wait, as the last step
    says. When a follow-up item records the failure, give the item to the
@@ -56,24 +77,63 @@ One fix there reaches every open branch.
    another failure, add the test name to the branch name.
 
 4. Start the fix in its own workspace, as the `delegating` skill says. The
-   workspace starts from the claim branch, is named `ci-fix: <job>`, and
-   runs the `default orchestrator` action:
+   workspace is named `ci-fix: <job>` and runs the `default orchestrator`
+   action. In Conductor, it starts from the claim branch. In Conductive,
+   it starts from `main` and targets `main`. The claim branch holds only
+   the empty claim commit, so the fix needs nothing from it. The
+   `create_workspace` tool of Conductive takes the same values as its
+   command:
 
    ```sh
    conductor workspace create --branch ci-fix/<job>-<step> \
      --name "ci-fix: <job>" --agent <agent> --model <model> \
      --effort <effort> --message-file <prompt>
+   conductive workspaces create --repository <repository-id> \
+     --name "ci-fix: <job>" --start-branch main --base-branch main \
+     --agent <agent> --model <model> --effort <effort> \
+     --message "$(cat <prompt>)"
    ```
 
    The prompt gives the failure text, the run URL, the rerun outcome, the
-   suspected source, the claim branch, and the draft pull request. It names
-   the follow-up item that records the failure, when one exists. It tells
-   the agent to push each commit to the claim branch, with
-   `git push origin HEAD:ci-fix/<job>-<step>`. It tells the agent to follow
-   the `finish-work` skill, and then the merge step below. Outside
-   Conductor, a worktree agent does the fix.
+   suspected source, the claim branch, and the claim pull request. It
+   names the follow-up item that records the failure, when one exists. It
+   tells the agent where to push each commit:
 
-5. Merge. The agent of the fix pull request merges it into `main` only
+   - In Conductor, the agent pushes to the claim branch, with
+     `git push origin HEAD:ci-fix/<job>-<step>`.
+   - In Conductive, the agent pushes to its workspace branch. It never
+     pushes to the claim branch.
+
+   The prompt tells the agent to follow the `finish-work` skill and this
+   file, `references/ci-fix.md` of that skill. At the pull request step of
+   `finish-work`, the agent follows the next step below. After
+   `finish-work`, it follows the merge step below. Outside Conductor and
+   Conductive, a worktree agent does the fix and pushes to the claim
+   branch.
+
+5. Open the fix pull request. In Conductor, the claim pull request is the
+   fix pull request, so this step adds nothing. In Conductive, the agent
+   of the fix workspace opens the fix pull request at the pull request
+   step of `finish-work`, in this order:
+
+   - It writes the title and the description with the `git-commit` skill.
+     The first line of the description is `Claim: #<claim>`. The failed
+     job and step, the failure text, and the run URL follow. So the
+     search for an owner finds the fix pull request.
+   - It opens the fix pull request as a draft, from its workspace branch
+     into `main`. The merge step below marks it ready.
+   - It closes the claim pull request, with a comment that links the fix
+     pull request.
+
+   ```sh
+   gh pr create --draft --base main --title "<title>" --body-file <file>
+   gh pr close <claim> --comment "The fix pull request is #<number>."
+   ```
+
+   Keep the claim branch. It holds the claim until the fix pull request
+   merges, so that no other agent claims the failure.
+
+6. Merge. The agent of the fix pull request merges it into `main` only
    when all of these hold:
 
    - The `## CI` section of `AGENTS.md` on `origin/main` has the line
@@ -98,13 +158,16 @@ One fix there reaches every open branch.
    When they hold, mark the pull request ready. Then watch the CI of its
    last commit, because readiness can start more runs. Merge only when
    each run of that watch passed. The merge command also deletes the
-   branch. Then watch the merge commit, because a push to `main` can
-   deploy. Report a failure there to the user at once.
+   branch of the pull request. In Conductive, that branch is the workspace
+   branch. Delete the claim branch too. Then watch the merge commit,
+   because a push to `main` can deploy. Report a failure there to the user
+   at once.
 
    ```sh
    gh pr ready <number>
    scripts/ci-wait.sh
    gh pr merge <number> --<method> --delete-branch
+   git push origin --delete ci-fix/<job>-<step>   # Conductive
    git fetch origin main
    merge=$(gh pr view <number> --json mergeCommit --jq .mergeCommit.oid)
    scripts/ci-wait.sh "$merge"
@@ -113,9 +176,11 @@ One fix there reaches every open branch.
    When a condition fails, mark the pull request ready. Report it to the
    user. Then stop.
 
-6. Wait for the merge. As the agent of the branch, wait at most 60 minutes
-   for the fix pull request to merge. Check its state every 5 minutes, with
-   `gh pr view <number> --json state`.
+7. Wait for the merge. As the agent of the branch, wait at most 60 minutes
+   for the fix pull request to merge. In Conductive, use the claim pull
+   request in its place until the claim pull request closes. Then use the
+   fix pull request that its comment links. Check the state every 5
+   minutes, with `gh pr view <number> --json state`.
 
    When it merges, merge the base branch of your pull request into the
    branch, with the `git-merge` skill. Push, and watch again. When the base

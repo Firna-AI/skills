@@ -1,0 +1,39 @@
+# Claim branch stays after a merge by the user
+
+- **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** No.
+- **Kind:** Needs decision.
+- **Added:** 2026-11-23, from the branch `calummoore/ci-fix-steps-own-workspace-branch-in-bk7g`. That branch gave the CI-fix steps their own flow in Conductive and found this problem in the claim step.
+- **Location:** `skills/finish-work/references/ci-fix.md`, step 3 "Claim the failure", step 6 "Merge", and step 7 "Wait for the merge".
+- **Reason:** The recommended fix also changes the Conductor steps, which the user chose on 2026-11-23 to keep as they are.
+
+- **Terms:**
+  - **Conductor** and **Conductive:** apps that run each agent workspace on its own machine. Conductive gives each workspace its own branch, the workspace branch.
+  - **Fix pull request:** the one pull request from `main` that fixes a CI failure that is unrelated to the branch where the failure shows.
+  - **Claim branch:** the branch `ci-fix/<job>-<step>`, with one empty commit on `main`. It is the lock that stops two agents from claiming one CI failure.
+  - **Claim pull request:** the draft pull request from the claim branch. In Conductor, it becomes the fix pull request. In Conductive, it closes with a link to the fix pull request.
+- **Background:**
+  - `skills/finish-work/references/ci-fix.md` gives the procedure for an unrelated CI failure. Step 2 searches for an owner: an open pull request or a workspace that fixes the failure.
+  - Step 3 pushes a new claim commit to the claim branch. It says: "A rejected push means that another agent holds the claim. Then search again."
+  - A push of a new claim to an existing claim branch fails, unless the head of that branch is already in `main`. A squash merge does not put it in `main`.
+  - The merge step deletes the claim branch only when the agent merges, with `gh pr merge <number> --<method> --delete-branch`. In Conductive, it also runs `git push origin --delete ci-fix/<job>-<step>`.
+  - The agent merges only where `AGENTS.md` on `main` says `Agent merges: on, <method>`. Otherwise the user merges the fix pull request.
+  - In Conductor, the claim branch is the head of the fix pull request. A merge by the user deletes it only when GitHub deletes head branches on merge.
+  - In Conductive, the fix pull request comes from the workspace branch. So a merge by the user never deletes the claim branch, also when GitHub deletes head branches.
+  - On 2026-11-23, three claim branches stayed on GitHub, each at the head of its squash-merged pull request. The user merged each one.
+  - These were `ci-fix/complete-gate-exports` of `Firna-AI/conductive` #262, `ci-fix/mac-app-test-electron-previews` of `Firna-AI/conductive` #413, and `ci-fix/repository-rust-audit-0433` of `mokly-ai/mokly` #282.
+  - On 2026-11-23, `Firna-AI/conductive` did not delete head branches on merge. `mokly-ai/mokly` did, and it allowed only squash merges.
+  - A scratch test with two temporary repositories showed each case. A second claim is rejected while the first is live. A new claim is rejected after a squash merge of the first.
+  - The same test showed a push with a lease on the stale claim commit. It replaced the commit, and a second push with the same lease was rejected.
+- **Problem:** After a merge by the user, the claim branch stays. A later failure of the same job and step then gets a rejected claim. The search finds no open owner, and the procedure gives no next step.
+- **Impact if no action:** An agent that meets the same failure again improvises. It can add a suffix to the branch name, ask the user, or stop. In Conductive, each merge by the user leaves one more claim branch.
+- **Root question:** How does a claim end when its fix pull request ends, so that the next failure of the step can be claimed?
+- **Options:**
+  - **A.** Change nothing. A later claim of the same job and step is rejected. The agent can add the test name to the branch name, as step 3 says for a claim of another failure. A failure without a test name has no such rule. Effort: Small.
+  - **B.** In "Wait for the merge", the agent of the failing branch deletes the claim branch. It does this when it sees the fix pull request merge or close. That wait lasts at most 60 minutes, so a later merge still leaves the claim branch. Effort: Small.
+  - **C.** A rejected claim checks whether the claim is stale. A claim is stale when no pull request from the claim branch is open, and no fix pull request that the claim links is open. The agent then replaces the stale claim commit with `git push --force-with-lease=refs/heads/ci-fix/<job>-<step>:<stale commit> origin "$claim:refs/heads/ci-fix/<job>-<step>"`. A second agent with the same lease is rejected, so the claim stays a lock. This also frees the three claim branches that stay today. Effort: Small.
+  - **D.** A scheduled workflow in each repository deletes each `ci-fix/` branch whose pull requests are all merged or closed. It needs a workflow file in each repository and the right to delete branches. Effort: Medium.
+- **Left out:** Delete the claim branch when the fix pull request opens, and let the open fix pull request be the owner. It breaks the lock, because the search can miss a new pull request, and a push to a deleted branch succeeds. A note in the fix pull request that asks the person who merges to delete the claim branch. C is better on every point, because it needs no person. GitHub's own deletion of head branches. In Conductive, the head branch is the workspace branch, so it cannot delete the claim branch.
+- **Wider fix:** C. It ends each stale claim at the one moment that needs it, the next claim, in both apps.
+- **Previous examples:** The three claim branches in the Background, from 2026-11-03 to 2026-11-16.
+- **Recommendation:** C. It frees each stale claim when the next claim needs it, and the lease keeps the claim a lock. D also protects the codebase, but it adds a workflow to each repository.
+- **Action:** ask the user, because the recommended option also changes the Conductor steps, which the user chose on 2026-11-23 to keep as they are.
