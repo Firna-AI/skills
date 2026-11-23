@@ -35,6 +35,8 @@ not have the plan, the review report, or the findings file.
   Copy a failure text, a count, or a command. Do not point to it.
 - Do not depend on a plan, a review report, a findings file, a file under
   `.context/`, a pull request, a chat, or another workspace.
+- When the source item has a **Screenshot**, give its sentence only.
+  Describe in words what the picture showed.
 - In the body, do not use a number that only another document explains,
   such as "user item 104", "finding 11", "M14", or "condition 3". Say
   what it stands for. For a decision, give its choice and its date.
