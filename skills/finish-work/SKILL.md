@@ -24,11 +24,13 @@ name the blocker, and list the checks that did run.
 
 ## 2. The complete gate
 
-- Run the complete gate once before you say work is complete.
-- When the branch has an open pull request whose CI runs the complete
-  gate on each push, do not run the gate locally. Push, and let the CI
-  runs of the last commit be the gate run, as step 7 says. Run locally
-  only the part of the gate that CI does not run.
+- Run the complete gate locally once before you say work is complete.
+- Let CI run the gate only when the branch already has an open pull
+  request whose CI runs the complete gate on each push. Then push, and
+  let the CI runs of the last commit be the gate run, as step 7 says.
+  Run locally only the part of the gate that CI does not run.
+- Never open a pull request, also a draft, to make CI run the gate. The
+  pull request opens at step 6, after the gate and the review.
 - A local run usually stops at the first failed suite. After a failure, fix
   it. Rerun only the failing tests, or the failed suite. Then rerun the
   complete gate.
@@ -171,8 +173,9 @@ the failure, as [references/ci.md](references/ci.md) says.
 - [ ] Targeted tests pass at 100%.
 - [ ] Each new asynchronous or browser test passed 10 of 10 runs.
 - [ ] Smoke test done for new features.
-- [ ] Complete gate passed once, locally or in the CI of an open pull
-      request, or the blocker is explained.
+- [ ] Complete gate passed once, locally or in the CI of a pull request
+      that was already open, or the blocker is explained. No pull request
+      opened only to run the gate.
 - [ ] Docs, protocol docs, mockups, READMEs, and plan updated in the same
       change.
 - [ ] Preservation audit clean: each deletion removes no functionality

@@ -53,9 +53,10 @@ git push origin <primary-branch>
 Merge the branch on the primary branch when its review is done, also
 when findings stay open. Merge it again after each fix round. Directly
 after each merge commit, run the merge audit from the `git-merge` skill.
-Run the complete gate from `AGENTS.md`, then push. With an open pull
-request whose CI runs the gate, push and let CI run it, as the
-`finish-work` skill says.
+Run the complete gate from `AGENTS.md`, then push. With a pull request
+that is already open and whose CI runs the gate, push and let CI run
+it, as the `finish-work` skill says. Never open a pull request to make
+CI run the gate.
 
 After the last merge, close the work item:
 

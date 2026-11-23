@@ -157,11 +157,12 @@ Codex and Claude sessions. One combined gate verified them.
    `git-commit` skill. Never accept the report alone.
 2. When its review is done, merge the branch into the primary branch with
    the `git-merge` skill. Run the complete gate from `AGENTS.md` on the
-   merged tree, then push. With an open pull request whose CI runs the
-   gate, let CI run it, as the `finish-work` skill says. Wait for its
-   pass. Each workspace ran the gate on its own tree only. The combined
-   gate proves the milestone. Then start the milestones that depend on
-   it, unless step 6 blocks one.
+   merged tree, then push. With a pull request that is already open and
+   whose CI runs the gate, let CI run it, as the `finish-work` skill
+   says. Wait for its pass. Never open a pull request to make CI run
+   the gate. Each workspace ran the gate on its own tree only. The
+   combined gate proves the milestone. Then start the milestones that
+   depend on it, unless step 6 blocks one.
 
    | The record says | The answer |
    | --- | --- |
