@@ -3,15 +3,16 @@
 - **Severity:** Low. **Effort:** Small. **Confidence:** Medium. **Harder later:** No.
 - **Kind:** Post-merge task.
 - **Added:** 2026-11-02, from the branch `calummoore/ci-failure-auto-fix-agent` and its plan `ci-watch-after-push.md`.
-- **Location:** `skills/finish-work/references/ci.md` and `skills/finish-work/scripts/ci-wait.sh`.
+- **Location:** `skills/finish-work/references/ci.md`, `skills/finish-work/references/ci-fix.md`, and `skills/finish-work/scripts/ci-wait.sh`.
 - **Reason:** The task needs a real CI failure in a futex repository after the merge, and none can happen before it.
 
 **Background:** The `finish-work` skill has step 7, "CI". After each change
 that can start CI, the agent runs `scripts/ci-wait.sh` of that skill on the
 last commit. A change that can start CI is a push, the opening of a pull
 request, or a change from draft to ready. On a failure, `references/ci.md`
-gives the action: a fix in the branch, one rerun for a flaky test, a fix
-pull request from `main` for an unrelated failure, or a report to the user.
+and `references/ci-fix.md` give the action: a fix in the branch, one rerun
+for a flaky test, a fix pull request from `main` for an unrelated failure,
+or a report to the user.
 Before the merge, the text was checked only against recorded cases:
 accounting pull requests #740, #741, #739, #724, and #517, redloop pull
 request #1, and firna pull request #1360.

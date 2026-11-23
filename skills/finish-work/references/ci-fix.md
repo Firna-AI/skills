@@ -47,8 +47,8 @@ request from it: the claim pull request. Some steps differ by app:
    Each workspace in the list gives its branch. A fix pull request in
    Conductive comes from such a branch, not from `ci-fix/`.
    `gh pr list --state all --head <branch>` gives the pull requests of a
-   branch. A closed claim pull request links its fix pull request in a
-   comment.
+   branch. The timeline of a claim pull request lists its fix pull
+   request, as the wait step below shows.
 
    When an owner exists, name it in the report. Then wait, as the last step
    says. When a follow-up item records the failure, give the item to the
@@ -102,7 +102,8 @@ request from it: the claim pull request. Some steps differ by app:
    - In Conductor, the agent pushes to the claim branch, with
      `git push origin HEAD:ci-fix/<job>-<step>`.
    - In Conductive, the agent pushes to its workspace branch. It never
-     pushes to the claim branch.
+     pushes to the claim branch. The prompt also gives the claim commit,
+     for the merge step.
 
    The prompt tells the agent to follow the `finish-work` skill and this
    file, `references/ci-fix.md` of that skill. At the pull request step of
@@ -122,16 +123,18 @@ request from it: the claim pull request. Some steps differ by app:
      search for an owner finds the fix pull request.
    - It opens the fix pull request as a draft, from its workspace branch
      into `main`. The merge step below marks it ready.
-   - It closes the claim pull request, with a comment that links the fix
-     pull request.
+   - It links the fix pull request in a comment on the claim pull
+     request. Then it closes the claim pull request, when it is open.
 
    ```sh
    gh pr create --draft --base main --title "<title>" --body-file <file>
-   gh pr close <claim> --comment "The fix pull request is #<number>."
+   gh pr comment <claim> --body "The fix pull request is #<number>."
+   gh pr close <claim>
    ```
 
-   Keep the claim branch. It holds the claim until the fix pull request
-   merges, so that no other agent claims the failure.
+   When the agent does this step again, it uses the fix pull request that
+   its branch already has. Keep the claim branch. It holds the claim until
+   the fix pull request merges, so that no other agent claims the failure.
 
 6. Merge. The agent of the fix pull request merges it into `main` only
    when all of these hold:
@@ -157,37 +160,70 @@ request from it: the claim pull request. Some steps differ by app:
 
    When they hold, mark the pull request ready. Then watch the CI of its
    last commit, because readiness can start more runs. Merge only when
-   each run of that watch passed. The merge command also deletes the
-   branch of the pull request. In Conductive, that branch is the workspace
-   branch. Delete the claim branch too. Then watch the merge commit,
-   because a push to `main` can deploy. Report a failure there to the user
-   at once.
+   each run of that watch passed. In Conductor, the merge command also
+   deletes the claim branch, the head of the pull request. In Conductive,
+   leave out `--delete-branch`. It would check out `main`, and Continue
+   moves a workspace only from its own branch. Then watch the merge
+   commit, because a push to `main` can deploy. Report a failure there to
+   the user at once.
 
    ```sh
    gh pr ready <number>
    scripts/ci-wait.sh
-   gh pr merge <number> --<method> --delete-branch
-   git push origin --delete ci-fix/<job>-<step>   # Conductive
+   gh pr merge <number> --<method> --delete-branch   # Conductor
+   gh pr merge <number> --<method>                   # Conductive
    git fetch origin main
    merge=$(gh pr view <number> --json mergeCommit --jq .mergeCommit.oid)
    scripts/ci-wait.sh "$merge"
+   ```
+
+   In Conductive, then end the claim. First check that the fix pull
+   request has the state `MERGED`. Then delete the claim branch only while
+   it holds the claim commit, so that the push cannot delete a newer
+   claim:
+
+   ```sh
+   gh pr view <number> --json state --jq .state
+   git push --force-with-lease=refs/heads/<claim branch>:<claim commit> \
+     origin --delete <claim branch>
    ```
 
    When a condition fails, mark the pull request ready. Report it to the
    user. Then stop.
 
 7. Wait for the merge. As the agent of the branch, wait at most 60 minutes
-   for the fix pull request to merge. In Conductive, use the claim pull
-   request in its place until the claim pull request closes. Then use the
-   fix pull request that its comment links. Check the state every 5
-   minutes, with `gh pr view <number> --json state`.
+   for the fix pull request to merge. Check its state every 5 minutes, with
+   `gh pr view <number> --json state`.
 
-   When it merges, merge the base branch of your pull request into the
-   branch, with the `git-merge` skill. Push, and watch again. When the base
-   branch is a primary branch of the `delegating` skill, it gets the fix
-   only when its orchestrator merges `main`. Until then, report the red CI
-   under **Open**, with the fix pull request. Report it there too when the
-   time ends first.
+   In Conductive, each check also reads the claim and the fix workspace:
+
+   - The fix pull request is the pull request whose description starts
+     with the line `Claim: #<claim>`. The timeline of the claim pull
+     request lists it. Until it exists, use the claim pull request in its
+     place.
+   - When the claim pull request is closed and no fix pull request
+     exists, the claim ended without a fix. Then start "Find the cause"
+     in [ci.md](ci.md#find-the-cause) again.
+   - When the first session of the fix workspace has the state `failed`,
+     stop the wait. Report the failure and the claim to the user at once.
+     The create reply, or the workspace list of step 2, gives the id of
+     the workspace.
+
+   ```sh
+   gh api "repos/{owner}/{repo}/issues/<claim>/timeline" --paginate \
+     --jq '.[] | select(.event == "cross-referenced") | .source.issue
+       | select(.pull_request != null)
+       | select((.body // "") | split("\n")[0] | rtrimstr("\r")
+         == "Claim: #<claim>") | .number'
+   conductive sessions list --workspace <workspace-id>
+   ```
+
+   When the fix pull request merges, merge the base branch of your pull
+   request into the branch, with the `git-merge` skill. Push, and watch
+   again. When the base branch is a primary branch of the `delegating`
+   skill, it gets the fix only when its orchestrator merges `main`. Until
+   then, report the red CI under **Open**, with the fix pull request.
+   Report it there too when the time ends first.
 
 Add no follow-up item for a failure that a fix pull request owns. The fix
 pull request is the record. An item in your branch would stay after the

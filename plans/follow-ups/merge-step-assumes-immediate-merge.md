@@ -1,0 +1,31 @@
+# Merge step assumes an immediate merge
+
+- **Severity:** Low. **Effort:** Small. **Confidence:** Medium. **Harder later:** No.
+- **Kind:** Outside the scope.
+- **Added:** 2026-11-23, from the branch `calummoore/ci-fix-steps-own-workspace-branch-in-bk7g`, review round 1, the check of finding 1.
+- **Location:** `skills/finish-work/references/ci-fix.md`, step 6 "Merge", the block with `gh pr merge`.
+- **Reason:** The merge command and the read of the merge commit are unchanged from `origin/main`, and no repository of the record uses a merge queue.
+
+- **Terms:**
+  - **Fix pull request:** the one pull request from `main` that fixes a CI failure that is unrelated to the branch where the failure shows.
+  - **Merge queue:** a GitHub setting. A merge request then waits in a queue, and GitHub merges the pull request later, after its checks pass.
+- **Background:**
+  - Step 6 of `skills/finish-work/references/ci-fix.md` merges the fix pull request when the agent may merge it.
+  - In Conductor, it runs `gh pr merge <number> --<method> --delete-branch`. In Conductive, it runs the same command without `--delete-branch`.
+  - Then it reads the merge commit with `gh pr view <number> --json mergeCommit --jq .mergeCommit.oid` and watches it with `scripts/ci-wait.sh`.
+  - A reading of the source of gh 2.105.0 showed two facts. With a merge queue, gh refuses `--delete-branch`, in `pkg/cmd/pr/merge/merge.go` at lines 248 and 249.
+  - Without that flag, gh adds the pull request to the queue and exits 0, at lines 353 to 355. The merge commit does not exist until the queue merges the pull request.
+  - In Conductive, the step already checks the state `MERGED` before it deletes the claim branch.
+- **Problem:** In a repository with a merge queue, the Conductor merge command fails. The Conductive merge command returns before the merge, so the next line reads an empty merge commit.
+- **Impact if no action:** The agent stops at the failed command, or it watches no merge commit. Then its report gives a wrong state of the merge.
+- **Root question:** How does the merge step wait for the real merge when GitHub merges the pull request later?
+- **Options:**
+  - **A.** Change nothing. Effort: Small.
+  - **B.** After the merge command, wait until `gh pr view <number> --json state` gives `MERGED`, within the deadline of the watch. Only then read the merge commit. Leave out `--delete-branch` where the repository has a merge queue. Effort: Small.
+  - **C.** Add a line for the merge queue to the `## CI` section of `AGENTS.md`, beside `Agent merges`. The merge step reads it and picks the command. Effort: Small.
+  - **D.** A script beside `ci-wait.sh` that merges the pull request and waits for the state `MERGED`, with a test against a fake `gh`. Effort: Medium.
+- **Left out:** A merge with `--auto`. It also returns before the merge, so it needs the same wait as B.
+- **Wider fix:** D. One tested script holds the merge and the wait for each caller.
+- **Previous examples:** None found.
+- **Recommendation:** B. One more read handles both a direct merge and a queue. D best protects the codebase.
+- **Action:** fix after merge, apply B, because the merge command is unchanged from `origin/main` and no repository of the record uses a merge queue.
