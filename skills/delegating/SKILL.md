@@ -160,9 +160,9 @@ Codex and Claude sessions. One combined gate verified them.
    merged tree, then push. With a pull request that is already open and
    whose CI runs the gate, let CI run it, as the `finish-work` skill
    says. Wait for its pass. Never open a pull request to make CI run
-   the gate. Each workspace ran the gate on its own tree only. The combined
-   gate proves the milestone. Then start the milestones that depend on
-   it, unless step 6 blocks one.
+   the gate. Each workspace ran the gate on its own tree only. The
+   combined gate proves the milestone. Then start the milestones that
+   depend on it, unless step 6 blocks one.
 
    | The record says | The answer |
    | --- | --- |
