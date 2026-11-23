@@ -19,7 +19,8 @@
   - In Conductive, the merge step merges without `--delete-branch`. After the state `MERGED`, it deletes the claim branch with a lease on the claim commit.
   - The agent merges only where `AGENTS.md` on `main` says `Agent merges: on, <method>`. Otherwise the user merges the fix pull request, and no step deletes the claim branch.
   - In Conductive, the first line of the fix pull request is `Claim: #<claim>`. So the timeline of the claim pull request lists the fix pull request.
-  - In Conductor, the claim branch is the head of the fix pull request. A merge by the user deletes it only when GitHub deletes head branches on merge.
+  - In Conductor, the claim branch is the head of the fix pull request. A merge by the user can leave it, also where GitHub deletes head branches on merge.
+  - In `mokly-ai/mokly`, GitHub kept the claim branch of #282 after its merge on 2026-11-04. It deleted the head branches of #281 and #284 after their merges.
   - In Conductive, the fix pull request comes from the workspace branch. So a merge by the user never deletes the claim branch, also when GitHub deletes head branches.
   - On 2026-11-23, three claim branches stayed on GitHub, each at the head of its squash-merged pull request. The user merged each one.
   - These were `ci-fix/complete-gate-exports` of `Firna-AI/conductive` #262, `ci-fix/mac-app-test-electron-previews` of `Firna-AI/conductive` #413, and `ci-fix/repository-rust-audit-0433` of `mokly-ai/mokly` #282.
@@ -27,6 +28,7 @@
   - A scratch test with two temporary repositories showed each case. A second claim is rejected while the first is live. A new claim is rejected after a squash merge of the first.
   - The same test showed a push with a lease on the stale claim commit. It replaced the commit, and a second push with the same lease was rejected.
   - A lease does not tell an ended claim from a fresh one. Between the push of a claim and the opening of its draft pull request, a fresh claim has no pull request.
+  - In Conductive, step 3 also checks the claim right after a successful push. When a person deleted the branch of a claim whose fix pull request is open, the agent puts that claim back with a lease.
 - **Problem:** After a merge by the user, the claim branch stays. A later failure of the same job and step then gets a rejected claim. The search finds no open owner, and the procedure gives no next step.
 - **Impact if no action:** An agent that meets the same failure again improvises. It can add a suffix to the branch name, ask the user, or stop. In Conductive, each merge by the user leaves one more claim branch.
 - **Root question:** How does a claim end after its fix ends, so that a later failure can be claimed and a live claim stays safe?
@@ -34,11 +36,40 @@
   - **A.** Change nothing. A later claim of the same job and step is rejected. The agent can add the test name to the branch name, as step 3 says for a claim of another failure. A failure without a test name has no such rule. Effort: Small.
   - **B.** The report of the fix agent and the fix pull request name the claim branch. They ask the member who merges to delete it. This adds a manual step to each merge by a member, and a person can forget it. Effort: Small.
   - **C.** In "Wait for the merge", the agent of the failing branch deletes the claim branch with a lease on the claim commit. It does this when it sees the fix pull request merge. That wait lasts at most 60 minutes, so a later merge still leaves the claim branch. Effort: Small.
-  - **D.** A rejected claim replaces a claim whose commit is older than one hour, when the search for an owner finds no open owner. It pushes with a lease on that commit. A fresh claim is younger than one hour, so it stays. This also frees a claim whose fix closed without a merge. Risk: it depends on the clock and on a search that finds each live fix. It changes step 3, which both apps share. Effort: Small.
-  - **E.** A rejected claim replaces a claim only with a proof that the claim ended. In Conductor, the proof is a merged pull request from the claim branch whose head commit is the branch head. In Conductive, the claim pull request is closed, its head commit is the branch head, and a merged pull request starts with the line `Claim: #<claim>`. The agent then replaces the claim with a lease on that commit. A fresh claim has no such proof, so it stays. This also frees the three claim branches that stay today. A fix that closes without a merge still needs a person. It changes step 3, which both apps share. Effort: Small.
-  - **F.** A scheduled workflow in each repository deletes each claim branch that has the proof of E. It needs a workflow file in each repository and the right to delete branches. Effort: Medium.
-- **Left out:** A claim with no open pull request counts as ended. This fails the goal, because a fresh claim has no pull request before its draft opens, so a second agent could take a live claim. Delete the claim branch when the fix pull request opens. This fails the goal, because the fix is still active, and the search can miss a new pull request. Start the Conductive workspace from the claim branch, so that a merge puts the claim commit into `main` and the next claim fast-forwards. This fails where only squash merges are allowed, as in `mokly-ai/mokly`. A sweep that deletes each `ci-fix/` branch whose pull requests are all merged or closed. This fails the goal, because in Conductive the claim pull request closes while its fix pull request is still open. GitHub's own deletion of head branches. In Conductive, the head branch is the workspace branch, so it cannot delete the claim branch.
-- **Wider fix:** E. It ends a claim only with a positive proof, so a live claim stays safe in each time window, in both apps.
+  - **D.** A rejected claim replaces a claim whose commit is older than one hour.
+    - It does this only when the search for an owner finds no open owner. It pushes with a lease on that commit.
+    - A fresh claim is younger than one hour, so it stays. This also frees a claim whose fix closed without a merge.
+    - Risk: it depends on the clock and on a search that finds each live fix. It changes step 3, which both apps share.
+    - Effort: Small.
+  - **E.** A rejected claim replaces a claim only with a proof that the claim ended.
+    - In Conductor, the proof is a merged pull request from the claim branch whose head commit is the branch head.
+    - In Conductive, the claim pull request is closed, and its head commit is the branch head. Also, a merged pull request starts with the line `Claim: #<claim>`.
+    - The agent then replaces the claim with a lease on that commit. A fresh claim has no such proof, so it stays.
+    - Write it as one check of the claim state, together with the Conductive check of step 3 after a successful push.
+    - This also frees the three claim branches that stay today. A fix that closes without a merge still needs a person. It changes step 3, which both apps share.
+    - Effort: Small.
+  - **F.** A scheduled workflow in each repository deletes each claim branch that has the proof of E. It deletes with a lease on the branch head that it checked, so a newer claim stays. It needs a workflow file in each repository and the right to delete branches. Effort: Medium.
+  - **G.** E in Conductive only, in a Conductive bullet of step 3. It accepts both proofs of E, because the three stale branches came from the flow that Conductor still uses. The Conductor steps stay as they are, so a Conductor agent still meets a stale claim. Effort: Small.
+  - **H.** A Conductive automation in each repository, with the trigger "PR merged".
+    - Its prompt reads the first line `Claim: #<claim>` of the merged pull request. It checks the proof of E, then deletes the claim branch with a lease.
+    - It ends the claim at each merge by a member, and it changes no step of either app.
+    - Cost: the trigger filters only by author, so each merged pull request of the repository starts a cloud computer and a model run. A member must create the automation in each repository.
+    - Effort: Small.
+  - **I.** A claim script next to `ci-wait.sh` in the `finish-work` skill, with three commands.
+    - `claim` pushes the claim. On a rejection, it checks the proof of E and replaces the claim with a lease.
+    - `state` reports a live claim, a claim that ended with a merged fix, or a claim that ended without a fix.
+    - `release` deletes the claim with a lease after the state `MERGED`.
+    - Steps 3, 5, 6, and 7 call it. Shell tests use a local bare remote and a stub `gh`, as `tests/ci_wait_test.sh` does.
+    - Cost: a new script, a new test file, and changed steps in both apps. Effort: Medium.
+- **Left out:**
+  - A claim with no open pull request counts as ended. This fails the goal, because a fresh claim has no pull request before its draft opens. So a second agent could take a live claim.
+  - Delete the claim branch when the fix pull request opens. This fails the goal, because the fix is still active, and the search can miss a new pull request.
+  - Start the Conductive workspace from the claim branch, so that a merge puts the claim commit into `main` and the next claim fast-forwards. This fails where only squash merges are allowed, as in `mokly-ai/mokly`.
+  - A sweep that deletes each `ci-fix/` branch whose pull requests are all merged or closed. This fails the goal, because in Conductive the claim pull request closes while its fix pull request is still open.
+  - GitHub's own deletion of head branches. In Conductive, the head branch is the workspace branch, so it cannot delete the claim branch.
+  - A claim name for each occurrence of a failure, for example with the failing `main` commit. Two agents that meet one failure at different `main` commits then get two names, so this fails the goal.
+  - Turn agent merges on in each repository. A fix that changes a checksum, a dependency, a download URL, a secret, or a workflow file still waits for a merge by a person. So this fails the goal.
+- **Wider fix:** I. It keeps each claim action and its proof in one tested script, so a new end state changes one place.
 - **Previous examples:** The three claim branches in the Background, from 2026-11-03 to 2026-11-16.
-- **Recommendation:** E. It frees each ended claim when the next claim needs it, with no person and no new workflow. The lease keeps the claim a lock. F also protects the codebase, but it adds a workflow to each repository.
+- **Recommendation:** E. It frees each ended claim when the next claim needs it, with no person and no new workflow. The lease keeps the claim a lock. Choose G if the Conductor steps must stay as they are. I best protects the codebase, but it adds a script and its tests.
 - **Action:** ask the user, because the recommended option also changes the Conductor steps, which the user chose on 2026-11-23 to keep as they are.

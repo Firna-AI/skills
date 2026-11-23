@@ -3,7 +3,7 @@
 - **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** No.
 - **Kind:** Outside the scope.
 - **Added:** 2026-11-20, from the branch `calummoore/move-codex-actions-to-gpt-6-2-sol-moco`. Its review listed two problems outside the scope. The lookup rule names `conductor model`, which a Conductive computer does not have. The claude rows name `opus-5-5-1m`, which `conductive models list` does not give. This item holds both, because they share one root question.
-- **Location:** `skills/models/SKILL.md`, lines 28 to 31, the lookup rule, and lines 18, 19, 21, 22, and 26, the claude rows. `skills/delegating/SKILL.md`, lines 78 and 79. `skills/delegating/references/conductor.md`, each command block. `skills/brainstorming/SKILL.md`, line 31. `skills/finish-work/references/ci-fix.md`, lines 39 and 88 to 90.
+- **Location:** `skills/models/SKILL.md`, lines 28 to 31, the lookup rule, and lines 18, 19, 21, 22, and 26, the claude rows. `skills/delegating/SKILL.md`, lines 78 and 79. `skills/delegating/references/conductor.md`, each command block. `skills/brainstorming/SKILL.md`, line 31. `skills/finish-work/references/ci-fix.md`, the `conductor` commands of step 2 "Search for an owner" and step 4 "Start the fix".
 - **Reason:** Each fix changes the rule that names the source of the model ids, and this branch only moves the codex ids.
 
 - **Terms:**
@@ -15,7 +15,7 @@
   - `skills/models/SKILL.md` has one table with the agent, the model id, and the effort of each action. Skills and plans name the action, not the model id.
   - Lines 28 to 31 of that file say: "The model ids are the ids that `conductor model` lists. When `conductor model` does not list a model of this table, the table is stale. Tell the user. Then use the nearest model that it lists."
   - `skills/delegating/SKILL.md`, lines 78 and 79, say the same about a stale table. `skills/delegating/references/conductor.md` gives each route as a `conductor` command, for example `conductor session create`.
-  - `skills/brainstorming/SKILL.md` line 31 names a `conductor` command for work in Conductor. `skills/finish-work/references/ci-fix.md` lines 39 and 88 name `conductor` commands with no app condition.
+  - `skills/brainstorming/SKILL.md` line 31 names a `conductor` command for work in Conductor. `skills/finish-work/references/ci.md` lines [163](https://github.com/Firna-AI/skills/blob/3e96d1b3bd4be1a4e7eb88dce3442db53b51f73c/skills/finish-work/references/ci.md?plain=1#L163) and [198](https://github.com/Firna-AI/skills/blob/3e96d1b3bd4be1a4e7eb88dce3442db53b51f73c/skills/finish-work/references/ci.md?plain=1#L198) name `conductor` commands with no app condition.
   - On 2026-11-20, a Conductive cloud computer had no `conductor` command. Its tool `conductive` printed the model list with `conductive models list`.
   - That list gave the codex ids `gpt-6.2-sol`, `gpt-6.2-astra`, `gpt-6.1-sol`, `gpt-6-astra`, `gpt-6.1-terra`, and `gpt-6-luna`. It gave the claude ids `claude-opus-5-5`, with the label "Opus 5.5", `claude-sonnet-5-5`, `claude-haiku-5-5`, and `claude-fable-5-2`. It did not give `opus-5-5-1m`.
   - The five claude rows of the table name `opus-5-5-1m`. These are `brainstorming`, `default orchestrator`, `ui implementor`, `docs implementor`, and `second-pass review agent`. The four codex rows name `gpt-6.2-sol`.

@@ -1,0 +1,34 @@
+# Merge conditions skip a recheck of main
+
+- **Severity:** Low. **Effort:** Small. **Confidence:** Medium. **Harder later:** No.
+- **Kind:** Outside the scope.
+- **Added:** 2026-11-23, from the branch `calummoore/ci-fix-steps-own-workspace-branch-in-bk7g`, review round 2, the check of finding 7.
+- **Location:** `skills/finish-work/references/ci-fix.md`, step 6 "Merge", the list of conditions.
+- **Reason:** The merge conditions are the same on `origin/main`, and the branch kept the Conductor steps, as the user asked on 2026-11-23.
+
+- **Terms:**
+  - **Fix pull request:** the one pull request from `main` that fixes a CI failure that is unrelated to the branch where the failure shows.
+  - **Agent merge:** a merge of the fix pull request by its own agent. It runs only where the `## CI` section of `AGENTS.md` on `main` says `Agent merges: on, <method>`.
+- **Background:**
+  - Step 6 of `skills/finish-work/references/ci-fix.md` lists the conditions of an agent merge:
+    - the setting in `AGENTS.md`
+    - the fix rule
+    - no finding that waits for the user
+    - no change of a checksum, a dependency, a download URL, a secret, or a workflow file
+    - a pass of each CI run of the last commit
+  - No condition checks that the failed job still fails on `main`.
+  - In `Firna-AI/conductive`, pull request #428 repaired `main` 2 minutes after the claim of #429 on 2026-11-17. The claim stayed open for 53 more minutes, while its fix workspace worked on its own fix.
+  - In Conductive, the fix agent now checks that the claim pull request is still open before it opens the fix pull request. It does not check `main`.
+  - Some unrelated failures pass on one run of `main` and fail on the next. The Site Lighthouse failure of `mokly-ai/mokly` #431 failed "on many branches and sometimes on `main`".
+- **Problem:** Where agent merges are on, the fix agent can merge its fix after another repair reached `main`. Then `main` gets two repairs of one failure.
+- **Impact if no action:** A second change for one failure lands on `main`. It can conflict with the first repair or undo a part of it.
+- **Root question:** How does the fix agent learn before its merge that `main` no longer needs the fix?
+- **Options:**
+  - **A.** Change nothing. The CI of the fix pull request still passes, and agent merges are off in each repository of the record. Effort: Small.
+  - **B.** Add a merge condition: the failed job still fails on the newest `origin/main`. Read it as step 3 of "Find the cause" in `skills/finish-work/references/ci.md` does. When the job passes there, the agent does not merge and reports to the user. An intermittent failure can pass on one run, so a real fix then waits for the user. Effort: Small.
+  - **C.** Before the merge, merge `origin/main` into the fix branch, and compare the merged diff with the diff of the fix. When another repair already changed the same files, the agent reports to the user and does not merge. Effort: Small.
+- **Left out:** A stop of the fix work at each new commit on `main`. It adds a watch of `main` to each fix workspace, and B gives the same result at the one moment that matters.
+- **Wider fix:** B. It tests the failure itself, whatever another repair changed.
+- **Previous examples:** `Firna-AI/conductive` #428 and #429, from 2026-11-17.
+- **Recommendation:** B. It reads the failure itself, and an intermittent failure only waits for the user.
+- **Action:** ask the user, because B and C add a condition to the agent merge, and only the user adds a new gate.
