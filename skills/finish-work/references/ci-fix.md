@@ -77,10 +77,10 @@ request from it: the claim pull request. Some steps differ by app:
    another failure, add the test name to the branch name.
 
    In Conductive, a person can delete a claim branch after its claim pull
-   request closes. So check for an earlier claim right after the push
-   succeeds, before the claim pull request opens. An earlier claim pull
-   request of the branch still holds the claim when its fix pull request
-   is open. The wait step below shows how to find that fix pull request.
+   request closes. So check for an earlier claim between the push and
+   `gh pr create`. An earlier claim pull request of the branch still holds
+   the claim when its fix pull request is open. The wait step below shows
+   how to find that fix pull request.
 
    When an earlier claim still holds, put the head commit of its claim
    pull request back, with a lease on your claim commit. Its fix agent can
