@@ -60,8 +60,34 @@ not have the plan, the review report, or the findings file.
   parent item and its decision items stay apart. When two linked items
   stay apart, give each a **Related** line. Name the other file, and say
   what the link means.
-- Before you commit the item, read it as a reader without context. Add
-  each fact that you had to look up somewhere else.
+- Start from the template. Fill each slot of the item's kind. Do not drop
+  a slot because the source did not give it.
+
+## Checking new items
+
+The writer of an item knows its context, so the writer's own read does
+not find a missing fact. Before the commit that adds or rewrites items,
+start one fresh read-only check for all of them. The check is a
+`second-pass review agent` of the `models` skill. Give it the paths of the
+items and this prompt:
+
+> Check each follow-up item at the given paths. You may read the
+> repository. Do not modify files. For each item, report:
+>
+> 1. Each slot of the template `templates/follow-up.md` of the `plans`
+>    skill that the item lacks, or that has a letter or a claim with no
+>    reason.
+> 2. Each fact that the code at the branch head contradicts: a path, a
+>    line, a count, a name, or a command. Check each one.
+> 3. Each fact that you had to look up outside the item to do the work.
+> 4. Each other follow-up item under `plans/follow-ups/` that shares a
+>    cause, a file, or a fix with this item and has no **Related** link.
+>
+> Give the item path, then one line for each problem. Say "No problems"
+> for an item with none.
+
+Fix each problem that the check reports, in the item. Then commit. Save
+the report under `.context/`.
 
 ## Work with more than one open question
 

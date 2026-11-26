@@ -139,6 +139,10 @@ that its root question does not settle, give that question its own item.
 Each item then gets its own grades, decision test, and **Action** line.
 Do not number questions inside an item.
 
+The follow-up item template of the `plans` skill copies the slots from
+**Terms** to **Action**. When you change a slot here, change it there in
+the same branch.
+
 ```markdown
 ### 1. <The problem, in eight words or fewer>
 
