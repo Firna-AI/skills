@@ -201,7 +201,9 @@ needs. Its layout is [templates/follow-up.md](templates/follow-up.md). Read
 [references/follow-up-items.md](references/follow-up-items.md) before you
 add, fix, or drop an item, or choose the next one. Read it also when a
 change replaces a decision or edits a protocol section. Such a change
-updates each item that names that decision or section.
+updates each item that names that decision or section. Before the commit
+that adds or rewrites items, run the fresh check of new items that the
+reference gives.
 `scripts/follow-ups.sh` lists the open items, highest priority score first.
 
 ## Deleting the plan
