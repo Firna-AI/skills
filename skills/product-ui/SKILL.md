@@ -1,6 +1,6 @@
 ---
 name: product-ui
-description: Use before you implement or change a screen, a component, a view, or a mockup, when you write or edit user-facing text such as a status, helper, label, or error message, when you add an empty, loading, or error state, when you are about to hardcode a number, a row, or sample data in a screen, when you add an accent border, a badge, or an environment label, and when you need a component that may already exist.
+description: Use before you implement or change a screen, a component, a view, or a mockup, when you write or edit user-facing text such as a status, helper, label, or error message, when you add an empty, loading, or error state, when you are about to hardcode a number, a row, or sample data in a screen, when you add an accent border, a badge, or an environment label, when you build a list row or a card that opens something, and when you need a component that may already exist.
 ---
 
 # Product UI
@@ -15,6 +15,23 @@ repository's `AGENTS.md` under `## Product`.
 - If a component or pattern is used many times across the app, extract it
   or add it to the shared components instead of duplicating the
   implementation.
+
+## Rows and click targets
+
+- A list row or a card that leads to one place is a link or a button as
+  a whole. The title, the description, and the empty space are all part
+  of the click target.
+- Do not add trailing text such as "Open", "View", or "Details" that
+  repeats what the row does. Do not make such text the only link of the
+  row.
+- Show the target with a hover state and a focus state on the whole row.
+  A quiet chevron at the end of the row is optional.
+- Use a trailing control only for a second, different action on the same
+  row. Examples are a three-dot menu, a toggle, and a "Select" choice.
+  Put the control outside the row's link element. A click on the control
+  must not trigger the row's link.
+- An existing row component with a trailing "Open" link is not a pattern
+  to copy. Make the whole row the link instead.
 
 ## Forbidden visual patterns
 

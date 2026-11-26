@@ -61,7 +61,7 @@ Codex, and with any other agent that reads the
 | `databases` | Before you touch migrations, a schema, Diesel code, or store crates. |
 | `shared-types` | Before you add or change a type that crosses between Rust and TypeScript, or write a TypeScript type for backend data. |
 | `mockups` | Before you create or change a mockup, a screen component, or a user flow. |
-| `product-ui` | Before you change a user-facing screen, state, or copy, or hardcode data in a screen. |
+| `product-ui` | Before you change a user-facing screen, state, or copy, hardcode data in a screen, or build a list row or a card that opens something. |
 | `agents-md` | A repository has no `AGENTS.md`, still has a monolithic one, or needs its rules aligned with the shared skills. |
 | `agents-setup` | A repository has no `.agents/setup`, or the user asks to set up, align, or speed up its Amp orb setup. Before you add sccache, `RUSTC_WRAPPER`, or another build cache to a setup script or to the Amp env vars. |
 | `writing-skills` | Before you create or edit a skill or its description. Opt-in: linked only with `install.sh --opt-in`. |
