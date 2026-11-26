@@ -27,11 +27,15 @@ repository's `AGENTS.md` under `## Product`.
 - Show the target with a hover state and a focus state on the whole row.
   A quiet chevron at the end of the row is optional.
 - Use a trailing control only for a second, different action on the same
-  row. Examples are a three-dot menu, a toggle, and a "Select" choice.
-  Put the control outside the row's link element. A click on the control
-  must not trigger the row's link.
+  row. Examples are a three-dot menu, a toggle, and a "Select" choice on
+  a row that itself opens something else. Put the control outside the
+  row's link element. A click on the control must not trigger the row's
+  link.
+- A row whose only action is to choose the item is a button as a whole.
+  It has no trailing "Select" button.
 - An existing row component with a trailing "Open" link is not a pattern
-  to copy. Make the whole row the link instead.
+  to copy. Change that component so that the whole row is the link. Do
+  not build a second row component beside it.
 
 ## Forbidden visual patterns
 
