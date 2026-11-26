@@ -1,0 +1,42 @@
+# Merge step assumes an immediate merge
+
+- **Severity:** Medium. **Effort:** Medium. **Confidence:** Medium. **Harder later:** No.
+- **Kind:** Fix after merge.
+- **Added:** 2026-11-23, from the branch `calummoore/ci-fix-steps-own-workspace-branch-in-bk7g`, review round 1, the check of finding 1, and review round 2, finding 9.
+- **Location:** `skills/finish-work/references/ci-fix.md`, step 6 "Merge", the block with `gh pr merge` and the end of the claim after it. `skills/finish-work/scripts/ci-wait.sh`.
+- **Reason:** The failure needs a repository with a merge queue, and no repository of the record has one.
+
+- **Terms:**
+  - **Fix pull request:** the one pull request from `main` that fixes a CI failure that is unrelated to the branch where the failure shows.
+  - **Merge queue:** a GitHub setting. A merge request then waits in a queue, and GitHub merges the pull request later, after its checks pass.
+  - **Claim branch:** the branch `ci-fix/<job>-<step>` that stops two agents from claiming one CI failure.
+- **Background:**
+  - Step 6 of `skills/finish-work/references/ci-fix.md` merges the fix pull request when the agent may merge it.
+  - In Conductor, it runs `gh pr merge <number> --<method> --delete-branch`. In Conductive, it runs the same command without `--delete-branch`. The branch of this item added the Conductive command.
+  - Then it reads the merge commit with `gh pr view <number> --json mergeCommit --jq .mergeCommit.oid` and watches it with `scripts/ci-wait.sh`.
+  - In Conductive, the step then checks the state `MERGED` before it deletes the claim branch. That check comes after the watch.
+  - A reading of the source of gh 2.105.0 showed two facts. With a merge queue, gh refuses `--delete-branch`, in `pkg/cmd/pr/merge/merge.go` at lines 248 and 249.
+  - Without that flag, gh adds the pull request to the queue and exits 0, at lines 353 to 355. The merge commit does not exist until the queue merges the pull request.
+  - A watch of an empty commit exits 4 with `cannot resolve commit:`.
+  - When the checks of its merge group fail, GitHub removes the pull request from the queue, and the pull request stays open.
+- **Problem:** In a repository with a merge queue, the Conductor merge command fails. The Conductive merge command returns before the merge, so the next lines watch an empty merge commit. The claim branch then stays, because the state is not `MERGED` yet.
+- **Impact if no action:** GitHub can merge the fix after the agent stopped. Then nobody watches the merge commit, although a push to `main` can deploy, and the report gives a wrong state of the merge.
+- **Root question:** How does the merge step start its later work only after GitHub reports the fix as merged, also when the merge comes late?
+- **Options:**
+  - **A.** Change nothing. Effort: Small.
+  - **B.** After the merge command, wait until `gh pr view <number> --json state` gives `MERGED`, within the deadline of the watch. Only then read the merge commit and end the claim. Report a fix that is still open at the deadline as pending. Effort: Small.
+  - **C.** Add a line for the merge queue to the `## CI` section of `AGENTS.md`, beside `Agent merges`. The merge step reads it and picks the command. Effort: Small.
+  - **D.** Give `ci-wait.sh` a mode that takes the fix pull request.
+    - The mode polls until the state is `MERGED`, within its deadline, and then watches the merge commit.
+    - The merge step calls this mode in place of the read of the merge commit, so no caller reads a merge commit before `MERGED`.
+    - The regression test uses the fake `gh` of `tests/ci_wait_test.sh`. The Watch section of `skills/finish-work/references/ci.md` names the mode.
+    - Effort: Medium.
+  - **E.** B, and each poll also reads the queue state of the fix pull request: `isInMergeQueue` with `gh api graphql`, and `autoMergeRequest`. When an open fix is not in the queue and does not wait to join it, the wait stops at once as a failed merge. Effort: Small.
+  - **F.** A Conductive automation in each repository with the trigger "PR merged". Its run watches the merge commit and ends the claim of a merged pull request whose description starts with `Claim: #`. It also ends the claims of merges by a person, so it answers `plans/follow-ups/claim-branch-stays-after-user-merge.md` and waits for the user. Effort: Medium.
+  - **G.** B with the event stream of gh: `gh event listen --resource <fix pull request URL> --event com.github.pull_request.state.changed.v1 --timeout <rest of the limit>`, then a read of the state. When the stream is not available, poll as B says. Effort: Small.
+- **Left out:** A merge with `--admin` past the queue. It breaks the merge rules of the repository, which stay. A fixed wait before the read. B is better on every point, because it has the same limit and stops at the merge. A merge with `--auto`. It also returns before the merge, so it needs the same wait as B.
+- **Wider fix:** D. No caller reads a merge commit before `MERGED`, and the mode builds on the tested loop of `ci-wait.sh`.
+- **Previous examples:** None found.
+- **Related:** `plans/follow-ups/claim-branch-stays-after-user-merge.md`: a queued merge that ends after the time limit leaves the claim branch, as a merge by a person does. Option F here also answers that item.
+- **Recommendation:** D. It removes the early read for each caller, with a regression test on the fake `gh`. B is the smallest direct fix.
+- **Action:** fix after merge, apply D, because the failure needs a repository with a merge queue, and no repository of the record has one.

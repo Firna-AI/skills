@@ -166,7 +166,7 @@ follow-up items. Name the items that the change added. Give the number of
 all open items, from the script in the `plans` skill. Start work on an
 item only when the user asks for it. The one exception is a fix pull
 request for an unrelated CI failure. It works on the item that records
-the failure, as [references/ci.md](references/ci.md) says.
+the failure, as [references/ci-fix.md](references/ci-fix.md) says.
 
 ## Checklist
 
