@@ -36,6 +36,7 @@ repository's `AGENTS.md` under `## Product`.
 - An existing row component with a trailing "Open" link is not a pattern
   to copy. Change that component so that the whole row is the link. Do
   not build a second row component beside it.
+- This applies to mockups and to product implementation alike.
 
 ## Forbidden visual patterns
 
