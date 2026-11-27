@@ -26,9 +26,10 @@ does not have to open the app to find the problem.
 - A reviewer and a finding check are read-only. They do not take
   pictures. The reviewer gives a **Screenshot** line that names the
   screen, the state, and what to mark. The working agent takes the
-  picture after the finding checks, for each confirmed finding with that
-  line. Then it replaces the line in the findings file, as "Saved files"
-  below says.
+  picture after the finding checks, for each confirmed finding whose
+  problem shows on a screen. It does this also when the reviewer gave no
+  line, and before it shows the findings to the user. Then it replaces
+  the line in the findings file, as "Saved files" below says.
 
 ## Capture
 
