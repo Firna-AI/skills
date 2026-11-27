@@ -61,9 +61,13 @@ first round, and read the file itself after a context summary.
    "Merging a check report" of the findings file reference says. Name each
    removed finding in one line under **Checks** in the final message. Give
    its number, its title, and the check that failed.
-7. For each confirmed finding with a **Screenshot** line, take the marked
-   picture, as the screenshot rules of the `decisions-and-findings` skill
-   say. Put its sentence and its path in the finding's entry, as text.
+7. For each confirmed finding whose problem shows on a screen, take the
+   marked picture, as the screenshot rules of the `decisions-and-findings`
+   skill say. Do this also when the reviewer gave no **Screenshot** line.
+   Put its sentence and its path in the finding's entry, as text. Do this
+   step before you show the findings to the user. When you cannot take a
+   picture, write the blocker in the entry, and name the finding under
+   **Checks** in the final message.
 
 ## Finding format
 

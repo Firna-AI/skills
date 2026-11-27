@@ -7,14 +7,18 @@ does not have to open the app to find the problem.
 
 ## When to give one
 
-- Give the **Screenshot** field when the problem shows on a screen and a
-  picture makes it clearer. Examples are a layout, a colour, an overlap,
-  a wrong text on a screen, and a missing state.
-- Leave the field out when the problem does not show on a screen. A
+- A problem shows on a screen when a person who opens the screen in one
+  state can see it. Examples are a layout, a colour, an overlap, a wrong
+  text on a screen, and a missing state.
+- Give the **Screenshot** field for each item whose problem shows on a
+  screen. Give the picture also when the words describe the problem well.
+- Leave the field out only when the problem does not show on a screen. A
   problem in code, a test, a log, or a doc source has a **Location**.
-  Leave the field out also when the picture adds nothing to the words.
 - When the problem shows on a screen and you cannot take a picture, write
-  `**Screenshot:** None, because <the reason>.`
+  `**Screenshot:** None, because <the reason>.` The reason names the
+  blocker, such as no browser in the session or a screen that needs data
+  that the session does not have. Then name the item under **Checks** in
+  the final report, as the "Final report" section of the skill says.
 
 ## Who takes it
 
@@ -118,3 +122,8 @@ and neither can reach a file under `.context/`.
 When you give an item again in a message, build the inline image and the
 file link from the recorded path. Take a new picture when a commit changed
 the screen or the code at the item's location since the last picture.
+
+When an item whose problem shows on a screen has no picture, take the
+picture now. This applies when the record has no **Screenshot** field,
+and when it has `None, because` with a blocker that is gone. Record the
+new path in the saved file of the item.

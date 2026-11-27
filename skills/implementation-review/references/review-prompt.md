@@ -130,9 +130,9 @@ number them in that order, from <first number>. Use the item layout in the
   with no prior knowledge.
 - State the problem: what is wrong, in plain words and defined terms.
 - When the problem shows on a screen, such as a product screen, a mockup,
-  or a rendered doc, give a **Screenshot** line. Name the screen, the
-  state that shows the problem, and what a box must mark. Do not take the
-  picture. The working agent takes it.
+  or a rendered doc, always give a **Screenshot** line. Name the screen,
+  the state that shows the problem, and what a box must mark. Do not take
+  the picture. The working agent takes it.
 - State the impact of making no change.
 - Write the root question of the finding in the words of the goal, not
   of the current mechanism. Then give solution options labelled A, B, and
