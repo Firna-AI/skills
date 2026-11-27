@@ -53,8 +53,9 @@ that does not wait.
 
 Read [references/screenshots.md](references/screenshots.md) before you
 give an item whose problem shows on a screen, such as a product screen, a
-mockup, or a rendered doc. It says when to give a marked picture, and how
-to capture, mark, check, store, and link it.
+mockup, or a rendered doc. Each such item needs a marked picture, or a
+reason that names the blocker. The file says how to capture, mark, check,
+store, and link the picture.
 
 ## Simplified Technical English
 
@@ -154,7 +155,7 @@ the same branch.
   - **<Term>:** <One sentence: what it is, and where it lives when that helps the reader find it.>
 - **Background:** <Two to five sentences: what the feature does and where it is. Use plain words and defined terms only.>
 - **Problem:** <One to three sentences that say what is wrong. Use plain words and defined terms only.>
-- **Screenshot:** <Only when the problem shows on a screen. One sentence: what the picture shows and what the box marks. In a message, then the marked picture as an inline image and as a file link. In a saved file, then its path as text.>
+- **Screenshot:** <Only when the problem shows on a screen. One sentence: what the picture shows and what the box marks. In a message, then the marked picture as an inline image and as a file link. In a saved file, then its path as text. Or `None, because <the blocker>`.>
 - **Impact if no action:** <One or two sentences.>
 - **Root question:** <One question in the words of the goal, not of the current mechanism. The options answer it.>
 - **Options:**
@@ -289,7 +290,8 @@ End every task with a final report. Under **Fixed**, **Deferred**, and
 - **Checks:** each check and its result. Give the output of a failed
   check. Name each check that was skipped or blocked, and give the reason.
   Name each unrelated flaky test with its failure text, rerun outcome, and
-  suspected source.
+  suspected source. Name each item whose problem shows on a screen and
+  that has no picture, with the blocker.
 - **Open:** one line for each open item. The line gives the number, the
   title, the severity, the recommended option in a few words with its
   letter, and what the item blocks. Add the open plan TODOs. Add the follow-up items of the

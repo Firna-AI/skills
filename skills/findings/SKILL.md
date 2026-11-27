@@ -38,7 +38,9 @@ the user asks for it.
    the fix commits, the deferrals with their follow-up items, and each
    changed field.
 4. Check each open item against the current code. Update each field that
-   the code changed.
+   the code changed. For each item whose problem shows on a screen and
+   that has no picture, take the picture, as the "Again" section of the
+   screenshot rules says.
 5. Find each open item that changed since the last message that gave it
    in full. The "Open items" section says what counts as a change.
 6. Write each item with the rules in the "Explaining items again" section
@@ -57,7 +59,9 @@ says so. The final report holds these lines:
   recorded outcome. A dropped item and each design call go under
   **Decisions**.
 - **Checks:** the records that you read, each item that you could not
-  rebuild from them, and each finding that a check removed.
+  rebuild from them, and each finding that a check removed. Also each
+  item whose problem shows on a screen and that has no picture, with the
+  blocker.
 - **Open:** one line for each open item, as the "Final report" section
   says. A `fix now` finding without a commit goes here too, as work in
   progress.
@@ -71,3 +75,5 @@ says so. The final report holds these lines:
       under the label of its outcome.
 - [ ] The recorded numbers and option letters are kept.
 - [ ] Each open item was checked against the current code.
+- [ ] Each item whose problem shows on a screen has a picture, or its
+      blocker is under **Checks**.

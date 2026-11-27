@@ -20,8 +20,9 @@ section of the skill says.
 - Always write **Background**, **Problem**, **Impact if no action**,
   **Root question**, and **Options**. They explain the item, so you can
   write them from the record, the code, and the docs.
-- Give the **Screenshot** of an item again, as the "Again" section of
-  [screenshots.md](screenshots.md) says.
+- Give the **Screenshot** of an item again. Take the picture when the
+  problem shows on a screen and the item has none. The "Again" section of
+  [screenshots.md](screenshots.md) gives both rules.
 - When the record gives no **Left out** line, write "Not recorded".
 - Add **Terms** as the "Terms" section of the skill says, also when the
   record has none. You can write it from the code and the docs.
