@@ -24,7 +24,7 @@ Fix after merge.>
 - **Terms:** <Each project term that the item uses, with one sentence that explains it. Or delete the slot when the item uses no such term.>
 - **Background:** <Two to five sentences: what the feature does and where it is.>
 - **Problem:** <One to three sentences that say what is wrong, with the evidence: a count, a failure text, or a line that you checked at the code.>
-- **Screenshot:** <Only when the problem shows on a screen. One sentence: what the picture showed and what the box marked. Or delete the slot.>
+- **Screenshot:** <Only when the problem shows on a screen. One sentence: what the picture showed and what the box marked. When the source item has no picture, the screen and the state that show the problem, and the blocker. Or delete the slot.>
 - **Impact if no action:** <One or two sentences.>
 - **Root question:** <One question in the words of the goal. The options answer it.>
 - **Options:**

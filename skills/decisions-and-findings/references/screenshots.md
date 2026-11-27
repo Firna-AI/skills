@@ -14,6 +14,10 @@ does not have to open the app to find the problem.
   screen. Give the picture also when the words describe the problem well.
 - Leave the field out only when the problem does not show on a screen. A
   problem in code, a test, a log, or a doc source has a **Location**.
+- A problem in the text of a doc, such as a wrong word or a wrong rule,
+  has a **Location** only. A doc problem shows on a screen only when the
+  rendered page shows it and the source does not. Examples are a broken
+  list, table, link, or image.
 - When the problem shows on a screen and you cannot take a picture, write
   `**Screenshot:** None, because <the reason>.` The reason names the
   blocker, such as no browser in the session or a screen that needs data
@@ -29,7 +33,8 @@ does not have to open the app to find the problem.
   picture after the finding checks, for each confirmed finding whose
   problem shows on a screen. It does this also when the reviewer gave no
   line, and before it shows the findings to the user. Then it replaces
-  the line in the findings file, as "Saved files" below says.
+  the line in the findings file, or adds the field when the reviewer gave
+  no line, as "Saved files" below says.
 
 ## Capture
 
