@@ -1,0 +1,33 @@
+# New follow-up items get no options check
+
+- **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** No.
+- **Kind:** Outside the scope.
+- **Added:** 2026-11-28, from the branch `calummoore/do-not-open-pr-planning-aesi`, review round 2, the checks of findings 10 and 11.
+- **Location:**
+  - `skills/plans/references/follow-up-items.md`: "Checking new items", the prompt of the fresh check.
+  - `skills/plans/references/follow-up-items.md`: "Working on an item".
+  - `skills/implementation-review/references/second-pass-prompt.md`: the second and third paragraphs, which name where the options check runs, and the prompt lines "The review ran on the local diff against `origin/main`" and "Each item comes from a review or a plan".
+  - `skills/models/SKILL.md`: the row of the `second-pass review agent`, which lists its uses.
+  - `skills/decisions-and-findings/SKILL.md`: the sentence "Every writer of options follows these steps: the reviewer, the finding check, a plan decision, and a brainstorm."
+- **Reason:** The branch that found it does not change these three files, and its review covered only its diff.
+
+- **Terms:**
+  - **Follow-up item:** a file under `plans/follow-ups/` that records work that waits until after the merge. Its layout has lettered options, a recommendation, and an `Action` line.
+  - **Options check:** a fresh read-only pass, with the prompt in `second-pass-prompt.md`, that confirms that the options of an item are complete and that the recommendation is the best one. Each finding check of a review runs it.
+  - **Fresh item check:** the read-only check that "Checking new items" requires before the commit that adds or rewrites follow-up items.
+- **Background:**
+  - The working agent writes some follow-up items itself, with options that no finding check read: an item from a line under `Outside the scope`, an item for a wider fix that the agent split off a finding, an item for a blocked wider fix, and an item for a finding that a check moved outside the scope (the check stops before its options step).
+  - The fresh item check asks four questions: missing slots or claims with no reason, facts that the code contradicts, facts the reader had to look up, and missing **Related** links. It does not ask whether each option answers the root question, or whether an option breaks a rule on `main`.
+- **Problem:** On 2026-11-28 the branch above added two items that passed the fresh item check. The review of the next round still found a defect in an option of each. One option kept a plan status that goes wrong on `main` after a merge. The other option required the user's approval to move a TODO, which overrides a rule of the `plans` skill that moves blocked UI or mockup TODOs to a later milestone without the user.
+- **Impact if no action:** A later branch applies the recommended option of such an item without the user, and the defect of the option goes into the skills.
+- **Root question:** How are the options of a follow-up item confirmed before a branch applies its recommendation without the user?
+- **Options:**
+  - **A.** Add a fifth question to the prompt of the fresh item check: "Each option that does not answer the root question, or that breaks a rule or a decision on `origin/main` or in the branch head." Cost: one line, and the check reads the options with less depth than the options check. Effort: Small.
+  - **B.** In "Checking new items", the fresh check also runs the options check (`second-pass-prompt.md`) over each new item whose options no finding check read. Name this use in the first paragraphs of `second-pass-prompt.md`, add "the writer of a follow-up item" to the list of options writers in `decisions-and-findings`, and add the use to the `models` row. The writer merges the result into the item, as "Decisions" in the `plans` skill does for a plan decision, and makes the final call on the `Action` line. Cost: a longer fresh check before such a commit. Items that exist now stay unchecked. Effort: Small.
+  - **C.** In "Working on an item", the branch that starts work on an item first runs the options check over it, with the same merge step as B. Name the use in `second-pass-prompt.md`, `decisions-and-findings`, and the `models` row. Cost: one check at the start of each item's work. It reads every item, also the ones that exist now, and the options are checked against the code of that day. Effort: Small.
+- **Left out:** A rule that such an item has no options until a later branch writes them is left out. It reverses the rule of commit `140204b` on `main` that each item fills every slot, and the user reads the options to decide.
+- **Wider fix:** C. It checks the options of every item, from any writer and of any age, before anyone applies them.
+- **Previous examples:** The two items of 2026-11-28 above, `multi-pr-plan-rules-have-no-owner.md` and `workspace-close-skips-todo-check.md`, which the same branch later deleted when it applied the fix.
+- **Related:** `plans/follow-ups/check-prompts-assume-main-base.md`. Both items edit the prompt line "The review ran on the local diff against `origin/main`" in `second-pass-prompt.md`. Make the two edits in one branch, or rebase the second.
+- **Recommendation:** C. It reuses the options check, and it covers the items that exist now, which B does not.
+- **Action:** fix after merge, apply C, because it reaches three files that the branch which found it does not change.

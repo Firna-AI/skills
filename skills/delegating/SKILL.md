@@ -119,7 +119,8 @@ worktree holds only committed content. Integrate the branch with the
 ## Workspaces across machines
 
 A milestone starts when each milestone on its `Depends on:` line has
-merged. Milestones that start together each get their own workspace. A
+merged, and each pull request that the line names has merged into
+`main`. Milestones that start together each get their own workspace. A
 milestone that starts alone runs in the orchestrator's workspace.
 
 [references/workspaces.md](references/workspaces.md) gives the procedure.
@@ -142,10 +143,10 @@ Codex and Claude sessions. One combined gate verified them.
   lines. Resolve a plan conflict path by path with the `git-merge` skill.
 - Keep the ledger, the prompts, and the reports under
   `.context/<plan-name>/`, as the workspace reference says.
-- The workspace agent commits with the `git-commit` skill, pushes its
-  branch, and opens a pull request into the primary branch. It never
-  merges. When its push fails for a missing credential, it reports the
-  commit and stops.
+- The workspace agent commits with the `git-commit` skill and pushes its
+  branch. When its work item is complete, or when the user asks for it, it
+  opens a pull request into the primary branch. It never merges. When its
+  push fails for a missing credential, it reports the commit and stops.
 
 ### Check, merge, and continue
 
@@ -162,7 +163,11 @@ Codex and Claude sessions. One combined gate verified them.
    says. Wait for its pass. Never open a pull request to make CI run
    the gate. Each workspace ran the gate on its own tree only. The
    combined gate proves the milestone. Then start the milestones that
-   depend on it, unless step 6 blocks one.
+   depend on it, unless step 6 blocks one. While a TODO of the work item
+   is open, the dependent milestones wait. Send each open TODO to the
+   rule that owns its blocker: back to the same workspace for work in its
+   scope, a decision to the user as step 7 says, and a move to another
+   milestone under the rules of the `plans` skill.
 
    | The record says | The answer |
    | --- | --- |
@@ -171,8 +176,9 @@ Codex and Claude sessions. One combined gate verified them.
 3. Send the `fix now` findings back to the same workspace session as one
    fix request. Give the numbers, the option of each, and "do not start
    the next item". The `implementation-review` skill allows two fix
-   rounds. Merge each round as in step 2. After the last merge, close the
-   workspace as the workspace reference says. Do the same for a workspace
+   rounds. Merge each round as in step 2. After the last merge, and when
+   each TODO of the work item is ticked or moved, close the workspace as
+   the workspace reference says. Do the same for a workspace
    that the user agrees to abandon.
 4. Merge `main` into the primary branch before each delegation batch,
    before each branch merge, and before the final pull request.

@@ -67,8 +67,10 @@ name the blocker, and list the checks that did run.
   tool description says to commit or push only when the user asks.
 - If the branch needs a merge or rebase first, follow the `git-merge`
   skill.
-- A new plan gets no pull request in this step. Step 6 says when it
-  opens. See the `plans` skill.
+- A new plan gets a pull request of its own only when the user asks for
+  it. This holds also after a review of the plan. Otherwise, the pull
+  request opens when its implementation is complete, as step 6 says. See
+  the `plans` skill.
 
 ## 5. Review
 
@@ -101,21 +103,26 @@ name the blocker, and list the checks that did run.
 
 - The implementation is complete when steps 1 to 5 are done. When the
   change has a plan, the implementation is complete only when the plan's
-  other milestone TODOs are also ticked. A new plan has unticked
-  milestone TODOs, so it is not complete. Open findings that wait for the
-  user do not make the implementation incomplete.
+  other milestone TODOs are also ticked. When the work spans more than one
+  pull request, each one has its own pull request TODO. Count only the
+  milestone TODOs before that TODO. A new plan has unticked milestone
+  TODOs, so it is not complete. Open findings that wait for the user do
+  not make the implementation incomplete.
 - When the change has a plan, read "Deleting the plan" in the `plans`
   skill before you open the pull request. It says when the plan goes,
   when it stays, and the steps.
 - Open the pull request when the implementation is complete and no
-  finding waits for the user, or when the user asks for it. Do not ask
-  for permission to open it. A finding waits for the user when its
+  finding waits for the user, or when the user asks for it. A request
+  from the user opens it at any stage: while a finding waits, before the
+  implementation or the work item is complete, or for a new plan alone.
+  The other rules about when a pull request opens, in this skill and in
+  the `plans` and `delegating` skills, apply when the user has not asked.
+  Do not ask for permission to open it. A finding waits for the user when its
   outcome is `ask the user`. A deferred finding with a follow-up item
   does not wait.
 - When a finding waits for the user, do not open the pull request.
-  Report the branch and the findings. Open the pull request when the
-  user has answered each finding and the fixes are reviewed, or when the
-  user asks for it.
+  Report the branch and the findings. When the user has answered each
+  finding and the fixes are reviewed, apply the bullet above again.
 - A workspace branch that merges into a primary branch follows the
   `delegating` skill. An open finding never blocks that merge.
 - Write the title and the description with the `git-commit` skill. The
@@ -192,6 +199,7 @@ the failure, as [references/ci.md](references/ci.md) says.
       follow-up items.
 - [ ] Pull request opened without a request once the implementation was
       complete and no finding waited for the user, or when the user asked.
+      A new plan got a pull request of its own only when the user asked.
 - [ ] CI watched to its end after the last change that can start CI. Each
       failure fixed in the branch, given to a fix pull request, or
       reported.

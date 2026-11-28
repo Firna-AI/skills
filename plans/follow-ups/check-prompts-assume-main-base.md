@@ -1,0 +1,32 @@
+# Finding checks compare a workspace branch with main
+
+- **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** No.
+- **Kind:** Outside the scope.
+- **Added:** 2026-11-28, from the branch `calummoore/do-not-open-pr-planning-aesi`, review round 2, the check of finding 8.
+- **Location:**
+  - `skills/implementation-review/references/check-prompt.md`: "Starting the checks", and the prompt lines "The review ran on the local diff against `origin/main`" and "Compare the lines with `origin/main`".
+  - `skills/implementation-review/references/second-pass-prompt.md`: the prompt line "review ran on the local diff against `origin/main`".
+  - `skills/implementation-review/SKILL.md`: "Scope", which says to replace `origin/main` with the base "in the prompt".
+  - `skills/implementation-review/references/review-prompt.md`: the paragraph that says to replace `origin/main` with the primary branch throughout.
+- **Reason:** The branch that found it does not change these files, and its review covered only its diff.
+
+- **Terms:**
+  - **Primary branch:** the branch of a plan that runs in several workspaces. Each workspace branch merges into it, not into `main`. The `delegating` skill defines it.
+  - **Finding check:** the read-only second pass of a review. One check runs for each new finding, with the prompt in `check-prompt.md` followed by `second-pass-prompt.md`.
+- **Background:**
+  - The orchestrator reviews a workspace branch against the primary branch. `review-prompt.md` says: "When the branch targets a primary branch instead of `main`, replace `origin/main` with that branch throughout."
+  - "Scope" in `skills/implementation-review/SKILL.md` says the same for the review.
+- **Problem:** `check-prompt.md` and `second-pass-prompt.md` say that the review ran against `origin/main`, and "Starting the checks" gives no rule to put the primary branch in its place. Check 2 of the finding check ("Compare the lines with `origin/main`") then compares a workspace branch with `main`. The diff against `main` also holds the work of every other merged workspace.
+- **Impact if no action:** A finding check of a workspace branch can keep a finding that another workspace caused, or remove a finding as outside the scope when the workspace caused it.
+- **Root question:** How does each prompt of a review get the same base branch as the review itself?
+- **Options:**
+  - **A.** Add the sentence of `review-prompt.md` to "Starting the checks" in `check-prompt.md`: when the branch targets a primary branch, replace `origin/main` with that branch throughout both prompts. Cost: a fourth copy of the sentence. Effort: Small.
+  - **B.** State the rule once, in "Scope" of `skills/implementation-review/SKILL.md`: the orchestrator replaces `origin/main` with the base in every prompt of the review, the finding checks, and the options check. `review-prompt.md` and `check-prompt.md` point to it. Cost: an edit in three files. A wrong `origin/main` still looks correct when the orchestrator forgets the rule. Effort: Small.
+  - **C.** Put a `<base>` placeholder in place of `origin/main` in each review prompt, as the prompts already have `<number>` and `<findings file>`. "Scope" says once what fills it: `origin/main`, or the primary branch. An unfilled placeholder is easy to see, so the wrong default is gone. Cost: an edit in four files. Effort: Small.
+  - **D.** Do C, and define the base of a branch once for every procedure, in the `delegating` skill: the branch that the work merges into. The review, the checks, and the CI procedure (`skills/finish-work/references/ci.md`, "Find the cause") point to it. Cost: an edit in six files. Effort: Medium.
+- **Left out:** None.
+- **Wider fix:** D. One definition covers each procedure that compares a branch with its base.
+- **Previous examples:** Commit `77fadd6` added the primary-branch case to the review prompt, to "Scope", and to `finish-work` step 5, but not to the check prompts. The CI procedure in `ci.md` used `main` as the base of a workspace branch until the branch above fixed it.
+- **Related:** `plans/follow-ups/item-check-reads-no-options.md` (both edit the prompt line "The review ran on the local diff against `origin/main`" in `second-pass-prompt.md`; make the edits in one branch, or rebase the second) and `plans/follow-ups/multi-pr-plan-rules-have-no-owner.md` (both gaps come from `77fadd6`; no edit is shared).
+- **Recommendation:** C. It removes the wrong default from the prompts at Small effort. D goes further, but it reaches past the review into the CI procedure.
+- **Action:** fix after merge, apply C, because it reaches files that the branch which found it does not change.

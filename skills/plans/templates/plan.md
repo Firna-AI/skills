@@ -1,6 +1,6 @@
 # <Change title>
 
-Status: Active. On branch `<branch>`, no pull request yet. The pull request that completes the work deletes this plan, as the `plans` skill says. <When a pull request opens before the work is complete, the branch sentence becomes "[PR #123](<url>) is open.">
+Status: Active. On branch `<branch>`, no pull request yet. The pull request that completes the work deletes this plan, as the `plans` skill says. <When a pull request opens and the plan stays, change the branch sentence as "Completion boundary" in the `plans` skill says.>
 
 <One or two short paragraphs: the problem, the chosen approach, and what the
 change does not cover. Record each user decision with its date, the
@@ -50,7 +50,7 @@ requirements and the decisions for the work below.>
 
 Tags: ui <keep the tag line only for a ui or mockup milestone>
 
-Depends on: <none, or the numbers of the milestones that this one needs>
+Depends on: <none, or what this milestone needs, in the forms that "Milestones" in the `plans` skill gives>
 
 <Summary.>
 

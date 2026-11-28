@@ -5,8 +5,9 @@ its own worktree, where one agent does one work item. In Conductor,
 each workspace is a Conductor workspace. [conductor.md](conductor.md)
 gives its commands. Without Conductor, a worktree agent, a second
 machine, or a cloud session follows the same procedure. A worktree
-agent here is a workspace agent in a worktree. It pushes its branch and
-opens a pull request, unlike a worktree subagent.
+agent here is a workspace agent in a worktree. It pushes its branch and,
+when its work item is complete or the user asks, opens a pull request,
+unlike a worktree subagent.
 
 The orchestrator runs the procedure from the primary workspace, on the
 primary branch. It keeps a ledger under
@@ -35,7 +36,7 @@ the install script.
 
 The agent reports in its session. Read its first message for the
 branch. Then read its report, as [conductor.md](conductor.md) says, and
-its pull request.
+its pull request, when it opened one.
 
 You run the review of the item's branch, so you keep its findings file,
 as the `implementation-review` skill says. Send a fix request as one
@@ -58,21 +59,33 @@ that is already open and whose CI runs the gate, push and let CI run
 it, as the `finish-work` skill says. Never open a pull request to make
 CI run the gate.
 
-After the last merge, close the work item:
+After the last merge, close the work item. First confirm that each TODO
+of the work item is ticked, as step 3 of "Check, merge, and continue" in
+the `delegating` skill says. Then:
 
 ```sh
-gh pr view <number> --json state,headRefOid
-git merge-base --is-ancestor <headRefOid> HEAD
-# only when the state is OPEN
-gh pr close <number> --comment "merged into <primary-branch> at <sha>"
-git push origin --delete <branch>
+git fetch origin <branch>
+sha=$(git ls-remote origin refs/heads/<branch> | cut -f1)
+git merge-base --is-ancestor "$sha" HEAD
+# only with a pull request whose state is OPEN
+gh pr close <number> --comment "merged into <primary-branch> at <merge sha>"
+git push --force-with-lease="refs/heads/<branch>:$sha" origin --delete <branch>
 ```
 
-Confirm that the pull request's head commit is in the primary branch.
-When it is not, or git reports an unknown commit, the branch moved after
-your fetch. Fetch and merge again. GitHub may not mark a pull request
-into a branch other than the default as merged. When the state stays
-open, close the pull request with a comment that names the merge commit.
+`git ls-remote` reads the live head of the branch. Confirm that the
+primary branch holds it. When it does not, or git reports an unknown
+commit, the branch moved after your merge. Review and merge again. The
+lease deletes the branch only while it still points to the checked
+commit. A `stale info` rejection means that the branch moved after the
+check. Reopen a pull request that you closed, then review and merge
+again.
+
+With a pull request, `gh pr view <number> --json state` gives its state.
+GitHub may not mark a pull request into a branch other than the default
+as merged. When the state stays open, close the pull request with a
+comment that names the merge commit. For a branch that the user agreed
+to abandon, skip the ancestor check. Lease the delete to the commit that
+the user agreed to abandon.
 
 Delete the branch on the remote. Archive the workspace with its tool.
 Mark it closed in the ledger. The merge commit keeps the content of a

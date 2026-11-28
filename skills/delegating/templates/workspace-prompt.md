@@ -36,8 +36,11 @@ Steps:
    Tick the TODOs that you complete. Run the complete gate from
    `AGENTS.md`.
 4. Commit with the `git-commit` skill and push your branch.
-5. Open a pull request into `<primary-branch>` with
-   `gh pr create --base <primary-branch>`.
+5. When each TODO in your scope is ticked, or when the user asks for it,
+   open a pull request into `<primary-branch>` with
+   `gh pr create --base <primary-branch>`, as the `delegating` skill
+   says. Otherwise, report your branch, your commit, and each open TODO
+   with its blocker.
 
 Constraints:
 - Change only <the files or the directory>.
@@ -48,7 +51,7 @@ Constraints:
 - When the work needs a change outside the scope, stop and report it.
 
 Output, in your final message:
-- The pull request URL and the commit.
+- The commit, and the pull request URL when the pull request opened.
 - What changed, in two to five sentences.
 - The checks that ran and their results.
 - The decisions that need the user, in the `decisions-and-findings`

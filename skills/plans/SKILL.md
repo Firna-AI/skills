@@ -22,12 +22,20 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
   from the approach that the brainstorm chose.
 - A new plan is a plan-only change. Write the plan. Run the options check
   over its decisions, as the section below says. Commit it. Push the
-  branch. Then report, as the `finish-work` skill says.
+  branch. Then report, as the `finish-work` skill says. The user approves
+  the plan in a message, not by the merge of a pull request.
 - The status paragraph names the branch and says that no pull request
   exists yet. Do not open a pull request to fill the status paragraph.
   The pull request opens when the implementation is complete and no
   finding waits for the user, or when the user asks for it. See the
   `finish-work` skill.
+- A new plan gets a pull request of its own only when the user asks for
+  it.
+
+  | The record says | The answer |
+  | --- | --- |
+  | "This plan-only pull request merges first, after the user answers and the rewrite below." | The user approves the plan in a message. The implementation follows on the plan's branch. |
+
 - One plan file per change, named after the change in concise kebab-case,
   for example `tool-request-error-contract-alignment.md`. Do not combine
   unrelated work in one plan.
@@ -72,8 +80,13 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
   check, and to review. Its checks find a problem early. Prefer several
   small milestones to one large milestone.
 - Each milestone has a short summary and a TODO checklist.
-- Each milestone has a `Depends on:` line: `none`, or the milestones that
-  it needs. A plan review checks it. The `delegating` skill uses it.
+- Each milestone has a `Depends on:` line. It holds `none`, or each
+  thing that the milestone needs: a milestone, or the merge of a pull
+  request into `main`. Name a pull request of the plan by the milestone
+  that holds its pull request TODO, as in "the merge of the pull request
+  of Milestone 4 into `main`". Name a pull request outside the plan by
+  its link. A plan review checks the line. The `delegating` skill uses
+  it.
 - When the plan has mockup work, Milestone 1 is the mockup milestone. It
   comes before every other milestone. That includes the documentation
   milestone and repository bootstrap work, such as the workspace skeleton,
@@ -185,13 +198,22 @@ action. The `delegating` skill gives its route.
   must be completable on the branch before the PR merges, or by the merge
   itself. Never add a required TODO that depends on the PR already being
   merged.
+- When the work spans more than one pull request, the merge of each pull
+  request is the completion boundary of the milestones before its pull
+  request TODO. A later milestone can depend on that merge. Name the merge
+  on its `Depends on:` line, in the form that "Milestones" gives.
 - Put post-merge work, including smoke tests that need the merged or
   deployed change, in a `## Post-merge follow-up (non-blocking)` section
   outside the milestones. It does not affect completion. When the change
   deletes the plan, each unchecked task becomes a follow-up item.
 - Keep smoke tests that can run before merge as required milestone TODOs.
-- When the pull request opens before the work is complete, replace the
-  branch sentence with `[PR #<number>](<url>) is open.`
+- When a pull request opens and the plan stays, replace the branch
+  sentence with `[PR #<number>](<url>) carries Milestones <N> to <M>.`
+  For a plan-only pull request, write `carries the plan`. The sentence
+  names what the pull request carries, not its state, because the merge
+  keeps the status as it is. The first commit on the branch of the next
+  pull request adds its branch sentence after the links. Rewrite an
+  older `is open` sentence in this form.
 
 ## Follow-up items
 
