@@ -120,9 +120,9 @@ example `~/.futex/skills` in a cloud workspace. Read the copy under
   `Use after` first, near 300 characters and under 500.
 - Skill text: no repository-specific path, command, or crate name.
 - Consistency: a rule that the change edits says the same thing in every
-  file that restates it. These files are the other skills,
-  `global/AGENTS.md`, the `agents-md` template, and `README.md` with its
-  skills table.
+  file that restates it. These files are the other skills, the other
+  files of the same skill, `global/AGENTS.md`, the `agents-md` template,
+  and `README.md` with its skills table.
 - Context cost: every line of `global/AGENTS.md` and every skill
   description loads into every session on every turn.
 

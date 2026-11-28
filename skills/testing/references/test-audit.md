@@ -39,8 +39,7 @@ Group the tests in these classes:
 - Tests at a higher level than needed, such as a browser spec of logic
   that a unit test can check.
 - Tests of something that never gets a test, as the `testing` skill lists.
-- One-time proofs that became tests: equivalence, migration, stress, and
-  third-party-tool checks.
+- One-time proofs that became tests, as the `testing` skill lists them.
 - Slow setup: files where a build, an install, or a subprocess takes most
   of the time, and not the behaviour under test.
 

@@ -3,7 +3,7 @@
 - **Severity:** Medium. **Effort:** Small. **Confidence:** High. **Harder later:** No.
 - **Kind:** Outside the scope.
 - **Added:** 2026-11-20, from the branch `calummoore/move-codex-actions-to-gpt-6-2-sol-moco`. Its review listed two problems outside the scope. The lookup rule names `conductor model`, which a Conductive computer does not have. The claude rows name `opus-5-5-1m`, which `conductive models list` does not give. This item holds both, because they share one root question.
-- **Location:** `skills/models/SKILL.md`, lines 28 to 31, the lookup rule, and lines 18, 19, 21, 22, and 26, the claude rows. `skills/delegating/SKILL.md`, lines 78 and 79. `skills/delegating/references/conductor.md`, each command block. `skills/brainstorming/SKILL.md`, line 31. `skills/finish-work/references/ci.md`, lines 163 and 198 to 200.
+- **Location:** `skills/models/SKILL.md`, lines 29 to 32, the lookup rule, and lines 18, 19, 21, 22, and 26, the claude rows. `skills/delegating/SKILL.md`, lines 78 and 79. `skills/delegating/references/conductor.md`, each command block. `skills/brainstorming/SKILL.md`, line 32. `skills/finish-work/references/ci.md`, lines 163 and 198 to 200.
 - **Reason:** Each fix changes the rule that names the source of the model ids, and this branch only moves the codex ids.
 
 - **Terms:**
@@ -13,9 +13,9 @@
   - **Stale table:** the case in the `models` skill where the model list does not give a model of the table. The agent then tells the user and uses the nearest listed model.
 - **Background:**
   - `skills/models/SKILL.md` has one table with the agent, the model id, and the effort of each action. Skills and plans name the action, not the model id.
-  - Lines 28 to 31 of that file say: "The model ids are the ids that `conductor model` lists. When `conductor model` does not list a model of this table, the table is stale. Tell the user. Then use the nearest model that it lists."
+  - Lines 29 to 32 of that file say: "The model ids are the ids that `conductor model` lists. When `conductor model` does not list a model of this table, the table is stale. Tell the user. Then use the nearest model that it lists."
   - `skills/delegating/SKILL.md`, lines 78 and 79, say the same about a stale table. `skills/delegating/references/conductor.md` gives each route as a `conductor` command, for example `conductor session create`.
-  - `skills/brainstorming/SKILL.md` line 31 names a `conductor` command for work in Conductor. `skills/finish-work/references/ci.md` lines 163 and 198 name `conductor` commands with no app condition.
+  - `skills/brainstorming/SKILL.md` line 32 names a `conductor` command for work in Conductor. `skills/finish-work/references/ci.md` lines 163 and 198 name `conductor` commands with no app condition.
   - On 2026-11-20, a Conductive cloud computer had no `conductor` command. Its tool `conductive` printed the model list with `conductive models list`.
   - That list gave the codex ids `gpt-6.2-sol`, `gpt-6.2-astra`, `gpt-6.1-sol`, `gpt-6-astra`, `gpt-6.1-terra`, and `gpt-6-luna`. It gave the claude ids `claude-opus-5-5`, with the label "Opus 5.5", `claude-sonnet-5-5`, `claude-haiku-5-5`, and `claude-fable-5-2`. It did not give `opus-5-5-1m`.
   - The five claude rows of the table name `opus-5-5-1m`. These are `brainstorming`, `default orchestrator`, `ui implementor`, `docs implementor`, and `second-pass review agent`. The four codex rows name `gpt-6.2-sol`.
@@ -35,5 +35,8 @@
 - **Left out:** A script that finds the app and prints its model list. It adds a tool to keep current, and B gives the same with one sentence. A check in the gate that compares the table with a model list. The gate runs in CI without the apps, so it cannot read a list.
 - **Wider fix:** F. One route reference for each app holds every command of that app, so a change in one app edits one file.
 - **Previous examples:** `77fadd6` moved the routes of each action from the `models` skill into the `delegating` skill. The lookup command stayed in `models`.
+- **Related:**
+  - `plans/follow-ups/read-only-agents-cannot-run-spikes.md`, a shared file for some option pairs only. Option B, C, D, E, or F of this item and option C of that item change `skills/delegating/SKILL.md`, on other lines. If option C or D of that item must add a sandbox setting to the reviewer route, it also changes `skills/delegating/references/conductor.md`, which options E and F of this item rewrite. Then do that work in order. The recommended pair, C here and B there, shares no file.
+  - `plans/follow-ups/ci-watch-first-real-failure.md`, a shared file only. Options E and F of this item edit `skills/finish-work/references/ci.md` lines 163 and 198 to 200. That task corrects the same file after a real CI failure.
 - **Recommendation:** C. It fixes both problems with the smallest change, and a model change still edits only the `models` table. F best protects the codebase, because each app then has its commands in one file.
 - **Action:** ask the user, because each fix changes the rule in force that `conductor model` gives the model ids, and Cal has the claude id question open.

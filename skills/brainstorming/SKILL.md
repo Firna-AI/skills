@@ -12,9 +12,10 @@ or with the user's choice of the approach for a change. The `plans`
 skill takes over from there.
 
 A brainstorm changes nothing in the repository. Do not edit code, docs,
-or plans, and do not commit. Do not build a mockup or a spike. The
-mockup milestone of the plan makes the pictures. Keep the notes, the
-reports, and the user's answers under `.context/<topic>/`.
+or plans, and do not commit. Do not build a mockup. The mockup
+milestone of the plan makes the pictures. You can run a spike when all
+its files stay under `.context/<topic>/`. Keep the notes, the reports,
+the spikes, and the user's answers there.
 
 When the user's message or a recorded decision already chooses the
 approach, skip the brainstorm. Go on with the request, and name the
@@ -52,8 +53,9 @@ action, do the steps yourself. Otherwise, delegate them with the agent,
 the model, and the effort of that action, as the `delegating` skill says.
 Give the agent the goal, the root question, and the requirements with
 their sources. Also give it the earlier work and the paths to read. Tell
-it to change nothing. Do not give it your own approaches, so that its
-read is not anchored on yours.
+it to change nothing in the repository and to keep each spike under
+`.context/<topic>/`, as the top of this skill says. Do not give it your
+own approaches, so that its read is not anchored on yours.
 
 - Widen with steps 2 and 3 of the options rule in the
   `decisions-and-findings` skill. A brainstorm always finds at least

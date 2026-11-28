@@ -1,0 +1,32 @@
+# Fixed follow-up items get no second check
+
+- **Severity:** Low. **Effort:** Small. **Confidence:** High. **Harder later:** No.
+- **Kind:** Needs decision.
+- **Added:** 2026-11-28, from the branch `calummoore/spike-tests-for-unsure-ai-v6g1`, review round 2, the wider fix of findings 5, 7, and 8.
+- **Location:** `skills/plans/references/follow-up-items.md` lines 66 to 90, "Checking new items", with the prompt at lines 74 to 87 and the step at line 89: "Fix each problem that the check reports, in the item. Then commit." `skills/plans/SKILL.md` lines 204 to 206, which restate that one fresh check runs before the commit.
+- **Reason:** Option B adds a second check before each commit of fixed items, and the always-on rules reserve a new check for the user.
+
+- **Terms:**
+  - **Follow-up item:** a file under `plans/follow-ups/` that records work or a decision that waits until after the merge.
+  - **Fresh check:** a read-only agent that reads new follow-up items before the commit, as "Checking new items" says.
+- **Background:**
+  - The writer of a follow-up item knows its context, so "Checking new items" starts one fresh read-only check before the commit. The check reports missing slots, wrong facts, facts that need a lookup, and missing **Related** links.
+  - Then the writer fixes each reported problem and commits. Nobody reads the fixed text again.
+  - In the source branch, the fresh check reported 13 problems in `plans/follow-ups/read-only-agents-cannot-run-spikes.md`. The writer rewrote the item and committed it. The next code review then found three new problems in the rewritten text:
+    - The worktree option claimed that a git worktree keeps writes out of the original checkout. That claim was wrong.
+    - The header gave the effort as Medium, but the recommended option was Small.
+    - The new **Related** links named files that the options of the two items do not share.
+- **Problem:** The fixes of a fresh check's report get no fresh read, so the writer's own blind spot comes back in the fixed text.
+- **Impact if no action:** Wrong facts in a rewritten item reach `main`, or a code review round finds them later at a higher cost.
+- **Root question:** How do the fixes of a fresh check get a read that is not the writer's own?
+- **Options:**
+  - **A.** Change nothing. The code review of the branch reads the fixed items. Effort: Small.
+  - **B.** Before the writer fixes the reported problems, save each item as the first check read it under `.context/`. After the fixes, start one more fresh check with the same prompt. Give it the item paths and the diff of each item against its saved copy, and ask it to check only the changed slots. Fix what it reports, then commit. Also let the prompt question about missing **Related** links report a link whose shared file, cause, or fix the options of the two items do not have. Update `skills/plans/SKILL.md` lines 204 to 206 to name the second check. It costs one more read-only run for each batch of items that needed fixes. Effort: Small.
+- **Left out:** Repeat the check until it reports nothing. A loop has no end, and the code review already reads the branch once more. A script that checks the grades against the recommended option. It parses free text, and a new lint needs the user.
+- **Wider fix:** B. Every fix of a check then gets a fresh read.
+- **Previous examples:** The three problems in the source branch above, all in text that a fix of the fresh check wrote.
+- **Related:**
+  - `plans/follow-ups/read-only-agents-cannot-run-spikes.md`, the same code. Option B of this item and options B and C of that item change "Checking new items" in `follow-up-items.md`. Do the two edits in one branch, or one after the other.
+  - `plans/follow-ups/deleted-item-leaves-related-links.md`, the same cause: wrong **Related** links. Both items change `follow-up-items.md`, in other sections. When one of the two closes, its commit removes this link.
+- **Recommendation:** B. One more read-only run is cheaper than a review round.
+- **Action:** ask the user, because B adds a second check before each commit of fixed items, and the always-on rules reserve a new check for the user.
