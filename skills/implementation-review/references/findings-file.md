@@ -65,7 +65,9 @@ wider fix.
 Update the file at each of these points, before you continue:
 
 - A review reports. Record the round. Write each new finding as the review
-  gave it, with the status New.
+  gave it, with the status New. Give each finding its own entry, with the
+  number and every field of the report. Do not merge, shorten, or
+  renumber findings.
 - The checks report. Merge each check into its entry, as the
   `implementation-review` skill says.
 - You make the final call on an outcome.

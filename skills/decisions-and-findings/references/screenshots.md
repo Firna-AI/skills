@@ -7,12 +7,14 @@ does not have to open the app to find the problem.
 
 ## When to give one
 
-- Give the **Screenshot** field when the problem shows on a screen and a
-  picture makes it clearer. Examples are a layout, a colour, an overlap,
-  a wrong text on a screen, and a missing state.
+- Give the **Screenshot** field when the problem shows on a screen.
+  Examples are a layout, a colour, an overlap, a wrong text on a screen,
+  a missing state, and a wrong notice after an action.
 - Leave the field out when the problem does not show on a screen. A
   problem in code, a test, a log, or a doc source has a **Location**.
-  Leave the field out also when the picture adds nothing to the words.
+- When the fix of the problem is committed, give a before-and-after
+  picture. Put the screen before the fix and after it side by side, and
+  label each half. Give it also when the fix only stops an action.
 - When the problem shows on a screen and you cannot take a picture, write
   `**Screenshot:** None, because <the reason>.`
 
@@ -29,7 +31,8 @@ does not have to open the app to find the problem.
 ## Capture
 
 1. Open the screen in the state that shows the problem. Use the branch as
-   it is now.
+   it is now. For the before half of a fixed problem, use the commit
+   before the fix, in a temporary worktree.
 2. Use only test or seed data. Do not capture a secret, a token, or
    personal data. Crop or cover it when the screen shows it.
 3. Capture a PNG file. Use a screenshot tool of your session that writes a
@@ -118,3 +121,5 @@ and neither can reach a file under `.context/`.
 When you give an item again in a message, build the inline image and the
 file link from the recorded path. Take a new picture when a commit changed
 the screen or the code at the item's location since the last picture.
+When that commit is the fix of the item, take the before-and-after
+picture.

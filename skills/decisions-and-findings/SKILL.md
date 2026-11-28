@@ -114,7 +114,7 @@ report and each message with items does these things:
   changed item, one sentence says what changed.
 - It gives each other open item one line under **Open** in the final
   report. Give such an item in full only when the user asks for it. The
-  `findings` skill re-prints every item on request.
+  `findings` skill re-prints the items on request.
 
 An item changed when one of its fields changed since the last message
 that gave it in full. The fields are **Severity**, **Likelihood**,
