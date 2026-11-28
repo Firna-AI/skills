@@ -155,4 +155,8 @@ needs one to check against.
 - [ ] A rule restated from another skill, or in another file or section
       of the same skill, says what the source says, or points to the
       source.
+- [ ] Each rule reaches the agent in every kind of task where it
+      applies, such as a plain question, a brainstorm, a review, and an
+      implementation: the rule loads there, or a skill description names
+      that moment.
 - [ ] The README row exists. The repository check and `tests/run.sh` pass.

@@ -60,8 +60,8 @@ at that moment instead of guessing the rule.
   because it conflicts with a protocol doc. See the `documentation` skill.
 - Before you build on how a library, a tool, an API, a platform, or existing
   code behaves, check it in its docs or its code. When they do not settle
-  it, run a spike: a small throwaway experiment under `.context/`. Do not
-  commit a spike.
+  it, run a spike: a small throwaway experiment under `.context/`. Keep
+  its command and output there. Do not commit a spike.
 - When you add a new package, crate, or service, build it to check for
   errors.
 - If you get compile errors, keep working until there are none.
