@@ -5,8 +5,9 @@ its own worktree, where one agent does one work item. In Conductor,
 each workspace is a Conductor workspace. [conductor.md](conductor.md)
 gives its commands. Without Conductor, a worktree agent, a second
 machine, or a cloud session follows the same procedure. A worktree
-agent here is a workspace agent in a worktree. It pushes its branch and
-opens a pull request, unlike a worktree subagent.
+agent here is a workspace agent in a worktree. It pushes its branch and,
+when its work item is complete, opens a pull request, unlike a worktree
+subagent.
 
 The orchestrator runs the procedure from the primary workspace, on the
 primary branch. It keeps a ledger under
@@ -35,7 +36,7 @@ the install script.
 
 The agent reports in its session. Read its first message for the
 branch. Then read its report, as [conductor.md](conductor.md) says, and
-its pull request.
+its pull request, when it opened one.
 
 You run the review of the item's branch, so you keep its findings file,
 as the `implementation-review` skill says. Send a fix request as one
@@ -73,6 +74,8 @@ When it is not, or git reports an unknown commit, the branch moved after
 your fetch. Fetch and merge again. GitHub may not mark a pull request
 into a branch other than the default as merged. When the state stays
 open, close the pull request with a comment that names the merge commit.
+When the work item has no pull request, skip the `gh pr` lines. Check
+`git merge-base --is-ancestor origin/<branch> HEAD` instead.
 
 Delete the branch on the remote. Archive the workspace with its tool.
 Mark it closed in the ledger. The merge commit keeps the content of a

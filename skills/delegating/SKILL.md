@@ -119,7 +119,8 @@ worktree holds only committed content. Integrate the branch with the
 ## Workspaces across machines
 
 A milestone starts when each milestone on its `Depends on:` line has
-merged. Milestones that start together each get their own workspace. A
+merged, and each pull request that the line names has merged into
+`main`. Milestones that start together each get their own workspace. A
 milestone that starts alone runs in the orchestrator's workspace.
 
 [references/workspaces.md](references/workspaces.md) gives the procedure.
@@ -143,9 +144,9 @@ Codex and Claude sessions. One combined gate verified them.
 - Keep the ledger, the prompts, and the reports under
   `.context/<plan-name>/`, as the workspace reference says.
 - The workspace agent commits with the `git-commit` skill and pushes its
-  branch. When its work item is complete, it opens a pull request into the
-  primary branch. It never merges. When its push fails for a missing credential, it reports the
-  commit and stops.
+  branch. When its work item is complete, it opens a pull request into
+  the primary branch. It never merges. When its push fails for a missing
+  credential, it reports the commit and stops.
 
 ### Check, merge, and continue
 

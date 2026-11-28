@@ -117,9 +117,8 @@ name the blocker, and list the checks that did run.
   outcome is `ask the user`. A deferred finding with a follow-up item
   does not wait.
 - When a finding waits for the user, do not open the pull request.
-  Report the branch and the findings. Open the pull request when the
-  user has answered each finding and the fixes are reviewed, or when the
-  user asks for it.
+  Report the branch and the findings. When the user has answered each
+  finding and the fixes are reviewed, apply the bullet above again.
 - A workspace branch that merges into a primary branch follows the
   `delegating` skill. An open finding never blocks that merge.
 - Write the title and the description with the `git-commit` skill. The
