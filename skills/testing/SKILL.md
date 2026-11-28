@@ -55,9 +55,9 @@ covers time in tests, flaky tests, and slow tests, gates, and checks.
 ## What never gets a test
 
 - One-time proofs: output equivalence, a migration, a stress or
-  performance run, and the behaviour of a third-party tool. Run the check
-  once. Save its output under `.context/`, and name the file in the pull
-  request.
+  performance run, a spike, and the behaviour of a third-party tool. Run
+  the check once. Save its output under `.context/`, and name the file in
+  the pull request.
 - Doc prose, plans, `AGENTS.md`, skills, and protocol docs. A link check
   and a drift check of generated files stay.
 - Workflow YAML literals: job names, step order, matrix values, and run

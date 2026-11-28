@@ -12,9 +12,10 @@ or with the user's choice of the approach for a change. The `plans`
 skill takes over from there.
 
 A brainstorm changes nothing in the repository. Do not edit code, docs,
-or plans, and do not commit. Do not build a mockup or a spike. The
-mockup milestone of the plan makes the pictures. Keep the notes, the
-reports, and the user's answers under `.context/<topic>/`.
+or plans, and do not commit. Do not build a mockup. The mockup
+milestone of the plan makes the pictures. You can run a spike when all
+its files stay under `.context/<topic>/`. Keep the notes, the reports,
+the spikes, and the user's answers there.
 
 When the user's message or a recorded decision already chooses the
 approach, skip the brainstorm. Go on with the request, and name the
