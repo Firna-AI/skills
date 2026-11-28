@@ -18,8 +18,9 @@ Keep the plan in these cases:
 - The user asks for the pull request before the work is complete. Open
   it, and keep the plan. Delete the plan in the last commit of the work,
   when the condition above holds.
-- The work spans more than one pull request. Each earlier pull request
-  keeps the plan. The last one deletes it.
+- The work spans more than one pull request. Each pull request carries
+  implementation milestones. The first one also adds the plan. Each
+  earlier pull request keeps the plan. The last one deletes it.
 
 ## Steps
 

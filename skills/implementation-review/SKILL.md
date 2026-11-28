@@ -161,9 +161,9 @@ after the merge.
 6. Run the finding checks on the new findings, and again on each open
    finding whose code a fix changed. Fix any confirmed new `fix now`
    findings once more, and record the other new findings as follow-up
-   items. Then stop. The `finish-work` skill gives the next steps: the
-   pull request, the CI step, and the report. Do not start a third fix
-   round without the user.
+   items. Then stop. The `finish-work` skill gives the next steps. It says
+   when the pull request opens. Do not start a third fix round without the
+   user.
 
    A review can still run after the second fix round, for example on
    the answers of the user. Give each confirmed `fix now` finding of that

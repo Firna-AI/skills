@@ -22,12 +22,21 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
   from the approach that the brainstorm chose.
 - A new plan is a plan-only change. Write the plan. Run the options check
   over its decisions, as the section below says. Commit it. Push the
-  branch. Then report, as the `finish-work` skill says.
+  branch. Then report, as the `finish-work` skill says. The user approves
+  the plan in a message, not by the merge of a pull request.
 - The status paragraph names the branch and says that no pull request
   exists yet. Do not open a pull request to fill the status paragraph.
   The pull request opens when the implementation is complete and no
   finding waits for the user, or when the user asks for it. See the
   `finish-work` skill.
+- The plan and its first implementation milestones merge into `main` in
+  one pull request. A new plan gets a pull request of its own only when
+  the user asks for it.
+
+  | The record says | The answer |
+  | --- | --- |
+  | "This plan-only pull request merges first, after the user answers and the rewrite below." | The user approves the plan in a message. The plan goes into the first implementation pull request. |
+
 - One plan file per change, named after the change in concise kebab-case,
   for example `tool-request-error-contract-alignment.md`. Do not combine
   unrelated work in one plan.
@@ -190,8 +199,9 @@ action. The `delegating` skill gives its route.
   outside the milestones. It does not affect completion. When the change
   deletes the plan, each unchecked task becomes a follow-up item.
 - Keep smoke tests that can run before merge as required milestone TODOs.
-- When the pull request opens before the work is complete, replace the
-  branch sentence with `[PR #<number>](<url>) is open.`
+- The pull request opens before the work is complete only when the user
+  asks for it. Then replace the branch sentence with
+  `[PR #<number>](<url>) is open.`
 
 ## Follow-up items
 

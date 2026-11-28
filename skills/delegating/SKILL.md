@@ -142,9 +142,9 @@ Codex and Claude sessions. One combined gate verified them.
   lines. Resolve a plan conflict path by path with the `git-merge` skill.
 - Keep the ledger, the prompts, and the reports under
   `.context/<plan-name>/`, as the workspace reference says.
-- The workspace agent commits with the `git-commit` skill, pushes its
-  branch, and opens a pull request into the primary branch. It never
-  merges. When its push fails for a missing credential, it reports the
+- The workspace agent commits with the `git-commit` skill and pushes its
+  branch. When its work item is complete, it opens a pull request into the
+  primary branch. It never merges. When its push fails for a missing credential, it reports the
   commit and stops.
 
 ### Check, merge, and continue
