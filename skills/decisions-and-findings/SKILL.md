@@ -287,9 +287,10 @@ End every task with a final report. Under **Fixed**, **Deferred**, and
   each design call that you made under the decision test, in one line:
   the call and its reason.
 - **Checks:** each check and its result. Give the output of a failed
-  check. Name each check that was skipped or blocked, and give the reason.
-  Name each unrelated flaky test with its failure text, rerun outcome, and
-  suspected source.
+  check. Name the file of each check whose output you saved under
+  `.context/`. Name each check that was skipped or blocked, and give the
+  reason. Name each unrelated flaky test with its failure text, rerun
+  outcome, and suspected source.
 - **Open:** one line for each open item. The line gives the number, the
   title, the severity, the recommended option in a few words with its
   letter, and what the item blocks. Add the open plan TODOs. Add the follow-up items of the

@@ -53,8 +53,9 @@ action, do the steps yourself. Otherwise, delegate them with the agent,
 the model, and the effort of that action, as the `delegating` skill says.
 Give the agent the goal, the root question, and the requirements with
 their sources. Also give it the earlier work and the paths to read. Tell
-it to change nothing. Do not give it your own approaches, so that its
-read is not anchored on yours.
+it to change nothing in the repository and to keep each spike under
+`.context/<topic>/`, as the top of this skill says. Do not give it your
+own approaches, so that its read is not anchored on yours.
 
 - Widen with steps 2 and 3 of the options rule in the
   `decisions-and-findings` skill. A brainstorm always finds at least

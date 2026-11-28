@@ -1,0 +1,42 @@
+# Read-only agents cannot run a spike
+
+- **Severity:** Low. **Effort:** Medium. **Confidence:** High. **Harder later:** No.
+- **Kind:** Needs decision.
+- **Added:** 2026-11-28, from the branch `calummoore/spike-tests-for-unsure-ai-v6g1`, review round 1, the wider fix of finding 1.
+- **Location:**
+  - The read-only rule: `skills/delegating/SKILL.md` lines 53 to 56, the **Constraints** field of a delegation prompt.
+  - The prompts that say "Do not modify files": `skills/implementation-review/references/review-prompt.md` line 37, `skills/implementation-review/references/check-prompt.md` line 37, `skills/implementation-review/references/second-pass-prompt.md` line 34, and `skills/plans/references/follow-up-items.md` line 75.
+  - The lines that restate that these agents are read-only: `skills/implementation-review/SKILL.md` lines 10 and 39, `check-prompt.md` lines 6 and 11, `second-pass-prompt.md` lines 4, 14, and 33, `review-prompt.md` lines 28 and 29, `skills/plans/SKILL.md` line 58, `follow-up-items.md` line 70, and `skills/finish-work/SKILL.md` line 77.
+  - `skills/decisions-and-findings/references/screenshots.md` line 22. It gives "read-only" as the reason that a reviewer and a check take no pictures.
+  - `skills/delegating/references/conductor.md`, the commands that start a Codex reviewer.
+- **Reason:** Option C widens the read-only rule of every reviewer and check on `main`. The user decision of 2026-11-28 covers only one always-on rule plus edits to the `brainstorming` and `testing` skills.
+
+- **Terms:**
+  - **Spike:** a small throwaway experiment that checks how a library, a tool, an API, a platform, or existing code behaves. Its files stay under the git-ignored `.context/` directory, and it is never committed.
+  - **Read-only agent:** a delegated agent whose prompt says "change nothing" or "Do not modify files". The first-pass reviewer, the finding checks, the options check, and the follow-up item check are read-only agents.
+  - **First-pass reviewer:** the agent that reviews the diff of a branch and returns numbered findings, as `skills/implementation-review/SKILL.md` says. It runs as Codex.
+  - **Finding check:** a fresh agent that confirms or removes one finding of a review before the working agent fixes it.
+  - **Working agent:** the session that runs the review of a branch and applies the fixes.
+- **Background:**
+  - On 2026-11-28 the user chose to add an always-on rule to `global/AGENTS.md`, under `## Working`: "Before you build on how a library, a tool, an API, a platform, or existing code behaves, check it in its docs or its code. When they do not settle it, run a spike: a small throwaway experiment under `.context/`. Do not commit a spike." The decision rejected three other places for the rule: only the `testing`, `brainstorming`, and `plans` skills; evidence for each premise of a decision; and a new `spikes` skill.
+  - The same change lets a brainstorm run a spike under `.context/<topic>/`. Commit `c67a5fa` (#43) had added the ban "Do not build a mockup or a spike." to `skills/brainstorming/SKILL.md`, and commit `9c20d29` removed it.
+  - The problem that started this item: step 3 of `skills/brainstorming/SKILL.md` told the brainstorm delegate only to "change nothing". `skills/delegating/SKILL.md` uses that phrase for fully read-only work, so the delegate could not write spike files. The source branch fixed that brief. It now says "change nothing in the repository and keep each spike under `.context/<topic>/`".
+  - `skills/delegating/SKILL.md` says: "A read-only agent, such as a reviewer, gets 'change nothing'." The four prompts in **Location** say "Do not modify files".
+  - The first-pass reviewer of the source branch ran as `codex exec ... -s read-only`. Its log says `approval: never` and `sandbox: read-only`. That sandbox blocks every file write, also under `.context/`.
+  - An earlier design call of the same day kept the finding check sentence "When you are not sure, confirm it" unchanged. Its reason was that the always-on rule reaches the checker through the global file.
+- **Problem:** A read-only agent that is not sure how a tool behaves cannot write the files of a spike. Its prompt forbids every file change, and the Codex reviewer also runs in a read-only sandbox. So the always-on rule reaches these agents, but they cannot follow it.
+- **Impact if no action:** A reviewer can raise a finding that rests on an unchecked guess about how a tool behaves. A finding check that is not sure confirms the finding, as `check-prompt.md` lines 79 and 80 say ("When you are not sure, confirm it"). The guess then goes into the fix round as a confirmed finding, unless the working agent notices it and runs the spike itself.
+- **Root question:** How does a reviewer or a check settle how a tool or the code behaves before it raises, confirms, or removes a finding?
+- **Options:**
+  - **A.** Change nothing. No rule asks a read-only agent to mark an unchecked premise, so the working agent must find such guesses itself. Effort: Small.
+  - **B.** Keep the agents read-only. Ask each read-only agent to mark each premise about tool or code behaviour that it did not check, in its report. Then the working agent runs the spike before the fix round. It adds one line to the review and check prompts, and one step for the working agent. Effort: Small.
+  - **C.** Give every read-only brief one exception. In `skills/delegating/SKILL.md`, a read-only agent gets "change nothing, except a spike whose files all stay under the `.context/` directory that the brief names". The four prompts and every line in **Location** use the same words. Each check names its own folder, because checks run side by side in one working tree. The Codex reviewer then needs a writable sandbox, such as `-s workspace-write`, which lets it write anywhere in the working tree. `screenshots.md` must say whether a reviewer may then take pictures. Effort: Medium.
+  - **D.** Give every read-only agent its own git worktree, as `skills/delegating/SKILL.md` "Subagents in one session" describes, and allow spike files there. A write cannot reach the working tree of the branch. The working agent must commit first, because a worktree holds only committed content. It also must remove each worktree after the check. Effort: Medium.
+- **Left out:**
+  - A spike exception in the always-on rule itself. It costs context on every turn, and it would cancel a read-only instruction that a user gives through a brief.
+  - A spike in a temporary directory outside the repository. C is better on every point: the always-on rule puts spike files under `.context/`, and a file there stays for the working agent to read.
+- **Wider fix:** C. It gives every read-only brief one rule for spike files.
+- **Previous examples:** The brainstorm ban that `c67a5fa` added and `9c20d29` removed. Under that ban, a brainstorm delegate wrote "I did not run a check, because line 15 forbids one" about how a scratch Cargo package builds.
+- **Related:** `plans/follow-ups/model-table-follows-only-conductor.md`, a shared file only. Both items change `skills/delegating/SKILL.md` and `skills/brainstorming/SKILL.md`, on other lines. When C or D changes the Codex reviewer command, both items also change `skills/delegating/references/conductor.md`.
+- **Recommendation:** B. It meets the goal with one prompt line, it keeps every reviewer read-only, and the working agent already runs the fix round.
+- **Action:** ask the user, because B adds a duty to every review report, and B, C, and D trade the safety of a read-only reviewer against the cost of an extra step, with no option clearly best.

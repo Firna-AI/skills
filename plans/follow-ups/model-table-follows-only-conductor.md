@@ -35,5 +35,6 @@
 - **Left out:** A script that finds the app and prints its model list. It adds a tool to keep current, and B gives the same with one sentence. A check in the gate that compares the table with a model list. The gate runs in CI without the apps, so it cannot read a list.
 - **Wider fix:** F. One route reference for each app holds every command of that app, so a change in one app edits one file.
 - **Previous examples:** `77fadd6` moved the routes of each action from the `models` skill into the `delegating` skill. The lookup command stayed in `models`.
+- **Related:** `plans/follow-ups/read-only-agents-cannot-run-spikes.md`, a shared file only. Both items change `skills/delegating/SKILL.md` and `skills/brainstorming/SKILL.md`, on other lines. When that item changes the Codex reviewer command, both items also change `skills/delegating/references/conductor.md`.
 - **Recommendation:** C. It fixes both problems with the smallest change, and a model change still edits only the `models` table. F best protects the codebase, because each app then has its commands in one file.
 - **Action:** ask the user, because each fix changes the rule in force that `conductor model` gives the model ids, and Cal has the claude id question open.

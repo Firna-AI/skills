@@ -131,6 +131,8 @@ body. The format enables automated changelogs and readable history.
     the code dead or the approval for the functionality
   - each test that the `testing` skill removes, with its reason, the
     covering test, and the proof file
+  - each one-time proof, such as a spike, with its result and the file
+    of its output
   - each plan edit made for a rename or removal
   - each intentional merge decision with the paths it affects
   - each design call under the decision test in the
