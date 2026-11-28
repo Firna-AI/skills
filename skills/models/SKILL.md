@@ -16,7 +16,7 @@ else does. The `delegating` skill says where and how each action runs.
 | Action | Agent | Model | Effort | Use |
 | --- | --- | --- | --- | --- |
 | `brainstorming` | claude | `opus-5-5-1m` | `max` | Goal reviews, design options, and candidate changes before a plan exists. |
-| `default orchestrator` | claude | `opus-5-5-1m` | `high` | The session that manages a workspace. It plans, delegates the milestones, checks the delegated work, and reports. |
+| `default orchestrator` | claude | `opus-5-5-1m` | `max` | The session that manages a workspace. It plans, delegates the milestones, checks the delegated work, and reports. |
 | `non-ui implementor` | codex | `gpt-6.2-sol` | `max` | Code that is not UI: backend, scripts, tests, and tooling. |
 | `ui implementor` | claude | `opus-5-5-1m` | `max` | Screens, components, styles, and mockups. |
 | `docs implementor` | claude | `opus-5-5-1m` | `max` | Internal docs, for the team: protocol docs, architecture docs, READMEs, and plans. |
@@ -25,8 +25,7 @@ else does. The `delegating` skill says where and how each action runs.
 | `first-pass review agent` | codex | `gpt-6.2-sol` | `max` | The implementation review and plan reviews. |
 | `second-pass review agent` | claude | `opus-5-5-1m` | `max` | The finding checks of a review, the options check of plan decisions, and investigations of a decision or a finding. |
 
-The `default orchestrator` runs at the `high` effort. Every other action
-runs at the `max` effort. The model ids are the ids that
+Every action runs at the `max` effort. The model ids are the ids that
 `conductor model` lists. When `conductor model` does not list a model of
 this table, the table is stale. Tell the user. Then use the nearest
 model that it lists.
