@@ -112,8 +112,12 @@ name the blocker, and list the checks that did run.
   skill before you open the pull request. It says when the plan goes,
   when it stays, and the steps.
 - Open the pull request when the implementation is complete and no
-  finding waits for the user, or when the user asks for it. Do not ask
-  for permission to open it. A finding waits for the user when its
+  finding waits for the user, or when the user asks for it. A request
+  from the user opens it at any stage: while a finding waits, before the
+  implementation or the work item is complete, or for a new plan alone.
+  The other rules about when a pull request opens, in this skill and in
+  the `plans` and `delegating` skills, apply when the user has not asked.
+  Do not ask for permission to open it. A finding waits for the user when its
   outcome is `ask the user`. A deferred finding with a follow-up item
   does not wait.
 - When a finding waits for the user, do not open the pull request.

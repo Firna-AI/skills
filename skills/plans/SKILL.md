@@ -80,10 +80,13 @@ change. [templates/plan.md](templates/plan.md) is the starting point.
   check, and to review. Its checks find a problem early. Prefer several
   small milestones to one large milestone.
 - Each milestone has a short summary and a TODO checklist.
-- Each milestone has a `Depends on:` line: `none`, or the milestones that
-  it needs. It can also name the merge of an earlier pull request of the
-  plan, as "Completion boundary" says. A plan review checks it. The
-  `delegating` skill uses it.
+- Each milestone has a `Depends on:` line. It holds `none`, or each
+  thing that the milestone needs: a milestone, or the merge of a pull
+  request into `main`. Name a pull request of the plan by the milestone
+  that holds its pull request TODO, as in "the merge of the pull request
+  of Milestone 4 into `main`". Name a pull request outside the plan by
+  its link. A plan review checks the line. The `delegating` skill uses
+  it.
 - When the plan has mockup work, Milestone 1 is the mockup milestone. It
   comes before every other milestone. That includes the documentation
   milestone and repository bootstrap work, such as the workspace skeleton,
@@ -198,14 +201,19 @@ action. The `delegating` skill gives its route.
 - When the work spans more than one pull request, the merge of each pull
   request is the completion boundary of the milestones before its pull
   request TODO. A later milestone can depend on that merge. Name the merge
-  on its `Depends on:` line.
+  on its `Depends on:` line, in the form that "Milestones" gives.
 - Put post-merge work, including smoke tests that need the merged or
   deployed change, in a `## Post-merge follow-up (non-blocking)` section
   outside the milestones. It does not affect completion. When the change
   deletes the plan, each unchecked task becomes a follow-up item.
 - Keep smoke tests that can run before merge as required milestone TODOs.
 - When a pull request opens and the plan stays, replace the branch
-  sentence with `[PR #<number>](<url>) is open.`
+  sentence with `[PR #<number>](<url>) carries Milestones <N> to <M>.`
+  For a plan-only pull request, write `carries the plan`. The sentence
+  names what the pull request carries, not its state, because the merge
+  keeps the status as it is. The first commit on the branch of the next
+  pull request adds its branch sentence after the links. Rewrite an
+  older `is open` sentence in this form.
 
 ## Follow-up items
 

@@ -36,10 +36,11 @@ Steps:
    Tick the TODOs that you complete. Run the complete gate from
    `AGENTS.md`.
 4. Commit with the `git-commit` skill and push your branch.
-5. When each TODO in your scope is ticked, open a pull request into
-   `<primary-branch>` with `gh pr create --base <primary-branch>`, as the
-   `delegating` skill says. Otherwise, report your branch, your commit,
-   and each open TODO with its blocker.
+5. When each TODO in your scope is ticked, or when the user asks for it,
+   open a pull request into `<primary-branch>` with
+   `gh pr create --base <primary-branch>`, as the `delegating` skill
+   says. Otherwise, report your branch, your commit, and each open TODO
+   with its blocker.
 
 Constraints:
 - Change only <the files or the directory>.

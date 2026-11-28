@@ -50,7 +50,7 @@ requirements and the decisions for the work below.>
 
 Tags: ui <keep the tag line only for a ui or mockup milestone>
 
-Depends on: <none, or the numbers of the milestones that this one needs>
+Depends on: <none, or what this milestone needs, in the forms that "Milestones" in the `plans` skill gives>
 
 <Summary.>
 

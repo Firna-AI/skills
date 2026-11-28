@@ -67,12 +67,14 @@ job, such as "Verify required jobs". It only repeats the other failures.
    flaky test, or an unrelated failure. Before you label a failure as one
    of the branch or as unrelated, check the base branch. Check it before a
    claim too. A pass on a rerun makes a flaky test without this check. The
-   command takes the base branch of the pull request, or `main` when the
-   branch has no pull request:
+   base branch is the branch that the work merges into. The command takes
+   the base branch of the pull request. Without a pull request, set
+   `<primary-branch>` to the primary branch that the workspace prompt
+   names, or to `main` for a branch that is not a workspace branch:
 
    ```sh
    base=$(gh pr view --json baseRefName --jq .baseRefName 2>/dev/null \
-     || echo main)
+     || echo <primary-branch>)
    git fetch origin "$base" main
    git rev-list --count "HEAD..origin/$base"
    ```
@@ -252,12 +254,12 @@ fix pull request. One fix there reaches every open branch.
    for the fix pull request to merge. Check its state every 5 minutes, with
    `gh pr view <number> --json state`.
 
-   When it merges, merge the base branch of your pull request into the
-   branch, with the `git-merge` skill. Push, and watch again. When the base
-   branch is a primary branch of the `delegating` skill, it gets the fix
-   only when its orchestrator merges `main`. Until then, report the red CI
-   under **Open**, with the fix pull request. Report it there too when the
-   time ends first.
+   When it merges, merge the base branch from step 1 of "Find the cause"
+   into the branch, with the `git-merge` skill. Push, and watch again.
+   When the base branch is a primary branch of the `delegating` skill, it
+   gets the fix only when its orchestrator merges `main`. Until then,
+   report the red CI under **Open**, with the fix pull request. Report it
+   there too when the time ends first.
 
 Add no follow-up item for a failure that a fix pull request owns. The fix
 pull request is the record. An item in your branch would stay after the
