@@ -50,8 +50,8 @@ first round, and read the file itself after a context summary.
 3. The reviewer returns numbered findings and then the `Outside the scope`
    list, or says clearly that there are none.
 4. Save the full report in the review folder. Record the round in the
-   findings file, and write each new finding as the review gave it. Do
-   this before any check starts.
+   findings file. Write each new finding as the review gave it, in its own
+   entry with its number and fields. Do this before any check starts.
 5. Run the finding checks, the second pass. Start one check for each new
    finding, side by side, with the prompt in
    [references/check-prompt.md](references/check-prompt.md). Each check
